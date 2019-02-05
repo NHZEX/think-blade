@@ -8,6 +8,8 @@
 
 namespace nhzex\BladeTest;
 
+use Illuminate\View\View;
+
 class ViewBladeTest extends TestBase
 {
     /** @var \think\View */
@@ -23,18 +25,27 @@ class ViewBladeTest extends TestBase
         $this->engine = $this->blade->engine;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testBasicFetch()
     {
         $result = $this->blade->fetch("view1");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view1.blade.php"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testParametersFetch()
     {
         $result = $this->blade->fetch("view2", ["title" => "Test Title"]);
         $this->assertSame(file_get_contents(__DIR__ . "/views/view2.html"), $result);
     }
 
+    /**
+     *
+     */
     public function testAltPath()
     {
         $this->engine->addPath(__DIR__ . "/views/alt");
@@ -42,24 +53,36 @@ class ViewBladeTest extends TestBase
         $this->assertSame(file_get_contents(__DIR__ . "/views/alt/view3.blade.php"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testUse()
     {
         $result = $this->blade->fetch("view5");
         $this->assertSame("stuff", trim($result));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testRawOutput()
     {
         $result = $this->blade->fetch("view6");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view6.html"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testEscapedOutput()
     {
         $result = $this->blade->fetch("view7");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view7.html"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testShare()
     {
         $this->blade->share("shareData", "shared");
@@ -67,41 +90,58 @@ class ViewBladeTest extends TestBase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view8.html"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testComposer()
     {
-        $this->engine->composer("*", function ($view) {
+        $this->engine->composer("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
         $result = $this->blade->fetch("view9");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view9.html"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCreator()
     {
-        $this->engine->creator("*", function ($view) {
-
+        $this->engine->creator("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
         $result = $this->blade->fetch("view9");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view9.html"), $result);
     }
 
+    /**
+     *
+     */
     public function testExists1()
     {
         $this->assertTrue($this->blade->exists("view1"));
     }
 
+    /**
+     *
+     */
     public function testDoesntExist()
     {
         $this->assertFalse($this->blade->exists("no-such-view"));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testInheritance()
     {
         $result = $this->blade->fetch("view10");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view10.html"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testInheritanceAltPath()
     {
         $this->engine->addPath(__DIR__ . "/views/alt");
@@ -109,6 +149,9 @@ class ViewBladeTest extends TestBase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view11.html"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCustomCompiler()
     {
         $this->engine->extend(function ($value) {
@@ -118,6 +161,9 @@ class ViewBladeTest extends TestBase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view12.html"), $result);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testCustomDirective()
     {
         $this->engine->directive("normandie", function ($parameter) {
@@ -128,6 +174,9 @@ class ViewBladeTest extends TestBase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view13.html"), $result);
     }
 
+    /**
+     * @return \Generator
+     */
     public function customConditionProvider()
     {
         yield [false, "off"];
