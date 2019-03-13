@@ -12,7 +12,7 @@ before_install:
   - composer validate
 
 install:
-  - composer install --prefer-dist --prefer-stable
+  - composer install --prefer-dist
 
 before_script:
 
