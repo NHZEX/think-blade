@@ -107,9 +107,9 @@ class Driver
 
         // 模板不存在 抛出异常
         if (!is_file($template)) {
-            if (class_exists('\think\template\exception\TemplateNotFoundException')) {
-                /** @noinspection PhpUndefinedNamespaceInspection, PhpUndefinedClassInspection */
-                throw new \think\template\exception\TemplateNotFoundException('template not exists:' . $template, $template);
+            $not_exist = '\think\template\exception\TemplateNotFoundException';
+            if (class_exists($not_exist)) {
+                throw new $not_exist('template not exists:' . $template, $template);
             } else {
                 throw new Exception('template not exists:' . $template, 0);
             }
