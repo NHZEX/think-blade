@@ -113,7 +113,6 @@ class Driver
             } else {
                 throw new Exception('template not exists:' . $template, 0);
             }
-
         }
 
         // 记录视图信息

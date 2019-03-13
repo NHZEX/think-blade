@@ -177,6 +177,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     {
         $this->engine->directive("normandie", function ($parameter) {
             $parameter = trim($parameter, "()");
+
             return "inguz({$parameter});";
         });
         $result = $this->blade->fetch("view13");
