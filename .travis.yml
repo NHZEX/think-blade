@@ -6,7 +6,6 @@ php:
   - nightly
 
 services:
-  - redis-server
 
 before_install:
   - composer self-update
