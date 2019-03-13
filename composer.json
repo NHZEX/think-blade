@@ -25,6 +25,8 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {"nhzex\\BladeTest\\": "tests/"}
+        "psr-4": {
+            "nhzex\\BladeTest\\": "tests/"
+        }
     }
 }
