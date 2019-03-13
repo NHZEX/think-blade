@@ -6,11 +6,7 @@
  * Time: 14:47
  */
 
-namespace think;
+require_once '../vendor/autoload.php';
 
-require_once __DIR__ . '/../vendor/topthink/framework/base.php';
-
-/** @var App $app */
-$app = Container::get('app');
-$app->path(__DIR__);
-$app->initialize();
+\think\facade\App::instance(dirname(__DIR__));
+\think\facade\App::debug(true);

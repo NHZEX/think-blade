@@ -38,9 +38,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $config = new \think\Config();
-        $config->set(self::config, 'template');
-        $this->blade = \think\Container::get('view', [$config], true);
+        $this->blade = new \think\View(self::config);
         $this->engine = $this->blade->engine;
     }
 
@@ -58,7 +56,8 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
      */
     public function testParametersFetch()
     {
-        $result = $this->blade->fetch("view2", ["title" => "Test Title"]);
+        $this->blade->assign(["title" => "Test Title"]);
+        $result = $this->blade->fetch("view2");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view2.html"), $result);
     }
 
@@ -77,10 +76,8 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
      */
     public function testUse()
     {
-        // TODO 类无法加载，跳过测试
-        $this->assertTrue(true);
-        // $result = $this->blade->fetch("view5");
-        // $this->assertSame("stuff", trim($result));
+         $result = $this->blade->fetch("view5");
+         $this->assertSame("stuff", trim($result));
     }
 
     /**
@@ -106,7 +103,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
      */
     public function testShare()
     {
-        $this->blade->share("shareData", "shared");
+        $this->blade->__set("shareData", "shared");
         $result = $this->blade->fetch("view8");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view8.html"), $result);
     }
@@ -228,9 +225,10 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
         $this->engine->if("global", function (bool $global) {
             return $global;
         });
-        $result = $this->blade->fetch("view15", [
+        $this->blade->assign([
             "global" => $global,
         ]);
+        $result = $this->blade->fetch("view15");
         $this->assertSame("{$expected}\n", $result);
     }
 }
