@@ -5,6 +5,7 @@
  * Date: 2019/2/4
  * Time: 15:58
  */
+declare (strict_types = 1);
 
 namespace nhzex\Blade\Blade;
 
@@ -64,7 +65,7 @@ class Driver
         $this->boot();
     }
 
-    public function boot()
+    public function boot(): void
     {
         $cache_path = $this->config['cache_path'] . $this->config['cache_prefix'];
 
@@ -81,7 +82,7 @@ class Driver
      * @param  string $template 模板文件或者模板规则
      * @return bool
      */
-    public function exists($template)
+    public function exists(string $template): bool
     {
         if ('' == pathinfo($template, PATHINFO_EXTENSION)) {
             // 获取模板文件名
@@ -96,32 +97,31 @@ class Driver
      * @access public
      * @param string $template  模板文件
      * @param array  $data      模板变量
-     * @param array  $mergeData 附加变量
-     * @param array  $config    参数
      * @return void
      * @throws Exception
      */
-    public function fetch($template, $data = [], $mergeData = [], $config = [])
+    public function fetch(string $template, array $data = []): void
     {
-        $this->config($config);
         if ('' == pathinfo($template, PATHINFO_EXTENSION)) {
             // 获取模板文件名
             $template = $this->parseTemplate($template);
         }
+
         // 模板不存在 抛出异常
         if (!is_file($template)) {
             if (class_exists('\think\template\exception\TemplateNotFoundException')) {
                 /** @noinspection PhpUndefinedNamespaceInspection, PhpUndefinedClassInspection */
                 throw new \think\template\exception\TemplateNotFoundException('template not exists:' . $template, $template);
             } else {
-                throw new Exception('template not exists:' . $template, $template);
+                throw new Exception('template not exists:' . $template, 0);
             }
 
         }
+
         // 记录视图信息
         $this->app->log->alert('[ VIEW ] ' . $template . ' [ ' . var_export(array_keys($data), true) . ' ]');
 
-        echo $this->template->file($template, $data, $mergeData)->render();
+        echo $this->template->file($template, $data)->render();
     }
 
     /**
@@ -129,14 +129,11 @@ class Driver
      * @access public
      * @param string $template 模板内容
      * @param array $data 模板变量
-     * @param array $mergeData 附加变量
-     * @param array $config 参数
-     * @return string
+     * @return void
      */
-    public function display($template, $data = [], $mergeData = [], $config = [])
+    public function display(string $template, array $data = []): void
     {
-        $this->config($config);
-        return $this->template->make($template, $data, $mergeData)->render();
+        echo $this->template->make($template, $data)->render();
     }
 
     /**
@@ -185,22 +182,24 @@ class Driver
     }
 
     /**
-     * 配置或者获取模板引擎参数
-     * @access private
-     * @param  string|array $name 参数名
-     * @param  mixed $value 参数值
+     * 配置模板引擎
+     * @param array $config
      * @return mixed
      */
-    public function config($name, $value = null)
+    public function config(array $config): void
     {
-        if (is_array($name)) {
-            $this->config = array_merge($this->config, $name);
-        } elseif (is_null($value)) {
-            return $this->config[$name];
-        } else {
-            $this->config[$name] = $value;
-        }
-        return null;
+        $this->config = array_merge($this->config, $config);
+    }
+
+    /**
+     * 获取模板引擎配置
+     * @access public
+     * @param  string  $name 参数名
+     * @return mixed
+     */
+    public function getConfig(string $name)
+    {
+        return $this->config[$name];
     }
 
     public function __call($method, $params)
