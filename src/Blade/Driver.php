@@ -5,7 +5,7 @@
  * Date: 2019/2/4
  * Time: 15:58
  */
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace nhzex\Blade\Blade;
 
@@ -78,7 +78,6 @@ class Driver
 
     /**
      * 检测是否存在模板文件
-     * @access public
      * @param  string $template 模板文件或者模板规则
      * @return bool
      */
@@ -94,9 +93,8 @@ class Driver
 
     /**
      * 渲染模板文件
-     * @access public
-     * @param string $template  模板文件
-     * @param array  $data      模板变量
+     * @param string $template 模板文件
+     * @param array $data 模板变量
      * @return void
      * @throws Exception
      */
@@ -126,7 +124,6 @@ class Driver
 
     /**
      * 渲染模板内容
-     * @access public
      * @param string $template 模板内容
      * @param array $data 模板变量
      * @return void
@@ -138,7 +135,6 @@ class Driver
 
     /**
      * 自动定位模板文件
-     * @access private
      * @param  string $template 模板文件规则
      * @return string
      */
@@ -155,21 +151,26 @@ class Driver
 
         if ($this->config['view_base']) {
             // 基础视图目录
-            $app  = isset($app) ? $app : $request->app();
+            $app = isset($app) ? $app : $request->app();
             $path = $this->config['view_base'] . ($app ? $app . DIRECTORY_SEPARATOR : '');
         } else {
-            $path = isset($app) ? $this->app->getBasePath() . $app . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR : $this->config['view_path'];
+            $path = isset($app)
+                ? $this->app->getBasePath() . $app . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR
+                : $this->config['view_path'];
         }
 
         $depr = $this->config['view_depr'];
 
         if (0 !== strpos($template, '/')) {
-            $template   = str_replace(['/', ':'], $depr, $template);
+            $template = str_replace(['/', ':'], $depr, $template);
             $controller = App::parseName($request->controller());
             if ($controller) {
                 if ('' == $template) {
                     // 如果模板文件名为空 按照默认规则定位
-                    $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . (1 == $this->config['auto_rule'] ? App::parseName($request->action(true)) : $request->action());
+                    $template = (1 == $this->config['auto_rule']
+                        ? App::parseName($request->action(true))
+                        : $request->action());
+                    $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
                 } elseif (false === strpos($template, $depr)) {
                     $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
                 }
@@ -194,7 +195,7 @@ class Driver
     /**
      * 获取模板引擎配置
      * @access public
-     * @param  string  $name 参数名
+     * @param  string $name 参数名
      * @return mixed
      */
     public function getConfig(string $name)

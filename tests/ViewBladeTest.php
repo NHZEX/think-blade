@@ -12,7 +12,7 @@ use Illuminate\View\View;
 
 class ViewBladeTest extends \PHPUnit\Framework\TestCase
 {
-    const config = [
+    const CONFIG = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写
         'auto_rule' => 1,
         // 模板引擎类型 支持 php think 支持扩展
@@ -38,7 +38,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        $this->blade = new \think\View(self::config);
+        $this->blade = new \think\View(self::CONFIG);
         $this->engine = $this->blade->engine;
     }
 
@@ -61,9 +61,6 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view2.html"), $result);
     }
 
-    /**
-     *
-     */
     public function testAltPath()
     {
         $this->engine->addPath(__DIR__ . "/views/alt");
@@ -76,8 +73,8 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
      */
     public function testUse()
     {
-         $result = $this->blade->fetch("view5");
-         $this->assertSame("stuff", trim($result));
+        $result = $this->blade->fetch("view5");
+        $this->assertSame("stuff", trim($result));
     }
 
     /**
@@ -132,17 +129,11 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view9.html"), $result);
     }
 
-    /**
-     *
-     */
     public function testExists1()
     {
         $this->assertTrue($this->blade->exists("view1"));
     }
 
-    /**
-     *
-     */
     public function testDoesntExist()
     {
         $this->assertFalse($this->blade->exists("no-such-view"));
