@@ -62,9 +62,6 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view2.html"), $result);
     }
 
-    /**
-     *
-     */
     public function testAltPath()
     {
         $this->engine->addPath(__DIR__ . "/views/alt");
@@ -135,17 +132,11 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view9.html"), $result);
     }
 
-    /**
-     *
-     */
     public function testExists1()
     {
         $this->assertTrue($this->blade->exists("view1"));
     }
 
-    /**
-     *
-     */
     public function testDoesntExist()
     {
         $this->assertFalse($this->blade->exists("no-such-view"));
@@ -189,6 +180,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     {
         $this->engine->directive("normandie", function ($parameter) {
             $parameter = trim($parameter, "()");
+
             return "inguz({$parameter});";
         });
         $result = $this->blade->fetch("view13");
