@@ -11,7 +11,6 @@ namespace nhzex\Blade\Blade;
 use duncan3dc\Laravel\BladeInstance;
 use Illuminate\Filesystem\Filesystem;
 use think\App;
-
 use think\exception\TemplateNotFoundException;
 use think\Loader;
 use think\Request;
@@ -128,6 +127,7 @@ class Driver
     public function display($template, $data = [], $mergeData = [], $config = [])
     {
         $this->config($config);
+
         return $this->template->make($template, $data, $mergeData)->render();
     }
 
@@ -206,7 +206,6 @@ class Driver
         } else {
             $this->config[$name] = $value;
         }
-        return null;
     }
 
     public function __call($method, $params)
