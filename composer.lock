@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69b2586d3880805f9ed81105ab4cfc73",
+    "content-hash": "1d96b6df70ba169bc95d9b520eabf21a",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1155,12 +1155,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "bed7eda189dc55fb9653ba200378fb8306efe4e1"
+                "reference": "d9cbb6db3321e303a42882031525f9525dc26e1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/bed7eda189dc55fb9653ba200378fb8306efe4e1",
-                "reference": "bed7eda189dc55fb9653ba200378fb8306efe4e1",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/d9cbb6db3321e303a42882031525f9525dc26e1a",
+                "reference": "d9cbb6db3321e303a42882031525f9525dc26e1a",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1214,20 +1214,20 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2019-03-13T09:02:52+00:00"
+            "time": "2019-03-15T09:51:40+00:00"
         },
         {
-            "name": "topthink/think-installer",
-            "version": "v2.0.0",
+            "name": "topthink/think-template",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/top-think/think-installer.git",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675"
+                "url": "https://github.com/top-think/think-template.git",
+                "reference": "aee66382c62610b11f0694df8b2aef1ba32f064d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675",
+                "url": "https://api.github.com/repos/top-think/think-template/zipball/aee66382c62610b11f0694df8b2aef1ba32f064d",
+                "reference": "aee66382c62610b11f0694df8b2aef1ba32f064d",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1237,18 +1237,12 @@
                 ]
             },
             "require": {
-                "composer-plugin-api": "^1.0"
+                "php": ">=7.1.0"
             },
-            "require-dev": {
-                "composer/composer": "1.0.*@dev"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "think\\composer\\Plugin"
-            },
+            "type": "library",
             "autoload": {
                 "psr-4": {
-                    "think\\composer\\": "src"
+                    "think\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1257,24 +1251,25 @@
             ],
             "authors": [
                 {
-                    "name": "yunwuxin",
-                    "email": "448901948@qq.com"
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
                 }
             ],
-            "time": "2018-05-11T06:45:42+00:00"
+            "description": "the php template engine",
+            "time": "2019-02-20T06:02:13+00:00"
         },
         {
             "name": "topthink/think-view",
-            "version": "dev-master",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/think-view.git",
-                "reference": "7bdbef129b3332b38f30be30206a5ac9443cb018"
+                "reference": "1b2ad9cc50428953da2f983c58b25bf74c219323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-view/zipball/7bdbef129b3332b38f30be30206a5ac9443cb018",
-                "reference": "7bdbef129b3332b38f30be30206a5ac9443cb018",
+                "url": "https://api.github.com/repos/top-think/think-view/zipball/1b2ad9cc50428953da2f983c58b25bf74c219323",
+                "reference": "1b2ad9cc50428953da2f983c58b25bf74c219323",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1285,9 +1280,9 @@
             },
             "require": {
                 "php": ">=7.1.0",
-                "topthink/think-installer": "^2.0"
+                "topthink/think-template": "^2.0"
             },
-            "type": "think-extend",
+            "type": "library",
             "extra": {
                 "think-config": {
                     "template": "src/config/template.php"
@@ -1312,7 +1307,7 @@
                 }
             ],
             "description": "thinkphp view",
-            "time": "2019-03-12T06:14:00+00:00"
+            "time": "2019-02-20T06:04:39+00:00"
         }
     ],
     "packages-dev": [
@@ -2956,10 +2951,9 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "stability-flags": {
-        "topthink/framework": 20,
-        "topthink/think-view": 20
+        "topthink/framework": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
