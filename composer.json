@@ -9,7 +9,7 @@
             "email": "auooru@outlook.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "require": {
         "php": ">=7.1",
         "topthink/framework": "5.2.x-dev",
