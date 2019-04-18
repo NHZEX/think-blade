@@ -8,15 +8,21 @@
 
 namespace nhzex\BladeTest;
 
+use Exception;
+use Generator;
 use Illuminate\View\View;
+use nhzex\Blade\Blade\Driver;
+use PHPUnit\Framework\TestCase;
+use think\Config;
+use think\Container;
 
-class ViewBladeTest extends \PHPUnit\Framework\TestCase
+class ViewBladeTest extends TestCase
 {
     const config = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写
         'auto_rule' => 1,
         // 模板引擎类型 支持 php think 支持扩展
-        'type' => \nhzex\Blade\Blade\Driver::class,
+        'type' => Driver::class,
         // 视图基础目录，配置目录为所有模块的视图起始目录
         'view_base' => __DIR__ . '/views/',
         // 当前模板的视图目录 留空为自动获取
@@ -33,19 +39,19 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
 
     /** @var \think\View */
     private $blade;
-    /** @var \nhzex\Blade\Blade\Driver */
+    /** @var Driver */
     private $engine;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $config = new \think\Config();
+        $config = new Config();
         $config->set(self::config, 'template');
-        $this->blade = \think\Container::get('view', [$config], true);
+        $this->blade = Container::get('view', [$config], true);
         $this->engine = $this->blade->engine;
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testBasicFetch()
     {
@@ -54,7 +60,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testParametersFetch()
     {
@@ -70,7 +76,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testUse()
     {
@@ -81,7 +87,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testRawOutput()
     {
@@ -90,7 +96,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testEscapedOutput()
     {
@@ -99,7 +105,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testShare()
     {
@@ -109,7 +115,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testComposer()
     {
@@ -121,7 +127,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testCreator()
     {
@@ -143,7 +149,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testInheritance()
     {
@@ -152,7 +158,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testInheritanceAltPath()
     {
@@ -162,7 +168,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testCustomCompiler()
     {
@@ -174,7 +180,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testCustomDirective()
     {
@@ -188,7 +194,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Generator
+     * @return Generator
      */
     public function customConditionProvider()
     {
@@ -200,7 +206,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
      * @dataProvider customConditionProvider
      * @param bool $global
      * @param string $expected
-     * @throws \Exception
+     * @throws Exception
      */
     public function testCustomConditions(bool $global, string $expected)
     {
@@ -213,7 +219,7 @@ class ViewBladeTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider customConditionProvider
-     * @throws \Exception
+     * @throws Exception
      */
     public function testCustomConditionArguments(bool $global, string $expected)
     {

@@ -13,7 +13,7 @@
     "require": {
         "php": ">=7.1",
         "topthink/framework": "~5.1.34",
-        "duncan3dc/blade": "~4.4.0"
+        "duncan3dc/blade": "^4.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^7"
