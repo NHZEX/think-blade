@@ -13,17 +13,18 @@ use duncan3dc\Laravel\BladeInstance;
 use Illuminate\Filesystem\Filesystem;
 use think\App;
 use think\Exception;
+use think\view\TemplateHandlerInterface;
 
 /**
  * Class Driver
  * @package nhzex\Blade\Blade
  * @mixin BladeInstance
  */
-class Driver
+class Driver implements TemplateHandlerInterface
 {
     // 模板引擎实例
     /** @var BladeInstance */
-    private $template;
+    private $blade;
     /** @var App */
     private $app;
 
@@ -73,7 +74,7 @@ class Driver
             (new Filesystem)->cleanDirectory($cache_path);
         }
 
-        $this->template = new BladeInstance($this->config['view_base'], $cache_path);
+        $this->blade = new BladeInstance($this->config['view_base'], $cache_path);
     }
 
     /**
@@ -116,7 +117,7 @@ class Driver
         // 记录视图信息
         $this->app->log->alert('[ VIEW ] ' . $template . ' [ ' . var_export(array_keys($data), true) . ' ]');
 
-        echo $this->template->file($template, $data)->render();
+        echo $this->blade->file($template, $data)->render();
     }
 
     /**
@@ -127,7 +128,7 @@ class Driver
      */
     public function display(string $template, array $data = []): void
     {
-        echo $this->template->make($template, $data)->render();
+        echo $this->blade->make($template, $data)->render();
     }
 
     /**
@@ -202,7 +203,7 @@ class Driver
 
     public function __call($method, $params)
     {
-        return call_user_func_array([$this->template, $method], $params);
+        return call_user_func_array([$this->blade, $method], $params);
     }
 
     public function __debugInfo()
