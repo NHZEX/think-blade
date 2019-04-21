@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b44ccc5cd05ffb508250d381f9ccd16",
+    "content-hash": "8fe85520abdf245f9e5eb86b0b303d74",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -543,6 +543,125 @@
             "time": "2019-04-17T08:51:36+00:00"
         },
         {
+            "name": "opis/closure",
+            "version": "3.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/opis/closure.git",
+                "reference": "ccb8e3928c5c8181c76cdd0ed9366c5bcaafd91b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/opis/closure/zipball/ccb8e3928c5c8181c76cdd0ed9366c5bcaafd91b",
+                "reference": "ccb8e3928c5c8181c76cdd0ed9366c5bcaafd91b",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": "^5.4 || ^7.0"
+            },
+            "require-dev": {
+                "jeremeamia/superclosure": "^2.0",
+                "phpunit/phpunit": "^4.0|^5.0|^6.0|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Opis\\Closure\\": "src/"
+                },
+                "files": [
+                    "functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marius Sarca",
+                    "email": "marius.sarca@gmail.com"
+                },
+                {
+                    "name": "Sorin Sarca",
+                    "email": "sarca_sorin@hotmail.com"
+                }
+            ],
+            "description": "A library that can be used to serialize closures (anonymous functions) and arbitrary objects.",
+            "homepage": "https://opis.io/closure",
+            "keywords": [
+                "anonymous functions",
+                "closure",
+                "function",
+                "serializable",
+                "serialization",
+                "serialize"
+            ],
+            "time": "2019-02-22T10:30:00+00:00"
+        },
+        {
+            "name": "psr/cache",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/cache.git",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/cache/zipball/d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "reference": "d11b50ad223250cf17b86e38383413f5a6764bf8",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for caching libraries",
+            "keywords": [
+                "cache",
+                "psr",
+                "psr-6"
+            ],
+            "time": "2016-08-06T20:24:11+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -1043,16 +1162,16 @@
         },
         {
             "name": "topthink/framework",
-            "version": "v5.1.35",
+            "version": "6.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "c53c0c6132022a87e8ee9c4109939eaf9a8a7adb"
+                "reference": "479aa70c4ebce18d01bbbcb39b33bbc8ad2eea4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/c53c0c6132022a87e8ee9c4109939eaf9a8a7adb",
-                "reference": "c53c0c6132022a87e8ee9c4109939eaf9a8a7adb",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/479aa70c4ebce18d01bbbcb39b33bbc8ad2eea4d",
+                "reference": "479aa70c4ebce18d01bbbcb39b33bbc8ad2eea4d",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1062,19 +1181,25 @@
                 ]
             },
             "require": {
-                "php": ">=5.6.0",
-                "topthink/think-installer": "2.*"
+                "opis/closure": "^3.1",
+                "php": ">=7.1.0",
+                "psr/cache": "~1.0",
+                "psr/container": "~1.0",
+                "psr/log": "~1.0",
+                "psr/simple-cache": "^1.0"
             },
             "require-dev": {
-                "johnkary/phpunit-speedtrap": "^1.0",
-                "mikey179/vfsstream": "~1.6",
-                "phpdocumentor/reflection-docblock": "^2.0",
-                "phploc/phploc": "2.*",
-                "phpunit/phpunit": "^5.0|^6.0",
-                "sebastian/phpcpd": "2.*",
-                "squizlabs/php_codesniffer": "2.*"
+                "mikey179/vfsstream": "^1.6",
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "^7.0"
             },
-            "type": "think-framework",
+            "type": "library",
+            "autoload": {
+                "files": [],
+                "psr-4": {
+                    "think\\": "src/think/"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
@@ -1089,27 +1214,27 @@
                     "email": "448901948@qq.com"
                 }
             ],
-            "description": "the new thinkphp framework",
+            "description": "The ThinkPHP Framework.",
             "homepage": "http://thinkphp.cn/",
             "keywords": [
                 "framework",
                 "orm",
                 "thinkphp"
             ],
-            "time": "2019-03-03T00:44:44+00:00"
+            "time": "2019-04-20T02:50:11+00:00"
         },
         {
-            "name": "topthink/think-installer",
-            "version": "v2.0.0",
+            "name": "topthink/think-template",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/top-think/think-installer.git",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675"
+                "url": "https://github.com/top-think/think-template.git",
+                "reference": "aee66382c62610b11f0694df8b2aef1ba32f064d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-installer/zipball/f5400a12c60e513911aef41fe443fa6920952675",
-                "reference": "f5400a12c60e513911aef41fe443fa6920952675",
+                "url": "https://api.github.com/repos/top-think/think-template/zipball/aee66382c62610b11f0694df8b2aef1ba32f064d",
+                "reference": "aee66382c62610b11f0694df8b2aef1ba32f064d",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1119,18 +1244,12 @@
                 ]
             },
             "require": {
-                "composer-plugin-api": "^1.0"
+                "php": ">=7.1.0"
             },
-            "require-dev": {
-                "composer/composer": "1.0.*@dev"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "think\\composer\\Plugin"
-            },
+            "type": "library",
             "autoload": {
                 "psr-4": {
-                    "think\\composer\\": "src"
+                    "think\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1139,11 +1258,62 @@
             ],
             "authors": [
                 {
-                    "name": "yunwuxin",
-                    "email": "448901948@qq.com"
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
                 }
             ],
-            "time": "2018-05-11T06:45:42+00:00"
+            "description": "the php template engine",
+            "time": "2019-02-20T06:02:13+00:00"
+        },
+        {
+            "name": "topthink/think-view",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-view.git",
+                "reference": "dee408c1924e6e32a435fa058e04cee6668ed6d6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-view/zipball/dee408c1924e6e32a435fa058e04cee6668ed6d6",
+                "reference": "dee408c1924e6e32a435fa058e04cee6668ed6d6",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://dl.laravel-china.org/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "topthink/think-template": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "think": {
+                    "config": {
+                        "template": "src/config/template.php"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\view\\driver\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "thinkphp template driver",
+            "time": "2019-04-17T10:36:32+00:00"
         }
     ],
     "packages-dev": [
@@ -1900,16 +2070,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.8",
+            "version": "7.5.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a"
+                "reference": "134669cf0eeac3f79bc7f0c793efbc158bffc160"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
-                "reference": "c29c0525cf4572c11efe1db49a8b8aee9dfac58a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/134669cf0eeac3f79bc7f0c793efbc158bffc160",
+                "reference": "134669cf0eeac3f79bc7f0c793efbc158bffc160",
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1986,7 +2156,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-03-26T13:23:54+00:00"
+            "time": "2019-04-19T15:50:46+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -2790,7 +2960,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "topthink/framework": 20,
+        "topthink/think-view": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

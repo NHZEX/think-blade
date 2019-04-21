@@ -9,11 +9,12 @@
             "email": "auooru@outlook.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.1",
-        "topthink/framework": "~5.1.34",
-        "duncan3dc/blade": "^4.5"
+        "duncan3dc/blade": "^4.5",
+        "topthink/framework": "6.0.x-dev",
+        "topthink/think-view": "master-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^7"
@@ -21,12 +22,15 @@
     "autoload": {
         "files": [],
         "psr-4": {
-            "nhzex\\Blade\\": "src/"
+            "HZEX\\Blade\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "nhzex\\BladeTest\\": "tests/"
+            "HZEX\\BladeTest\\": "tests/"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

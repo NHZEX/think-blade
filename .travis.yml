@@ -1,0 +1,19 @@
+language: php
+php:
+  - '7.1'
+  - '7.2'
+  - '7.3'
+
+services:
+
+before_install:
+  - composer self-update
+  - composer validate
+
+install:
+  - composer install --prefer-dist
+
+before_script:
+
+script:
+  - vendor/bin/phpunit

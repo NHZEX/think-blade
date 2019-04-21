@@ -1,1 +1,1 @@
-{{ nhzex\BladeTest\Helper::getStuff() }}
+{{ HZEX\BladeTest\Helper::getStuff() }}

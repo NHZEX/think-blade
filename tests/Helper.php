@@ -1,6 +1,6 @@
 <?php
 
-namespace nhzex\BladeTest;
+namespace HZEX\BladeTest;
 
 class Helper
 {

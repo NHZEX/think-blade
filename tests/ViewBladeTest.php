@@ -6,19 +6,17 @@
  * Time: 15:22
  */
 
-namespace nhzex\BladeTest;
+namespace HZEX\BladeTest;
 
 use Exception;
 use Generator;
+use HZEX\Blade\Driver;
 use Illuminate\View\View;
-use nhzex\Blade\Blade\Driver;
 use PHPUnit\Framework\TestCase;
-use think\Config;
-use think\Container;
 
 class ViewBladeTest extends TestCase
 {
-    const config = [
+    const CONFIG = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写
         'auto_rule' => 1,
         // 模板引擎类型 支持 php think 支持扩展
@@ -44,9 +42,7 @@ class ViewBladeTest extends TestCase
 
     public function setUp(): void
     {
-        $config = new Config();
-        $config->set(self::config, 'template');
-        $this->blade = Container::get('view', [$config], true);
+        $this->blade = new \think\View(self::CONFIG);
         $this->engine = $this->blade->engine;
     }
 
@@ -64,7 +60,8 @@ class ViewBladeTest extends TestCase
      */
     public function testParametersFetch()
     {
-        $result = $this->blade->fetch("view2", ["title" => "Test Title"]);
+        $this->blade->assign(["title" => "Test Title"]);
+        $result = $this->blade->fetch("view2");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view2.html"), $result);
     }
 
@@ -80,10 +77,8 @@ class ViewBladeTest extends TestCase
      */
     public function testUse()
     {
-        // TODO 类无法加载，跳过测试
-        $this->assertTrue(true);
-        // $result = $this->blade->fetch("view5");
-        // $this->assertSame("stuff", trim($result));
+        $result = $this->blade->fetch("view5");
+        $this->assertSame("stuff", trim($result));
     }
 
     /**
@@ -109,7 +104,7 @@ class ViewBladeTest extends TestCase
      */
     public function testShare()
     {
-        $this->blade->share("shareData", "shared");
+        $this->blade->__set("shareData", "shared");
         $result = $this->blade->fetch("view8");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view8.html"), $result);
     }
@@ -219,6 +214,8 @@ class ViewBladeTest extends TestCase
 
     /**
      * @dataProvider customConditionProvider
+     * @param bool   $global
+     * @param string $expected
      * @throws Exception
      */
     public function testCustomConditionArguments(bool $global, string $expected)
@@ -226,9 +223,10 @@ class ViewBladeTest extends TestCase
         $this->engine->if("global", function (bool $global) {
             return $global;
         });
-        $result = $this->blade->fetch("view15", [
+        $this->blade->assign([
             "global" => $global,
         ]);
+        $result = $this->blade->fetch("view15");
         $this->assertSame("{$expected}\n", $result);
     }
 }
