@@ -12,8 +12,8 @@ namespace HZEX\Blade;
 use duncan3dc\Laravel\BladeInstance;
 use Illuminate\Filesystem\Filesystem;
 use think\App;
+use think\contract\TemplateHandlerInterface;
 use think\Exception;
-use think\view\TemplateHandlerInterface;
 
 /**
  * Class Driver
