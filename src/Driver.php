@@ -124,10 +124,10 @@ class Driver implements TemplateHandlerInterface
                             $value = mb_substr((string) $value, 0, 36) . '...';
                         }
                     } else {
-                        $value = get_class($value) . '#' . hash('crc32', spl_object_hash($object));
+                        $value = get_class($value) . '#' . hash('crc32', spl_object_hash($value));
                     }
                 } else {
-                    $value = var_export($value, true);
+                    $value = print_r($value, true);
                     if (mb_strlen($value) > 36) {
                         $value = mb_substr($value, 0, 36) . '...';
                     }
