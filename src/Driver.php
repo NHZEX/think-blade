@@ -115,7 +115,28 @@ class Driver implements TemplateHandlerInterface
             }
         }
         // 记录视图信息
-        $this->app->log->alert('[ VIEW ] ' . $template . ' [ ' . var_export(array_keys($data), true) . ' ]');
+        if ($this->app->isDebug()) {
+            $debugInfo = array_map(function ($value) {
+                if (is_object($value)) {
+                    if (method_exists($value, '__toString')) {
+                        $value = (string) $value;
+                        if (mb_strlen($value) > 36) {
+                            $value = mb_substr((string) $value, 0, 36) . '...';
+                        }
+                    } else {
+                        $value = get_class($value) . '#' . hash('crc32', spl_object_hash($object));
+                    }
+                } else {
+                    $value = var_export($value, true);
+                    if (mb_strlen($value) > 36) {
+                        $value = mb_substr($value, 0, 36) . '...';
+                    }
+                }
+                return str_replace(PHP_EOL, 'LF', $value);
+            }, $data);
+
+            $this->app->log->info("[ VIEW ] {$template} [ {data} ]", ['data' => var_export($debugInfo, true)]);
+        }
 
         echo $this->blade->file($template, $data)->render();
     }
