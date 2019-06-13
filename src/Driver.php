@@ -160,7 +160,7 @@ class Driver implements TemplateHandlerInterface
     private function parseTemplate($template)
     {
         // 分析模板文件规则
-        $request = $this->app['request'];
+        $request = $this->app->request;
 
         // 获取视图根目录
         if (strpos($template, '@')) {
