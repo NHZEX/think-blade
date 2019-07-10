@@ -13,7 +13,7 @@ use duncan3dc\Laravel\BladeInstance;
 use Illuminate\Filesystem\Filesystem;
 use think\App;
 use think\contract\TemplateHandlerInterface;
-use think\Exception;
+use think\template\exception\TemplateNotFoundException;
 
 /**
  * Class Driver
@@ -30,13 +30,13 @@ class Driver implements TemplateHandlerInterface
 
     // 模板引擎参数
     protected $config = [
-        // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写
+        // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写 3 保持操作方法
         'auto_rule' => 1,
-        // 视图基础目录（集中式）
+        // 模板基础路径
         'view_base' => '',
-        // 模板起始路径
+        // 模板路径
         'view_path' => '',
-        // 模板文件后缀
+        // 模板后缀
         'view_suffix' => 'blade.php',
         // 模板文件名分隔符
         'view_depr' => DIRECTORY_SEPARATOR,
@@ -44,18 +44,15 @@ class Driver implements TemplateHandlerInterface
         'tpl_cache' => true,
         // 缓存池路径
         'cache_path' => '',
-        // 缓存池后缀
-        'cache_prefix' => '',
     ];
 
     public function __construct(App $app, array $config = [])
     {
         $this->app = $app;
-        $this->config['cache_path'] = $app->getRuntimePath() . 'temp/';
         $this->config = array_merge($this->config, $config);
 
-        if (empty($this->config['view_path'])) {
-            $this->config['view_path'] = $app->getAppPath() . 'view' . DIRECTORY_SEPARATOR;
+        if (empty($this->config['view_base'])) {
+            $this->config['view_base'] = $app->getRootPath() . 'view' . DIRECTORY_SEPARATOR;
         }
 
         if (empty($this->config['cache_path'])) {
@@ -68,10 +65,10 @@ class Driver implements TemplateHandlerInterface
 
     public function boot(): void
     {
-        $cache_path = $this->config['cache_path'] . $this->config['cache_prefix'];
+        $cache_path = $this->config['cache_path'];
 
         if (!$this->config['tpl_cache']) {
-            (new Filesystem)->cleanDirectory($cache_path);
+            (new Filesystem())->cleanDirectory($cache_path);
         }
 
         $this->blade = new BladeInstance($this->config['view_base'], $cache_path);
@@ -97,7 +94,6 @@ class Driver implements TemplateHandlerInterface
      * @param string $template 模板文件
      * @param array  $data     模板变量
      * @return void
-     * @throws Exception
      */
     public function fetch(string $template, array $data = []): void
     {
@@ -107,35 +103,13 @@ class Driver implements TemplateHandlerInterface
         }
         // 模板不存在 抛出异常
         if (!is_file($template)) {
-            $exceptionClass = '\think\template\exception\TemplateNotFoundException';
-            if (class_exists($exceptionClass)) {
-                throw new $exceptionClass('template not exists:' . $template, $template);
-            } else {
-                throw new Exception('template not exists:' . $template, 0);
-            }
+            throw new TemplateNotFoundException('template not exists:' . $template, $template);
         }
         // 记录视图信息
         if ($this->app->isDebug()) {
-            $debugInfo = array_map(function ($value) {
-                if (is_object($value)) {
-                    if (method_exists($value, '__toString')) {
-                        $value = (string) $value;
-                        if (mb_strlen($value) > 36) {
-                            $value = mb_substr((string) $value, 0, 36) . '...';
-                        }
-                    } else {
-                        $value = get_class($value) . '#' . hash('crc32', spl_object_hash($value));
-                    }
-                } else {
-                    $value = print_r($value, true);
-                    if (mb_strlen($value) > 36) {
-                        $value = mb_substr($value, 0, 36) . '...';
-                    }
-                }
-                return str_replace(PHP_EOL, 'LF', $value);
-            }, $data);
 
-            $this->app->log->info("[ VIEW ] {$template} [ {data} ]", ['data' => var_export($debugInfo, true)]);
+            $debugInfo = var_export($this->dumpArrayData($data), true);
+            $this->app->log->info("[ VIEW ] {$template} [ {data} ]", ['data' => $debugInfo]);
         }
 
         echo $this->blade->file($template, $data)->render();
@@ -159,7 +133,10 @@ class Driver implements TemplateHandlerInterface
      */
     private function parseTemplate($template)
     {
-        // 分析模板文件规则
+        if (empty($this->config['view_base'])) {
+            $this->config['view_base'] = $this->app->getRootPath() . 'view' . DIRECTORY_SEPARATOR;
+        }
+
         $request = $this->app->request;
 
         // 获取视图根目录
@@ -168,28 +145,30 @@ class Driver implements TemplateHandlerInterface
             list($app, $template) = explode('@', $template);
         }
 
-        if ($this->config['view_base']) {
-            // 基础视图目录
-            $app = isset($app) ? $app : $request->app();
-            $path = $this->config['view_base'] . ($app ? $app . DIRECTORY_SEPARATOR : '');
+        if ($this->config['view_path'] && !isset($app)) {
+            $path = $this->config['view_path'];
         } else {
-            $path = isset($app)
-                ? $this->app->getBasePath() . $app . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR
-                : $this->config['view_path'];
+            $app = isset($app) ? $app : $request->app();
+            // 基础视图目录
+            $path = $this->config['view_base'] . ($app ? $app . DIRECTORY_SEPARATOR : '');
         }
 
         $depr = $this->config['view_depr'];
 
         if (0 !== strpos($template, '/')) {
-            $template = str_replace(['/', ':'], $depr, $template);
+            $template   = str_replace(['/', ':'], $depr, $template);
             $controller = App::parseName($request->controller());
+
             if ($controller) {
                 if ('' == $template) {
-                    // 如果模板文件名为空 按照默认规则定位
-                    $template = (1 == $this->config['auto_rule']
-                        ? App::parseName($request->action(true))
-                        : $request->action()
-                    );
+                    // 如果模板文件名为空 按照默认模板渲染规则定位
+                    if (2 == $this->config['auto_rule']) {
+                        $template = $request->action(true);
+                    } elseif (3 == $this->config['auto_rule']) {
+                        $template = $request->action();
+                    } else {
+                        $template = App::parseName($request->action());
+                    }
                     $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
                 } elseif (false === strpos($template, $depr)) {
                     $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
@@ -230,5 +209,34 @@ class Driver implements TemplateHandlerInterface
     public function __debugInfo()
     {
         return ['config' => $this->config];
+    }
+
+    /**
+     * 获取数组调试信息
+     * @param array $data
+     * @return array
+     */
+    private function dumpArrayData(array $data)
+    {
+        $debugInfo = array_map(function ($value) {
+            if (is_object($value)) {
+                if (method_exists($value, '__toString')) {
+                    $value = (string) $value;
+                    if (mb_strlen($value) > 36) {
+                        $value = mb_substr((string) $value, 0, 36) . '...';
+                    }
+                } else {
+                    $value = get_class($value) . '#' . hash('crc32', spl_object_hash($value));
+                }
+            } else {
+                $value = print_r($value, true);
+                if (mb_strlen($value) > 36) {
+                    $value = mb_substr($value, 0, 36) . '...';
+                }
+            }
+            return str_replace(PHP_EOL, 'LF', $value);
+        }, $data);
+
+        return $debugInfo;
     }
 }
