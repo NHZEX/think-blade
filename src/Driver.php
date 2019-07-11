@@ -102,7 +102,8 @@ class Driver implements TemplateHandlerInterface
         if ($this->app->isDebug()) {
 
             $debugInfo = var_export($this->dumpArrayData($data), true);
-            $this->app->log->info("[ VIEW ] {$template} [ {data} ]", ['data' => $debugInfo]);
+            $this->app->log->record("template: {$template}", 'view');
+            $this->app->log->record("assign: [{$debugInfo}]", 'view');
         }
 
         echo $this->blade->file($template, $data)->render();
