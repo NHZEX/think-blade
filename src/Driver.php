@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace HZEX\Blade;
 
 use duncan3dc\Laravel\BladeInstance;
-use Illuminate\Filesystem\Filesystem;
 use think\App;
 use think\contract\TemplateHandlerInterface;
 use think\template\exception\TemplateNotFoundException;
@@ -40,9 +39,7 @@ class Driver implements TemplateHandlerInterface
         'view_suffix' => 'blade.php',
         // 模板文件名分隔符
         'view_depr' => DIRECTORY_SEPARATOR,
-        // 是否开启模板编译缓存,设为false则每次都会重新编译
-        'tpl_cache' => true,
-        // 缓存池路径
+        // 缓存路径
         'cache_path' => '',
     ];
 
@@ -66,10 +63,6 @@ class Driver implements TemplateHandlerInterface
     public function boot(): void
     {
         $cache_path = $this->config['cache_path'];
-
-        if (!$this->config['tpl_cache']) {
-            (new Filesystem())->cleanDirectory($cache_path);
-        }
 
         $this->blade = new BladeInstance($this->config['view_base'], $cache_path);
     }
