@@ -12,6 +12,7 @@ namespace HZEX\Blade;
 use duncan3dc\Laravel\BladeInstance;
 use think\App;
 use think\contract\TemplateHandlerInterface;
+use think\helper\Str;
 use think\template\exception\TemplateNotFoundException;
 
 /**
@@ -151,7 +152,13 @@ class Driver implements TemplateHandlerInterface
 
         if (0 !== strpos($template, '/')) {
             $template   = str_replace(['/', ':'], $depr, $template);
-            $controller = App::parseName($request->controller());
+            $controller = $request->controller();
+            if (strpos($controller, '.')) {
+                $pos        = strrpos($controller, '.');
+                $controller = substr($controller, 0, $pos) . '.' . Str::snake(substr($controller, $pos + 1));
+            } else {
+                $controller = Str::snake($controller);
+            }
 
             if ($controller) {
                 if ('' == $template) {

@@ -13,6 +13,7 @@
     "require": {
         "php": ">=7.1",
         "duncan3dc/blade": "^4.5",
+        "topthink/think-helper": "^3.1.1",
         "topthink/framework": "6.0.x-dev",
         "topthink/think-view": "master-dev"
     },
