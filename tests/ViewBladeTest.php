@@ -40,6 +40,12 @@ class ViewBladeTest extends TestCase
     /** @var Driver */
     private $engine;
 
+    public static function setUpBeforeClass(): void
+    {
+        // 清理缓存
+        array_map('unlink', glob(self::CONFIG['cache_path'] . '*'));
+    }
+
     public function setUp(): void
     {
         $this->blade = new \think\View(self::CONFIG);
@@ -205,6 +211,7 @@ class ViewBladeTest extends TestCase
      */
     public function testCustomConditions(bool $global, string $expected)
     {
+        $this->markTestIncomplete('功能未实现');
         $this->engine->if("global", function () use ($global) {
             return $global;
         });
@@ -220,6 +227,7 @@ class ViewBladeTest extends TestCase
      */
     public function testCustomConditionArguments(bool $global, string $expected)
     {
+        $this->markTestIncomplete('功能未实现');
         $this->engine->if("global", function (bool $global) {
             return $global;
         });

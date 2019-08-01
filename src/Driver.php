@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace HZEX\Blade;
 
-use duncan3dc\Laravel\BladeInstance;
 use think\App;
 use think\contract\TemplateHandlerInterface;
 use think\helper\Str;
