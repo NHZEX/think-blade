@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c848f0d3f3ed9c4ac40ef36b18c1b48b",
+    "content-hash": "4adc5c47756a04fa8776ce7d44ff01b2",
     "packages": [
         {
             "name": "league/flysystem",
@@ -709,99 +709,6 @@
                 "orm"
             ],
             "time": "2019-08-02T03:54:20+00:00"
-        },
-        {
-            "name": "topthink/think-template",
-            "version": "v2.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/top-think/think-template.git",
-                "reference": "3fb2741d6921475d980d987130cf8780c99c994c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-template/zipball/3fb2741d6921475d980d987130cf8780c99c994c",
-                "reference": "3fb2741d6921475d980d987130cf8780c99c994c",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=7.1.0",
-                "psr/simple-cache": "^1.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "think\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "liu21st",
-                    "email": "liu21st@gmail.com"
-                }
-            ],
-            "description": "the php template engine",
-            "time": "2019-07-30T06:29:57+00:00"
-        },
-        {
-            "name": "topthink/think-view",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/top-think/think-view.git",
-                "reference": "3cc8afc7069d3610b5ed09faebdddcfb5c929e80"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/top-think/think-view/zipball/3cc8afc7069d3610b5ed09faebdddcfb5c929e80",
-                "reference": "3cc8afc7069d3610b5ed09faebdddcfb5c929e80",
-                "shasum": "",
-                "mirrors": [
-                    {
-                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
-                        "preferred": true
-                    }
-                ]
-            },
-            "require": {
-                "php": ">=7.1.0",
-                "topthink/think-template": "^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "think": {
-                    "config": {
-                        "template": "src/config/template.php"
-                    }
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "think\\view\\driver\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "liu21st",
-                    "email": "liu21st@gmail.com"
-                }
-            ],
-            "description": "thinkphp template driver",
-            "time": "2019-07-30T04:10:50+00:00"
         }
     ],
     "packages-dev": [
@@ -2869,8 +2776,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "topthink/framework": 20,
-        "topthink/think-view": 20
+        "topthink/framework": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

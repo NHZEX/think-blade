@@ -18,8 +18,7 @@
         "symfony/debug": "^4.2",
         "symfony/finder": "^4.2",
         "topthink/framework": "6.0.x-dev",
-        "topthink/think-helper": "^3.1.1",
-        "topthink/think-view": "master-dev"
+        "topthink/think-helper": "^3.1.1"
     },
     "require-dev": {
         "doctrine/inflector": "^1.1",
