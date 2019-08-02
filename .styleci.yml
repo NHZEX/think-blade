@@ -67,6 +67,9 @@ finder:
     - node_modules
     - runtime
     - vendor
-  name: "*.php"
+  name:
+    - "*.php"
   not-name:
     - "*.blade.php"
+  not-path:
+    - "lib"
