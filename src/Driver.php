@@ -100,7 +100,6 @@ class Driver implements TemplateHandlerInterface
         }
         // 记录视图信息
         if ($this->app->isDebug()) {
-
             $debugInfo = var_export($this->dumpArrayData($data), true);
             $this->app->log->record("template: {$template}", 'view');
             $this->app->log->record("assign: [{$debugInfo}]", 'view');
@@ -234,6 +233,7 @@ class Driver implements TemplateHandlerInterface
                     $value = mb_substr($value, 0, 36) . '...';
                 }
             }
+
             return str_replace(PHP_EOL, 'LF', $value);
         }, $data);
 
