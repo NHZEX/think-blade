@@ -22,10 +22,15 @@
         "topthink/think-view": "master-dev"
     },
     "require-dev": {
-        "doctrine/inflector": "1.1",
+        "doctrine/inflector": "^1.1",
         "phpunit/phpunit": "^7",
-        "ramsey/uuid": "3.7",
+        "ramsey/uuid": "^3.7",
         "symfony/var-dumper": "^4.3"
+    },
+    "suggest": {
+        "ramsey/uuid": "Required to use Str::uuid() (^3.7).",
+        "symfony/var-dumper": "Required to use the dd function (^4.2).",
+        "doctrine/inflector": "Required to use the pluralizer (^1.1)."
     },
     "autoload": {
         "files": [
