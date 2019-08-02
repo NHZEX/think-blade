@@ -239,7 +239,7 @@ class BladeInstance implements BladeInterface
      */
     public function composer($key, $value): array
     {
-        return $this->getViewFactory()->composer($key, $value);
+        return [];
     }
 
 
@@ -253,7 +253,7 @@ class BladeInstance implements BladeInterface
      */
     public function creator($key, $value): array
     {
-        return $this->getViewFactory()->creator($key, $value);
+        return [];
     }
 
 

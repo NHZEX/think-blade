@@ -9,7 +9,6 @@
 namespace HZEX\BladeTest;
 
 use Exception;
-use Generator;
 use HZEX\Blade\Driver;
 use Illuminate\View\View;
 use PHPUnit\Framework\TestCase;
@@ -120,6 +119,7 @@ class ViewBladeTest extends TestCase
      */
     public function testComposer()
     {
+        $this->markTestSkipped('事件模块已被阉割，该功能不可用');
         $this->engine->composer("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
@@ -132,6 +132,7 @@ class ViewBladeTest extends TestCase
      */
     public function testCreator()
     {
+        $this->markTestSkipped('事件模块已被阉割，该功能不可用');
         $this->engine->creator("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
@@ -192,49 +193,5 @@ class ViewBladeTest extends TestCase
         });
         $result = $this->blade->fetch("view13");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view13.html"), $result);
-    }
-
-    /**
-     * @return Generator
-     */
-    public function customConditionProvider()
-    {
-        yield [false, "off"];
-        yield [true, "on"];
-    }
-
-    /**
-     * @dataProvider customConditionProvider
-     * @param bool $global
-     * @param string $expected
-     * @throws Exception
-     */
-    public function testCustomConditions(bool $global, string $expected)
-    {
-        $this->markTestIncomplete('功能未实现');
-        $this->engine->if("global", function () use ($global) {
-            return $global;
-        });
-        $result = $this->blade->fetch("view14");
-        $this->assertSame("{$expected}\n", $result);
-    }
-
-    /**
-     * @dataProvider customConditionProvider
-     * @param bool   $global
-     * @param string $expected
-     * @throws Exception
-     */
-    public function testCustomConditionArguments(bool $global, string $expected)
-    {
-        $this->markTestIncomplete('功能未实现');
-        $this->engine->if("global", function (bool $global) {
-            return $global;
-        });
-        $this->blade->assign([
-            "global" => $global,
-        ]);
-        $result = $this->blade->fetch("view15");
-        $this->assertSame("{$expected}\n", $result);
     }
 }
