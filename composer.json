@@ -12,20 +12,32 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.1",
-        "duncan3dc/blade": "^4.5",
-        "topthink/think-helper": "^3.1.1",
+        "ext-json": "*",
+        "ext-fileinfo": "*",
+        "ext-mbstring": "*",
+        "symfony/debug": "4.2",
+        "symfony/finder": "^4.2",
         "topthink/framework": "6.0.x-dev",
+        "topthink/think-helper": "^3.1.1",
         "topthink/think-view": "master-dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7"
+        "doctrine/inflector": "1.1",
+        "phpunit/phpunit": "^7",
+        "ramsey/uuid": "3.7",
+        "symfony/var-dumper": "^4.3"
     },
     "autoload": {
         "files": [
             "src/helper.php"
         ],
         "psr-4": {
-            "HZEX\\Blade\\": "src/"
+            "HZEX\\Blade\\": "src/",
+            "Illuminate\\Container\\": "lib/container",
+            "Illuminate\\Contracts\\": "lib/contracts",
+            "Illuminate\\Support\\": "lib/support",
+            "Illuminate\\Filesystem\\": "lib/filesystem",
+            "Illuminate\\View\\": "lib/view"
         }
     },
     "autoload-dev": {

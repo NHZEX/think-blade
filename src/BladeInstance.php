@@ -2,10 +2,9 @@
 
 namespace HZEX\Blade;
 
-use HZEX\Blade\Overlay\BladeCompiler;
 use Illuminate\Contracts\View\View as ViewInterface;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\View\Engines\CompilerEngine;
 use Illuminate\View\Engines\EngineResolver;
 use Illuminate\View\Engines\FileEngine;
@@ -109,7 +108,7 @@ class BladeInstance implements BladeInterface
             return $this->factory;
         }
 
-        $this->factory = new Factory($this->getResolver(), $this->getViewFinder(), new Dispatcher());
+        $this->factory = new Factory($this->getResolver(), $this->getViewFinder());
 
         return $this->factory;
     }
