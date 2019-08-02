@@ -17,8 +17,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function addExtension(string $extension): BladeInterface;
-
+    public function addExtension(string $extension): self;
 
     /**
      * Register a custom Blade compiler.
@@ -27,8 +26,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function extend(callable $compiler): BladeInterface;
-
+    public function extend(callable $compiler): self;
 
     /**
      * Register a handler for custom directives.
@@ -38,8 +36,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function directive(string $name, callable $handler): BladeInterface;
-
+    public function directive(string $name, callable $handler): self;
 
     /**
      * Add a path to look for views in.
@@ -48,8 +45,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function addPath(string $path): BladeInterface;
-
+    public function addPath(string $path): self;
 
     /**
      * Check if a view exists.
@@ -60,7 +56,6 @@ interface BladeInterface extends FactoryInterface
      */
     public function exists($view): bool;
 
-
     /**
      * Share data across all views.
      *
@@ -69,8 +64,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function share($key, $value = null): BladeInterface;
-
+    public function share($key, $value = null): self;
 
     /**
      * Register a composer.
@@ -82,7 +76,6 @@ interface BladeInterface extends FactoryInterface
      */
     public function composer($key, $value): array;
 
-
     /**
      * Register a creator.
      *
@@ -93,7 +86,6 @@ interface BladeInterface extends FactoryInterface
      */
     public function creator($key, $value): array;
 
-
     /**
      * Add a new namespace to the loader.
      *
@@ -102,8 +94,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function addNamespace($namespace, $hints): BladeInterface;
-
+    public function addNamespace($namespace, $hints): self;
 
     /**
      * Replace the namespace hints for the given namespace.
@@ -113,8 +104,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function replaceNamespace($namespace, $hints): BladeInterface;
-
+    public function replaceNamespace($namespace, $hints): self;
 
     /**
      * Get the evaluated view contents for the given path.
@@ -127,7 +117,6 @@ interface BladeInterface extends FactoryInterface
      */
     public function file($path, $data = [], $mergeData = []): ViewInterface;
 
-
     /**
      * Generate a view.
      *
@@ -138,7 +127,6 @@ interface BladeInterface extends FactoryInterface
      * @return ViewInterface The generated view
      */
     public function make($view, $params = [], $mergeData = []): ViewInterface;
-
 
     /**
      * Get the content by generating a view.

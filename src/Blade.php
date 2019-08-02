@@ -3,10 +3,10 @@
 namespace HZEX\Blade;
 
 use Illuminate\Contracts\View\View as ViewInterface;
-use RuntimeException;
 use function is_dir;
 use function is_string;
 use function realpath;
+use RuntimeException;
 
 /**
  * Standalone class for generating text using blade templates.
@@ -14,10 +14,9 @@ use function realpath;
 class Blade
 {
     /**
-     * @var BladeInstance|null $instance The internal cache of the BladeInstance to only instantiate it once
+     * @var BladeInstance|null The internal cache of the BladeInstance to only instantiate it once
      */
     private static $instance;
-
 
     /**
      * Set the BladeInstance object to use.
@@ -31,7 +30,6 @@ class Blade
         static::$instance = $instance;
     }
 
-
     /**
      * Get the BladeInstance object.
      *
@@ -40,7 +38,7 @@ class Blade
     public static function getInstance(): BladeInterface
     {
         if (!static::$instance) {
-            # Calculate the parent of the vendor directory
+            // Calculate the parent of the vendor directory
             $path = realpath(__DIR__ . "/../../../..");
             if (!is_string($path) || !is_dir($path)) {
                 throw new RuntimeException("Unable to locate the root directory: {$path}");
@@ -51,7 +49,6 @@ class Blade
 
         return static::$instance;
     }
-
 
     /**
      * Add another extension to use to search for template files.
@@ -65,7 +62,6 @@ class Blade
         return static::getInstance()->addExtension($extension);
     }
 
-
     /**
      * Register a custom Blade compiler.
      *
@@ -77,7 +73,6 @@ class Blade
     {
         return static::getInstance()->extend($compiler);
     }
-
 
     /**
      * Register a handler for custom directives.
@@ -92,7 +87,6 @@ class Blade
         return static::getInstance()->directive($name, $handler);
     }
 
-
     /**
      * Add a path to look for views in.
      *
@@ -105,7 +99,6 @@ class Blade
         return static::getInstance()->addPath($path);
     }
 
-
     /**
      * Check if a view exists.
      *
@@ -117,7 +110,6 @@ class Blade
     {
         return static::getInstance()->exists($view);
     }
-
 
     /**
      * Share data across all views.
@@ -132,7 +124,6 @@ class Blade
         return static::getInstance()->share($key, $value);
     }
 
-
     /**
      * Register a composer.
      *
@@ -145,7 +136,6 @@ class Blade
     {
         return static::getInstance()->composer($key, $value);
     }
-
 
     /**
      * Register a creator.
@@ -160,7 +150,6 @@ class Blade
         return static::getInstance()->creator($key, $value);
     }
 
-
     /**
      * Add a new namespace to the loader.
      *
@@ -174,7 +163,6 @@ class Blade
         return static::getInstance()->addNamespace($namespace, $hints);
     }
 
-
     /**
      * Replace the namespace hints for the given namespace.
      *
@@ -187,7 +175,6 @@ class Blade
     {
         return static::getInstance()->replaceNamespace($namespace, $hints);
     }
-
 
     /**
      * Get the evaluated view contents for the given path.
@@ -203,7 +190,6 @@ class Blade
         return static::getInstance()->file($path, $data, $mergeData);
     }
 
-
     /**
      * Generate a view.
      *
@@ -217,7 +203,6 @@ class Blade
     {
         return static::getInstance()->make($view, $params, $mergeData);
     }
-
 
     /**
      * Get the content by generating a view.

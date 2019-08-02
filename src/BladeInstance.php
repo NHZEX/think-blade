@@ -20,22 +20,22 @@ use function mkdir;
 class BladeInstance implements BladeInterface
 {
     /**
-     * @var string $path The default path for views.
+     * @var string The default path for views.
      */
     private $path;
 
     /**
-     * @var string $cache The default path for cached php.
+     * @var string The default path for cached php.
      */
     private $cache;
 
     /**
-     * @var Factory|null $factory The internal cache of the Factory to only instantiate it once.
+     * @var Factory|null The internal cache of the Factory to only instantiate it once.
      */
     private $factory;
 
     /**
-     * @var FileViewFinder|null $finder The internal cache of the FileViewFinder to only instantiate it once.
+     * @var FileViewFinder|null The internal cache of the FileViewFinder to only instantiate it once.
      */
     private $finder;
 
@@ -43,7 +43,6 @@ class BladeInstance implements BladeInterface
      * @var BladeCompiler|null The internal cache of the BladeCompiler to only instantiate it once.
      */
     private $compiler;
-
 
     /**
      * Create a new instance of the blade view factory.
@@ -57,7 +56,6 @@ class BladeInstance implements BladeInterface
         $this->cache = $cache;
     }
 
-
     /**
      * @return EngineResolver
      */
@@ -67,6 +65,7 @@ class BladeInstance implements BladeInterface
 
         $resolver->register("blade", function () {
             $blade = $this->getCompiler();
+
             return new CompilerEngine($blade);
         });
 
@@ -81,7 +80,6 @@ class BladeInstance implements BladeInterface
         return $resolver;
     }
 
-
     /**
      * Get the laravel view finder.
      *
@@ -95,7 +93,6 @@ class BladeInstance implements BladeInterface
 
         return $this->finder;
     }
-
 
     /**
      * Get the laravel view factory.
@@ -112,7 +109,6 @@ class BladeInstance implements BladeInterface
 
         return $this->factory;
     }
-
 
     /**
      * Get the internal compiler in use.
@@ -136,9 +132,8 @@ class BladeInstance implements BladeInterface
         return $this->compiler;
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function addExtension(string $extension): BladeInterface
     {
@@ -148,7 +143,6 @@ class BladeInstance implements BladeInterface
 
         return $this;
     }
-
 
     /**
      * Register a custom Blade compiler.
@@ -165,7 +159,6 @@ class BladeInstance implements BladeInterface
 
         return $this;
     }
-
 
     /**
      * Register a handler for custom directives.
@@ -184,7 +177,6 @@ class BladeInstance implements BladeInterface
         return $this;
     }
 
-
     /**
      * Add a path to look for views in.
      *
@@ -199,7 +191,6 @@ class BladeInstance implements BladeInterface
         return $this;
     }
 
-
     /**
      * Check if a view exists.
      *
@@ -211,7 +202,6 @@ class BladeInstance implements BladeInterface
     {
         return $this->getViewFactory()->exists($view);
     }
-
 
     /**
      * Share data across all views.
@@ -228,7 +218,6 @@ class BladeInstance implements BladeInterface
         return $this;
     }
 
-
     /**
      * Register a composer.
      *
@@ -242,7 +231,6 @@ class BladeInstance implements BladeInterface
         return [];
     }
 
-
     /**
      * Register a creator.
      *
@@ -255,8 +243,6 @@ class BladeInstance implements BladeInterface
     {
         return [];
     }
-
-
 
     /**
      * Add a new namespace to the loader.
@@ -273,7 +259,6 @@ class BladeInstance implements BladeInterface
         return $this;
     }
 
-
     /**
      * Replace the namespace hints for the given namespace.
      *
@@ -289,7 +274,6 @@ class BladeInstance implements BladeInterface
         return $this;
     }
 
-
     /**
      * Get the evaluated view contents for the given path.
      *
@@ -304,7 +288,6 @@ class BladeInstance implements BladeInterface
         return $this->getViewFactory()->file($path, $data, $mergeData);
     }
 
-
     /**
      * Generate a view.
      *
@@ -318,7 +301,6 @@ class BladeInstance implements BladeInterface
     {
         return $this->getViewFactory()->make($view, $params, $mergeData);
     }
-
 
     /**
      * Get the content by generating a view.
