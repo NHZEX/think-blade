@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4adc5c47756a04fa8776ce7d44ff01b2",
+    "content-hash": "ae452286e33ba62b46c49cd2ccaa1220",
     "packages": [
         {
             "name": "league/flysystem",
@@ -2444,6 +2444,43 @@
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "time": "2019-06-13T22:48:21+00:00"
+        },
+        {
+            "name": "topthink/think-template",
+            "version": "v2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-template.git",
+                "reference": "3fb2741d6921475d980d987130cf8780c99c994c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github-api-proxy.cnpkg.org/repos/top-think/think-template/zipball/3fb2741d6921475d980d987130cf8780c99c994c",
+                "reference": "3fb2741d6921475d980d987130cf8780c99c994c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "psr/simple-cache": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "think\\": "src"
+                }
+            },
+            "notification-url": "https://repo.packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "the php template engine",
+            "time": "2019-07-30T06:29:57+00:00"
         },
         {
             "name": "webmozart/assert",

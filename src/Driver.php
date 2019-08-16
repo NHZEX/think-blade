@@ -166,7 +166,7 @@ class Driver implements TemplateHandlerInterface
                     } elseif (3 == $this->config['auto_rule']) {
                         $template = $request->action();
                     } else {
-                        $template = App::parseName($request->action());
+                        $template = Str::snake($request->action());
                     }
                     $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
                 } elseif (false === strpos($template, $depr)) {
