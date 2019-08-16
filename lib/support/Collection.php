@@ -283,7 +283,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     {
         if (func_num_args() === 2) {
             return $this->contains(function ($item) use ($key, $value) {
-                return Helpers::data_get($item, $key) === $value;
+                return data_get($item, $key) === $value;
             });
         }
 
@@ -668,7 +668,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
         }
 
         return function ($item) use ($key, $operator, $value) {
-            $retrieved = Helpers::data_get($item, $key);
+            $retrieved = data_get($item, $key);
 
             $strings = array_filter([$retrieved, $value], function ($value) {
                 return is_string($value) || (is_object($value) && method_exists($value, '__toString'));
@@ -719,7 +719,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
         $values = $this->getArrayableItems($values);
 
         return $this->filter(function ($item) use ($key, $values, $strict) {
-            return in_array(Helpers::data_get($item, $key), $values, $strict);
+            return in_array(data_get($item, $key), $values, $strict);
         });
     }
 
@@ -757,7 +757,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     public function whereNotBetween($key, $values)
     {
         return $this->filter(function ($item) use ($key, $values) {
-            return Helpers::data_get($item, $key) < reset($values) || Helpers::data_get($item, $key) > end($values);
+            return data_get($item, $key) < reset($values) || data_get($item, $key) > end($values);
         });
     }
 
@@ -774,7 +774,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
         $values = $this->getArrayableItems($values);
 
         return $this->reject(function ($item) use ($key, $values, $strict) {
-            return in_array(Helpers::data_get($item, $key), $values, $strict);
+            return in_array(data_get($item, $key), $values, $strict);
         });
     }
 
@@ -877,7 +877,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
             return $this->items[$key];
         }
 
-        return Helpers::value($default);
+        return value($default);
     }
 
     /**
@@ -1897,7 +1897,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
         }
 
         return function ($item) use ($value) {
-            return Helpers::data_get($item, $value);
+            return data_get($item, $value);
         };
     }
 

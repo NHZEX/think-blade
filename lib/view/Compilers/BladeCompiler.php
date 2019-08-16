@@ -3,9 +3,9 @@
 namespace Illuminate\View\Compilers;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Helpers;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use function Illuminate\Support\collect;
 
 class BladeCompiler extends Compiler implements CompilerInterface
 {
@@ -91,7 +91,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      *
      * @var string
      */
-    protected $echoFormat = 'Illuminate\Support\Helpers::e(%s)';
+    protected $echoFormat = 'Illuminate\Support\e(%s)';
 
     /**
      * Array of footer lines to be added to template.
@@ -151,7 +151,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
      */
     protected function getOpenAndClosingPhpTokens($contents)
     {
-        return Helpers::collect(token_get_all($contents))
+        return collect(token_get_all($contents))
             ->pluck($tokenNumber = 0)
             ->filter(function ($token) {
                 return in_array($token, [T_OPEN_TAG, T_OPEN_TAG_WITH_ECHO, T_CLOSE_TAG]);

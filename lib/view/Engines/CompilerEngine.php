@@ -4,8 +4,8 @@ namespace Illuminate\View\Engines;
 
 use ErrorException;
 use Exception;
-use Illuminate\Support\Helpers;
 use Illuminate\View\Compilers\CompilerInterface;
+use function Illuminate\Support\last;
 
 class CompilerEngine extends PhpEngine
 {
@@ -88,7 +88,7 @@ class CompilerEngine extends PhpEngine
      */
     protected function getMessage(Exception $e)
     {
-        return $e->getMessage().' (View: '.realpath(Helpers::last($this->lastCompiled)).')';
+        return $e->getMessage().' (View: '.realpath(last($this->lastCompiled)).')';
     }
 
     /**

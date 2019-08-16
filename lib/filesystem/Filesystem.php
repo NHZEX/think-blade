@@ -5,9 +5,9 @@ namespace Illuminate\Filesystem;
 use ErrorException;
 use FilesystemIterator;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Illuminate\Support\Helpers;
 use Illuminate\Support\Traits\Macroable;
 use Symfony\Component\Finder\Finder;
+use function Illuminate\Support\windows_os;
 
 class Filesystem
 {
@@ -249,7 +249,7 @@ class Filesystem
      */
     public function link($target, $link)
     {
-        if (! Helpers::windows_os()) {
+        if (! windows_os()) {
             return symlink($target, $link);
         }
 

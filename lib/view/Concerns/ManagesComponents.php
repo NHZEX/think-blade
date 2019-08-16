@@ -3,8 +3,8 @@
 namespace Illuminate\View\Concerns;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Helpers;
 use Illuminate\Support\HtmlString;
+use function Illuminate\Support\last;
 
 trait ManagesComponents
 {
@@ -124,7 +124,7 @@ trait ManagesComponents
      */
     public function endSlot()
     {
-        Helpers::last($this->componentStack);
+        last($this->componentStack);
 
         $currentSlot = array_pop(
             $this->slotStack[$this->currentComponent()]

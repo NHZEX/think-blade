@@ -2,8 +2,8 @@
 
 namespace Illuminate\View\Concerns;
 
-use Illuminate\Support\Helpers;
 use InvalidArgumentException;
+use function Illuminate\Support\tap;
 
 trait ManagesStacks
 {
@@ -59,7 +59,7 @@ trait ManagesStacks
             throw new InvalidArgumentException('Cannot end a push stack without first starting one.');
         }
 
-        return Helpers::tap(array_pop($this->pushStack), function ($last) {
+        return tap(array_pop($this->pushStack), function ($last) {
             $this->extendPush($last, ob_get_clean());
         });
     }
@@ -115,7 +115,7 @@ trait ManagesStacks
             throw new InvalidArgumentException('Cannot end a prepend operation without first starting one.');
         }
 
-        return Helpers::tap(array_pop($this->pushStack), function ($last) {
+        return tap(array_pop($this->pushStack), function ($last) {
             $this->extendPrepend($last, ob_get_clean());
         });
     }

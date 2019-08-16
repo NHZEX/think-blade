@@ -6,11 +6,11 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\View\Factory as FactoryContract;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Helpers;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\View\Engines\EngineResolver;
 use InvalidArgumentException;
+use function Illuminate\Support\tap;
 
 class Factory implements FactoryContract
 {
@@ -102,7 +102,7 @@ class Factory implements FactoryContract
     {
         $data = array_merge($mergeData, $this->parseData($data));
 
-        return Helpers::tap($this->viewInstance($path, $path, $data), function ($view) {
+        return tap($this->viewInstance($path, $path, $data), function ($view) {
             $this->callCreator($view);
         });
     }
@@ -126,7 +126,7 @@ class Factory implements FactoryContract
         // the caller for rendering or performing other view manipulations on this.
         $data = array_merge($mergeData, $this->parseData($data));
 
-        return Helpers::tap($this->viewInstance($view, $path, $data), function ($view) {
+        return tap($this->viewInstance($view, $path, $data), function ($view) {
             $this->callCreator($view);
         });
     }
