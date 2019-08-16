@@ -35,7 +35,7 @@
     "autoload": {
         "files": [
             "src/helper.php",
-            "lib/Support/helpers.php"
+            "lib/support/helpers.php"
         ],
         "psr-4": {
             "HZEX\\Blade\\": "src/",
