@@ -12,7 +12,6 @@ namespace HZEX\Blade;
 use think\App;
 use think\contract\TemplateHandlerInterface;
 use think\helper\Str;
-use think\template\exception\TemplateNotFoundException;
 
 /**
  * Class Driver
@@ -96,7 +95,12 @@ class Driver implements TemplateHandlerInterface
         }
         // 模板不存在 抛出异常
         if (!is_file($template)) {
-            throw new TemplateNotFoundException('template not exists:' . $template, $template);
+            $exceptionClass = '\think\template\exception\TemplateNotFoundException';
+            if (class_exists($exceptionClass)) {
+                throw new $exceptionClass('template not exists:' . $template, $template);
+            } else {
+                throw new \Exception('template not exists:' . $template, 0);
+            }
         }
         // 记录视图信息
         if ($this->app->isDebug()) {
