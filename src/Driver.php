@@ -30,11 +30,11 @@ class Driver implements TemplateHandlerInterface
     protected $config = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写 3 保持操作方法
         'auto_rule' => 1,
-        // 模板基础路径
-        'view_base' => '',
-        // 模板路径
+        // 视图目录名
+        'view_dir_name' => 'view',
+        // 模板起始路径
         'view_path' => '',
-        // 模板后缀
+        // 模板文件后缀
         'view_suffix' => 'blade.php',
         // 模板文件名分隔符
         'view_depr' => DIRECTORY_SEPARATOR,
@@ -46,10 +46,6 @@ class Driver implements TemplateHandlerInterface
     {
         $this->app = $app;
         $this->config = array_merge($this->config, $config);
-
-        if (empty($this->config['view_base'])) {
-            $this->config['view_base'] = $app->getRootPath() . 'view' . DIRECTORY_SEPARATOR;
-        }
 
         if (empty($this->config['cache_path'])) {
             $this->config['cache_path'] = $app->getRuntimePath() . 'temp' . DIRECTORY_SEPARATOR;
@@ -63,7 +59,8 @@ class Driver implements TemplateHandlerInterface
     {
         $cache_path = $this->config['cache_path'];
 
-        $this->blade = new BladeInstance($this->config['view_base'], $cache_path);
+        $this->blade = new BladeInstance('', $cache_path);
+        $this->blade->getViewFactory();
     }
 
     /**
@@ -99,7 +96,7 @@ class Driver implements TemplateHandlerInterface
             if (class_exists($exceptionClass)) {
                 throw new $exceptionClass('template not exists:' . $template, $template);
             } else {
-                throw new \Exception('template not exists:' . $template, 0);
+                throw new \RuntimeException('template not exists:' . $template, 0);
             }
         }
         // 记录视图信息
@@ -145,9 +142,22 @@ class Driver implements TemplateHandlerInterface
         if ($this->config['view_path'] && !isset($app)) {
             $path = $this->config['view_path'];
         } else {
-            $app = isset($app) ? $app : $request->app();
-            // 基础视图目录
-            $path = $this->config['view_base'] . ($app ? $app . DIRECTORY_SEPARATOR : '');
+            $appName = isset($app) ? $app : $request->app();
+            $view    = $this->config['view_dir_name'];
+            if (is_dir($this->app->getAppPath() . $view)) {
+                $path = isset($app) ?
+                    $this->app->getBasePath() . (
+                        $appName ? $appName . DIRECTORY_SEPARATOR : ''
+                    ) . $view . DIRECTORY_SEPARATOR :
+                    $this->app->getAppPath() . $view . DIRECTORY_SEPARATOR;
+            } else {
+                $path = $this->app->getRootPath() . $view . DIRECTORY_SEPARATOR . (
+                        $appName ? $appName . DIRECTORY_SEPARATOR : ''
+                    );
+            }
+            // 重设视图起始路径
+            $this->blade->resetPath();
+            $this->blade->addPath($path);
         }
 
         $depr = $this->config['view_depr'];

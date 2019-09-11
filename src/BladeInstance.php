@@ -99,7 +99,7 @@ class BladeInstance implements BladeInterface
      *
      * @return Factory
      */
-    private function getViewFactory(): Factory
+    public function getViewFactory(): Factory
     {
         if ($this->factory) {
             return $this->factory;
@@ -173,6 +173,18 @@ class BladeInstance implements BladeInterface
         $this
             ->getCompiler()
             ->directive($name, $handler);
+
+        return $this;
+    }
+
+    /**
+     * 清空视图索引路径
+     *
+     * @return BladeInterface
+     */
+    public function resetPath(): BladeInterface
+    {
+        $this->getViewFinder()->setPaths([]);
 
         return $this;
     }

@@ -12,6 +12,7 @@ use Exception;
 use HZEX\Blade\Driver;
 use Illuminate\View\View;
 use PHPUnit\Framework\TestCase;
+use think\App;
 
 class ViewBladeTest extends TestCase
 {
@@ -20,8 +21,8 @@ class ViewBladeTest extends TestCase
         'auto_rule' => 1,
         // 模板引擎类型 支持 php think 支持扩展
         'type' => Driver::class,
-        // 视图基础目录，配置目录为所有模块的视图起始目录
-        'view_base' => __DIR__ . '/views/',
+        // 视图目录名
+        'view_dir_name' => 'views',
         // 当前模板的视图目录 留空为自动获取
         'view_path' => '',
         // 模板后缀
@@ -47,8 +48,11 @@ class ViewBladeTest extends TestCase
 
     public function setUp(): void
     {
-        $this->blade = new \think\View(self::CONFIG);
-        $this->engine = $this->blade->engine;
+        $app = new App(__DIR__);
+        $app->config->set(self::CONFIG, 'view');
+        $this->blade = $app->make(\think\View::class);
+        //$this->blade = new \think\View(self::CONFIG);
+        $this->engine = $this->blade->engine();
     }
 
     /**
@@ -164,6 +168,7 @@ class ViewBladeTest extends TestCase
      */
     public function testInheritanceAltPath()
     {
+        $this->markTestSkipped('暂无计划支持动态路径添加，该功能不可用');
         $this->engine->addPath(__DIR__ . "/views/alt");
         $result = $this->blade->fetch("view11");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view11.html"), $result);

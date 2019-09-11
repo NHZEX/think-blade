@@ -22,7 +22,7 @@
     },
     "require-dev": {
         "doctrine/inflector": "^1.1",
-        "phpunit/phpunit": "^7",
+        "phpunit/phpunit": "^8",
         "ramsey/uuid": "^3.7",
         "symfony/var-dumper": "^4.3",
         "topthink/think-template": "^2.0"
