@@ -11,7 +11,7 @@ before_install:
   - composer validate
 
 install:
-  - composer install --prefer-dist
+  - composer update --prefer-dist
 
 before_script:
 
