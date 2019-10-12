@@ -142,7 +142,7 @@ class Driver implements TemplateHandlerInterface
         if ($this->config['view_path'] && !isset($app)) {
             $path = $this->config['view_path'];
         } else {
-            $appName = isset($app) ? $app : $request->app();
+            $appName = isset($app) ? $app : $this->app->http->getName();
             $view    = $this->config['view_dir_name'];
             if (is_dir($this->app->getAppPath() . $view)) {
                 $path = isset($app) ?
