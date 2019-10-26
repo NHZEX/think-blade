@@ -21,3 +21,7 @@ composer require nhzex/think-blade
     'view_depr'    => DIRECTORY_SEPARATOR,
 ]
 ```
+
+## 代码引用
+- [duncan3dc/blade](https://github.com/duncan3dc/blade)
+- [illuminate/view](https://github.com/illuminate/view)
