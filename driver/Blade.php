@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace think\view\driver;
 
 use HZEX\Blade\BladeInstance;
+use Illuminate\View\Engines\CompilerEngine;
 use think\App;
 use think\contract\TemplateHandlerInterface;
 use think\helper\Str;
@@ -56,6 +57,10 @@ class Blade implements TemplateHandlerInterface
 
         $this->blade = new BladeInstance('', $cache_path);
         $this->blade->getViewFactory();
+        // Bind blade as think app
+        /** @var CompilerEngine $blade */
+        $blade = $this->blade->getViewFactory()->getEngineResolver()->resolve('blade');
+        $this->app->bind('blade.compiler', $blade->getCompiler());
     }
 
     /**
@@ -192,7 +197,7 @@ class Blade implements TemplateHandlerInterface
     /**
      * 配置模板引擎
      * @param array $config
-     * @return mixed
+     * @return void
      */
     public function config(array $config): void
     {

@@ -442,7 +442,7 @@ class BladeCompiler extends Compiler implements CompilerInterface
                 : "<?php elseif (\Illuminate\Support\Facades\Blade::check('{$name}')): ?>";
         });
 
-        $this->directive('end'.$name, function () {
+        $this->directive('end'. $name, function () {
             return '<?php endif; ?>';
         });
     }

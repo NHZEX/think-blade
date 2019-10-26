@@ -200,12 +200,47 @@ class ViewBladeTest extends TestCase
         $this->assertSame(file_get_contents(__DIR__ . "/views/view13.html"), $result);
     }
 
-    public function testCustomIf()
+    /**
+     * @return \Generator
+     */
+    public function customConditionProvider()
     {
-        $this->engine->if('sum10', function ($num) {
-            return 10 + $num;
+        yield [false, "off"];
+        yield [true, "on"];
+    }
+
+    /**
+     * @dataProvider customConditionProvider
+     * @param bool $global
+     * @param string $expected
+     * @throws Exception
+     */
+    public function testCustomConditions(bool $global, string $expected)
+    {
+        // $this->markTestIncomplete('功能未实现');
+        $this->engine->if("global", function () use ($global) {
+            return $global;
         });
-        $result = $this->blade->fetch("view13");
-        $this->assertSame(file_get_contents(__DIR__ . "/views/view13.html"), $result);
+        $result = $this->blade->fetch("view14");
+        $this->assertSame("{$expected}\n", $result);
+    }
+
+    /**
+     * @dataProvider customConditionProvider
+     * @param bool   $global
+     * @param string $expected
+     * @throws Exception
+     */
+    public function testCustomConditionArguments(bool $global, string $expected)
+    {
+        // $this->markTestIncomplete('功能未实现');
+        $this->engine->if("global", function (bool $global) {
+            return $global;
+        });
+        $this->blade->assign([
+            "global" => $global,
+        ]);
+        $result = $this->blade->fetch("view15");
+        $this->assertSame("{$expected}\n", $result);
     }
 }
