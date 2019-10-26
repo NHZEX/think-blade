@@ -199,4 +199,13 @@ class ViewBladeTest extends TestCase
         $result = $this->blade->fetch("view13");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view13.html"), $result);
     }
+
+    public function testCustomIf()
+    {
+        $this->engine->if('sum10', function ($num) {
+            return 10 + $num;
+        });
+        $result = $this->blade->fetch("view13");
+        $this->assertSame(file_get_contents(__DIR__ . "/views/view13.html"), $result);
+    }
 }

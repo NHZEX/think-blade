@@ -178,6 +178,22 @@ class BladeInstance implements BladeInterface
     }
 
     /**
+     * Register an "if" statement directive.
+     *
+     * @param  string  $name
+     * @param  callable  $handler
+     * @return $this
+     */
+    public function if(string $name, callable $handler): BladeInterface
+    {
+        $this
+            ->getCompiler()
+            ->if($name, $handler);
+
+        return $this;
+    }
+
+    /**
      * 清空视图索引路径
      *
      * @return BladeInterface
