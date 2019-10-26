@@ -9,10 +9,10 @@
 namespace HZEX\BladeTest;
 
 use Exception;
-use HZEX\Blade\Driver;
 use Illuminate\View\View;
 use PHPUnit\Framework\TestCase;
 use think\App;
+use think\view\driver\Blade;
 
 class ViewBladeTest extends TestCase
 {
@@ -20,7 +20,7 @@ class ViewBladeTest extends TestCase
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写
         'auto_rule' => 1,
         // 模板引擎类型 支持 php think 支持扩展
-        'type' => Driver::class,
+        'type' => Blade::class,
         // 视图目录名
         'view_dir_name' => 'views',
         // 当前模板的视图目录 留空为自动获取
@@ -37,7 +37,7 @@ class ViewBladeTest extends TestCase
 
     /** @var \think\View */
     private $blade;
-    /** @var Driver */
+    /** @var Blade */
     private $engine;
 
     public static function setUpBeforeClass(): void

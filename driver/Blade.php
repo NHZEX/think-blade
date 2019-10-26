@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Auoor
- * Date: 2019/2/4
- * Time: 15:58
- */
 declare(strict_types=1);
 
-namespace HZEX\Blade;
+namespace think\view\driver;
 
+use HZEX\Blade\BladeInstance;
 use think\App;
 use think\contract\TemplateHandlerInterface;
 use think\helper\Str;
@@ -18,7 +13,7 @@ use think\helper\Str;
  * @package nhzex\Blade\Blade
  * @mixin BladeInstance
  */
-class Driver implements TemplateHandlerInterface
+class Blade implements TemplateHandlerInterface
 {
     // 模板引擎实例
     /** @var BladeInstance */
