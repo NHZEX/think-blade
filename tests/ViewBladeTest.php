@@ -243,4 +243,13 @@ class ViewBladeTest extends TestCase
         $result = $this->blade->fetch("view15");
         $this->assertSame("{$expected}\n", $result);
     }
+
+    /**
+     * Ensure we support the basic PHP engine.
+     */
+    public function testRender1(): void
+    {
+        $result = $this->blade->fetch("view17", ["title" => "Test Title"]);
+        $this->assertSame(file_get_contents(__DIR__ . "/views/view17.html"), $result);
+    }
 }
