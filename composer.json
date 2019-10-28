@@ -38,8 +38,8 @@
             "lib/support/helpers.php"
         ],
         "psr-4": {
-            "think\\view\\driver\\": "driver/",
-            "HZEX\\Blade\\": "src/",
+            "think\\view\\driver\\": "driver",
+            "HZEX\\Blade\\": "src",
             "Illuminate\\Container\\": "lib/container",
             "Illuminate\\Contracts\\": "lib/contracts",
             "Illuminate\\Support\\": "lib/support",
