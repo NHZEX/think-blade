@@ -198,7 +198,7 @@ class BladeInstance implements BladeInterface
      *
      * @return BladeInterface
      */
-    public function resetPath(): BladeInterface
+    public function resetLocation(): BladeInterface
     {
         $this->getViewFinder()->setPaths([]);
 
@@ -206,15 +206,40 @@ class BladeInstance implements BladeInterface
     }
 
     /**
-     * Add a path to look for views in.
+     * 追加一个视图索引路径
      *
-     * @param string $path The path to look in
+     * @param string $location
+     * @return $this
+     */
+    public function addLocation(string $location): BladeInterface
+    {
+        $this->getViewFinder()->addLocation($location);
+
+        return $this;
+    }
+
+    /**
+     * 追加一个视图索引路径并设置为首选
+     *
+     * @param  string  $location
+     * @return $this
+     */
+    public function prependLocation(string $location): BladeInterface
+    {
+        $this->getViewFinder()->prependLocation($location);
+
+        return $this;
+    }
+
+    /**
+     * 移除重复的视图索引路径
      *
      * @return $this
      */
-    public function addPath(string $path): BladeInterface
+    public function locationUnique(): BladeInterface
     {
-        $this->getViewFinder()->addLocation($path);
+        $finder = $this->getViewFinder();
+        $finder->setPaths(array_unique($finder->getPaths()));
 
         return $this;
     }

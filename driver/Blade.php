@@ -155,9 +155,10 @@ class Blade implements TemplateHandlerInterface
                         $appName ? $appName . DIRECTORY_SEPARATOR : ''
                     );
             }
-            // 重设视图起始路径
-            $this->blade->resetPath();
-            $this->blade->addPath($path);
+
+            // 追加模板优先索引路径
+            $this->blade->prependLocation($path);
+            $this->blade->locationUnique();
         }
 
         $depr = $this->config['view_depr'];

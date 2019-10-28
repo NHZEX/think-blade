@@ -45,7 +45,7 @@ interface BladeInterface extends FactoryInterface
      *
      * @return $this
      */
-    public function addPath(string $path): self;
+    public function addLocation(string $path): self;
 
     /**
      * Check if a view exists.

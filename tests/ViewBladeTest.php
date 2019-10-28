@@ -76,7 +76,7 @@ class ViewBladeTest extends TestCase
 
     public function testAltPath()
     {
-        $this->engine->addPath(__DIR__ . "/views/alt");
+        $this->engine->addLocation(__DIR__ . "/views/alt");
         $result = $this->engine->render("view3");
         $this->assertSame(file_get_contents(__DIR__ . "/views/alt/view3.blade.php"), $result);
     }
@@ -168,8 +168,7 @@ class ViewBladeTest extends TestCase
      */
     public function testInheritanceAltPath()
     {
-        $this->markTestSkipped('暂无计划支持动态路径添加，该功能不可用');
-        $this->engine->addPath(__DIR__ . "/views/alt");
+        $this->engine->addLocation(__DIR__ . "/views/alt");
         $result = $this->blade->fetch("view11");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view11.html"), $result);
     }
@@ -217,7 +216,6 @@ class ViewBladeTest extends TestCase
      */
     public function testCustomConditions(bool $global, string $expected)
     {
-        // $this->markTestIncomplete('功能未实现');
         $this->engine->if("global", function () use ($global) {
             return $global;
         });
