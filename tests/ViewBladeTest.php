@@ -51,7 +51,6 @@ class ViewBladeTest extends TestCase
         $app = new App(__DIR__);
         $app->config->set(self::CONFIG, 'view');
         $this->blade = $app->make(\think\View::class);
-        //$this->blade = new \think\View(self::CONFIG);
         $this->engine = $this->blade->engine();
     }
 

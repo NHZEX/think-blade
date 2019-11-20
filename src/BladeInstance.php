@@ -11,6 +11,7 @@ use Illuminate\View\Engines\FileEngine;
 use Illuminate\View\Engines\PhpEngine;
 use Illuminate\View\Factory;
 use Illuminate\View\FileViewFinder;
+use Illuminate\View\ViewFinderInterface;
 use function is_dir;
 use function mkdir;
 
@@ -85,7 +86,7 @@ class BladeInstance implements BladeInterface
      *
      * @return FileViewFinder
      */
-    private function getViewFinder(): FileViewFinder
+    private function getViewFinder(): ViewFinderInterface
     {
         if (!$this->finder) {
             $this->finder = new FileViewFinder(new Filesystem(), [$this->path]);

@@ -125,12 +125,8 @@ class Blade implements TemplateHandlerInterface
      * @param  string $template 模板文件规则
      * @return string
      */
-    private function parseTemplate($template)
+    public function parseTemplate(string $template)
     {
-        if (empty($this->config['view_base'])) {
-            $this->config['view_base'] = $this->app->getRootPath() . 'view' . DIRECTORY_SEPARATOR;
-        }
-
         $request = $this->app->request;
 
         // 获取视图根目录
@@ -144,6 +140,7 @@ class Blade implements TemplateHandlerInterface
         } else {
             $appName = isset($app) ? $app : $this->app->http->getName();
             $view    = $this->config['view_dir_name'];
+
             if (is_dir($this->app->getAppPath() . $view)) {
                 $path = isset($app) ?
                     $this->app->getBasePath() . (
@@ -166,6 +163,7 @@ class Blade implements TemplateHandlerInterface
         if (0 !== strpos($template, '/')) {
             $template   = str_replace(['/', ':'], $depr, $template);
             $controller = $request->controller();
+
             if (strpos($controller, '.')) {
                 $pos        = strrpos($controller, '.');
                 $controller = substr($controller, 0, $pos) . '.' . Str::snake(substr($controller, $pos + 1));
