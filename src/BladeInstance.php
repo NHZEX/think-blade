@@ -89,7 +89,8 @@ class BladeInstance implements BladeInterface
     private function getViewFinder(): ViewFinderInterface
     {
         if (!$this->finder) {
-            $this->finder = new FileViewFinder(new Filesystem(), [$this->path]);
+            // $this->finder = new FileViewFinder(new Filesystem(), [$this->path]);
+            $this->finder = new TpViewFinder();
         }
 
         return $this->finder;
@@ -215,32 +216,6 @@ class BladeInstance implements BladeInterface
     public function addLocation(string $location): BladeInterface
     {
         $this->getViewFinder()->addLocation($location);
-
-        return $this;
-    }
-
-    /**
-     * 追加一个视图索引路径并设置为首选
-     *
-     * @param  string  $location
-     * @return $this
-     */
-    public function prependLocation(string $location): BladeInterface
-    {
-        $this->getViewFinder()->prependLocation($location);
-
-        return $this;
-    }
-
-    /**
-     * 移除重复的视图索引路径
-     *
-     * @return $this
-     */
-    public function locationUnique(): BladeInterface
-    {
-        $finder = $this->getViewFinder();
-        $finder->setPaths(array_unique($finder->getPaths()));
 
         return $this;
     }

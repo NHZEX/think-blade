@@ -75,8 +75,7 @@ class ViewBladeTest extends TestCase
 
     public function testAltPath()
     {
-        $this->engine->addLocation(__DIR__ . "/views/alt");
-        $result = $this->engine->render("view3");
+        $result = $this->engine->render("alt/view3");
         $this->assertSame(file_get_contents(__DIR__ . "/views/alt/view3.blade.php"), $result);
     }
 
@@ -167,7 +166,7 @@ class ViewBladeTest extends TestCase
      */
     public function testInheritanceAltPath()
     {
-        $this->engine->addLocation(__DIR__ . "/views/alt");
+        // $this->engine->setViewDirName("views/alt");
         $result = $this->blade->fetch("view11");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view11.html"), $result);
     }
