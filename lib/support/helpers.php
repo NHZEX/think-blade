@@ -6,69 +6,14 @@ use Closure;
 use Illuminate\Contracts\Support\Htmlable;
 
 /**
- * Determine whether the current environment is Windows based.
- *
- * @return bool
- */
-function windows_os()
-{
-    return strtolower(substr(PHP_OS, 0, 3)) === 'win';
-}
-
-/**
- * Call the given Closure with the given value then return the value.
+ * Create a collection from the given value.
  *
  * @param  mixed  $value
- * @param  callable|null  $callback
- * @return mixed
+ * @return Collection
  */
-function tap($value, $callback = null)
+function collect($value = null)
 {
-    if (is_null($callback)) {
-        return new HigherOrderTapProxy($value);
-    }
-
-    $callback($value);
-
-    return $value;
-}
-
-/**
- * Get the last element from an array.
- *
- * @param  array  $array
- * @return mixed
- */
-function last($array)
-{
-    return end($array);
-}
-
-/**
- * Encode HTML special characters in a string.
- *
- * @param Htmlable|string $value
- * @param  bool           $doubleEncode
- * @return string
- */
-function e($value, $doubleEncode = true)
-{
-    if ($value instanceof Htmlable) {
-        return $value->toHtml();
-    }
-
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8', $doubleEncode);
-}
-
-/**
- * Return the default value of the given value.
- *
- * @param  mixed  $value
- * @return mixed
- */
-function value($value)
-{
-    return $value instanceof Closure ? $value() : $value;
+    return new Collection($value);
 }
 
 /**
@@ -117,12 +62,67 @@ function data_get($target, $key, $default = null)
 }
 
 /**
- * Create a collection from the given value.
+ * Encode HTML special characters in a string.
+ *
+ * @param Htmlable|string $value
+ * @param  bool           $doubleEncode
+ * @return string
+ */
+function e($value, $doubleEncode = true)
+{
+    if ($value instanceof Htmlable) {
+        return $value->toHtml();
+    }
+
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8', $doubleEncode);
+}
+
+/**
+ * Get the last element from an array.
+ *
+ * @param  array  $array
+ * @return mixed
+ */
+function last($array)
+{
+    return end($array);
+}
+
+/**
+ * Call the given Closure with the given value then return the value.
  *
  * @param  mixed  $value
- * @return Collection
+ * @param  callable|null  $callback
+ * @return mixed
  */
-function collect($value = null)
+function tap($value, $callback = null)
 {
-    return new Collection($value);
+    if (is_null($callback)) {
+        return new HigherOrderTapProxy($value);
+    }
+
+    $callback($value);
+
+    return $value;
+}
+
+/**
+ * Return the default value of the given value.
+ *
+ * @param  mixed  $value
+ * @return mixed
+ */
+function value($value)
+{
+    return $value instanceof Closure ? $value() : $value;
+}
+
+/**
+ * Determine whether the current environment is Windows based.
+ *
+ * @return bool
+ */
+function windows_os()
+{
+    return strtolower(substr(PHP_OS, 0, 3)) === 'win';
 }

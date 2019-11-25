@@ -87,7 +87,7 @@ class View implements ArrayAccess, ViewContract
         try {
             $contents = $this->renderContents();
 
-            $response = isset($callback) ? call_user_func($callback, $this, $contents) : null;
+            $response = isset($callback) ? $callback($this, $contents) : null;
 
             // Once we have the contents of the view, we will flush the sections if we are
             // done rendering all views so that there is nothing left hanging over when
@@ -201,6 +201,31 @@ class View implements ArrayAccess, ViewContract
     public function nest($key, $view, array $data = [])
     {
         return $this->with($key, $this->factory->make($view, $data));
+    }
+
+    /**
+     * Add validation errors to the view.
+     *
+     * @param  \Illuminate\Contracts\Support\MessageProvider|array  $provider
+     * @return $this
+     */
+    public function withErrors($provider)
+    {
+        $this->with('errors', $this->formatErrors($provider));
+
+        return $this;
+    }
+
+    /**
+     * Format the given message provider into a MessageBag.
+     *
+     * @param  \Illuminate\Contracts\Support\MessageProvider|array  $provider
+     * @return \Illuminate\Support\MessageBag
+     */
+    protected function formatErrors($provider)
+    {
+        return $provider instanceof MessageProvider
+                        ? $provider->getMessageBag() : new MessageBag((array) $provider);
     }
 
     /**
@@ -386,6 +411,16 @@ class View implements ArrayAccess, ViewContract
         }
 
         return $this->with(Str::camel(substr($method, 4)), $parameters[0]);
+    }
+
+    /**
+     * Get content as a string of HTML.
+     *
+     * @return string
+     */
+    public function toHtml()
+    {
+        return $this->render();
     }
 
     /**
