@@ -33,7 +33,6 @@ class TpViewFinder implements ViewFinderInterface
      */
     public function addLocation($location)
     {
-        // TODO: Implement addLocation() method.
     }
 
     /**
@@ -45,7 +44,6 @@ class TpViewFinder implements ViewFinderInterface
      */
     public function addNamespace($namespace, $hints)
     {
-        // TODO: Implement addNamespace() method.
     }
 
     /**
@@ -57,7 +55,6 @@ class TpViewFinder implements ViewFinderInterface
      */
     public function prependNamespace($namespace, $hints)
     {
-        // TODO: Implement prependNamespace() method.
     }
 
     /**
@@ -69,7 +66,6 @@ class TpViewFinder implements ViewFinderInterface
      */
     public function replaceNamespace($namespace, $hints)
     {
-        // TODO: Implement replaceNamespace() method.
     }
 
     /**
@@ -80,7 +76,6 @@ class TpViewFinder implements ViewFinderInterface
      */
     public function addExtension($extension)
     {
-        // TODO: Implement addExtension() method.
     }
 
     /**
@@ -90,6 +85,5 @@ class TpViewFinder implements ViewFinderInterface
      */
     public function flush()
     {
-        // TODO: Implement flush() method.
     }
 }

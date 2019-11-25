@@ -89,7 +89,6 @@ class BladeInstance implements BladeInterface
     private function getViewFinder(): ViewFinderInterface
     {
         if (!$this->finder) {
-            // $this->finder = new FileViewFinder(new Filesystem(), [$this->path]);
             $this->finder = new TpViewFinder();
         }
 
@@ -191,18 +190,6 @@ class BladeInstance implements BladeInterface
         $this
             ->getCompiler()
             ->if($name, $handler);
-
-        return $this;
-    }
-
-    /**
-     * 清空视图索引路径
-     *
-     * @return BladeInterface
-     */
-    public function resetLocation(): BladeInterface
-    {
-        $this->getViewFinder()->setPaths([]);
 
         return $this;
     }
