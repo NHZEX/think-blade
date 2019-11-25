@@ -25,22 +25,24 @@ class Blade implements TemplateHandlerInterface
     // 模板引擎参数
     protected $config = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写 3 保持操作方法
-        'auto_rule' => 1,
+        'auto_rule'     => 1,
         // 视图目录名
         'view_dir_name' => 'view',
         // 模板起始路径
-        'view_path' => '',
+        'view_path'     => '',
         // 模板文件后缀
-        'view_suffix' => 'blade.php',
+        'view_suffix'   => 'blade.php',
         // 模板文件名分隔符
-        'view_depr' => DIRECTORY_SEPARATOR,
+        'view_depr'     => DIRECTORY_SEPARATOR,
         // 缓存路径
-        'cache_path' => '',
+        'cache_path'    => '',
+        // 编译缓存
+        'tpl_cache'     => true,
     ];
 
     public function __construct(App $app, array $config = [])
     {
-        $this->app = $app;
+        $this->app    = $app;
         $this->config = array_merge($this->config, $config);
 
         if (empty($this->config['cache_path'])) {
@@ -57,6 +59,9 @@ class Blade implements TemplateHandlerInterface
 
         $this->blade = new BladeInstance('', $cache_path);
         $this->blade->getViewFactory();
+        if (!$this->config['tpl_cache']) {
+            $this->blade->cacheDisable(true);
+        }
         // Bind blade as think app
         /** @var CompilerEngine $blade */
         $blade = $this->blade->getViewFactory()->getEngineResolver()->resolve('blade');
@@ -65,7 +70,7 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 检测是否存在模板文件
-     * @param  string $template 模板文件或者模板规则
+     * @param string $template 模板文件或者模板规则
      * @return bool
      */
     public function exists(string $template): bool
@@ -122,7 +127,7 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 自动定位模板文件
-     * @param  string $template 模板文件规则
+     * @param string $template 模板文件规则
      * @return string
      */
     public function parseTemplate(string $template)
@@ -144,12 +149,12 @@ class Blade implements TemplateHandlerInterface
             if (is_dir($this->app->getAppPath() . $view)) {
                 $path = isset($app) ?
                     $this->app->getBasePath() . (
-                        $appName ? $appName . DIRECTORY_SEPARATOR : ''
+                    $appName ? $appName . DIRECTORY_SEPARATOR : ''
                     ) . $view . DIRECTORY_SEPARATOR :
                     $this->app->getAppPath() . $view . DIRECTORY_SEPARATOR;
             } else {
                 $path = $this->app->getRootPath() . $view . DIRECTORY_SEPARATOR . (
-                        $appName ? $appName . DIRECTORY_SEPARATOR : ''
+                    $appName ? $appName . DIRECTORY_SEPARATOR : ''
                     );
             }
         }
@@ -201,7 +206,7 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 获取模板引擎配置
-     * @param  string  $name 参数名
+     * @param string $name 参数名
      * @return mixed
      */
     public function getConfig(string $name)

@@ -22,6 +22,11 @@ abstract class Compiler
     protected $cachePath;
 
     /**
+     * @var bool
+     */
+    protected $cacheDisable = false;
+
+    /**
      * Create a new compiler instance.
      *
      * @param  \Illuminate\Filesystem\Filesystem  $files
@@ -38,6 +43,14 @@ abstract class Compiler
 
         $this->files = $files;
         $this->cachePath = $cachePath;
+    }
+
+    /**
+     * @param bool $cacheDisable
+     */
+    public function setCacheDisable(bool $cacheDisable): void
+    {
+        $this->cacheDisable = $cacheDisable;
     }
 
     /**
@@ -59,6 +72,10 @@ abstract class Compiler
      */
     public function isExpired($path)
     {
+        if ($this->cacheDisable) {
+            return true;
+        }
+
         $compiled = $this->getCompiledPath($path);
 
         // If the compiled file doesn't exist we will indicate that the view is expired

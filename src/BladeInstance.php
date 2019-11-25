@@ -48,12 +48,12 @@ class BladeInstance implements BladeInterface
     /**
      * Create a new instance of the blade view factory.
      *
-     * @param string $path The default path for views
+     * @param string $path  The default path for views
      * @param string $cache The default path for cached php
      */
     public function __construct(string $path, string $cache)
     {
-        $this->path = $path;
+        $this->path  = $path;
         $this->cache = $cache;
     }
 
@@ -141,6 +141,17 @@ class BladeInstance implements BladeInterface
         $this
             ->getViewFactory()
             ->addExtension($extension, "blade");
+
+        return $this;
+    }
+
+    /**
+     * @param bool $off
+     * @return $this
+     */
+    public function cacheDisable(bool $off)
+    {
+        $this->getCompiler()->setCacheDisable($off);
 
         return $this;
     }
