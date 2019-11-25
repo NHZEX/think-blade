@@ -22,6 +22,15 @@ composer require nhzex/think-blade
 ]
 ```
 
+### 鉴权支持 (需自行实现并绑定到以下命名)
+- app->bind('auth')
+  - auth->check(): bool
+  - auth->guest(): bool
+- app->bind('auth.gate')
+  - auth->check($abilities, $arguments): bool
+  - auth->denies($abilities, $arguments): bool
+  - auth->any($abilities, $arguments): bool
+
 ## 代码引用
 - [duncan3dc/blade](https://github.com/duncan3dc/blade)
 - [illuminate/view](https://github.com/illuminate/view)
