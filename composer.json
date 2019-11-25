@@ -1,6 +1,11 @@
 {
     "name": "nhzex/think-blade",
     "description": "Use Laravel Blade templates without the full Laravel framework",
+    "keywords": [
+        "thinkphp",
+        "thinkphp6",
+        "blade"
+    ],
     "type": "library",
     "license": "Apache-2.0",
     "authors": [

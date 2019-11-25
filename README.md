@@ -1,5 +1,6 @@
 # Think-Blade
-基于 laravel 5.8 封装用于 ThinkPHP 的视图渲染驱动
+thinkphp 6.0 blade 视图渲染驱动  
+blade版本: laravel 6.5.2   
 
 ## Installation
 ```
@@ -22,7 +23,7 @@ composer require nhzex/think-blade
 ]
 ```
 
-### 鉴权支持 (需自行实现并绑定到以下命名)
+### auth 支持 (需自行实现并绑定到以下命名)
 - app->bind('auth')
   - auth->check(): bool
   - auth->guest(): bool
