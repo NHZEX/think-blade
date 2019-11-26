@@ -135,6 +135,7 @@ class BladeInstance implements BladeInterface
 
     /**
      * {@inheritdoc}
+     * @deprecated 因查找器替换而无效
      */
     public function addExtension(string $extension): BladeInterface
     {
@@ -206,10 +207,11 @@ class BladeInstance implements BladeInterface
     }
 
     /**
-     * 追加一个视图索引路径
+     * Add a path to look for views in.
      *
      * @param string $location
      * @return $this
+     * @deprecated 因查找器替换而无效
      */
     public function addLocation(string $location): BladeInterface
     {
@@ -278,6 +280,7 @@ class BladeInstance implements BladeInterface
      * @param array|string $hints The hints to apply
      *
      * @return $this
+     * @deprecated 因查找器替换而无效
      */
     public function addNamespace($namespace, $hints): BladeInterface
     {
@@ -293,6 +296,7 @@ class BladeInstance implements BladeInterface
      * @param array|string $hints The hints to use
      *
      * @return $this
+     * @deprecated 因查找器替换而无效
      */
     public function replaceNamespace($namespace, $hints): BladeInterface
     {

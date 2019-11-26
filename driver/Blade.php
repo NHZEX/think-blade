@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace think\view\driver;
 
 use HZEX\Blade\BladeInstance;
+use HZEX\Blade\Register;
 use Illuminate\View\Engines\CompilerEngine;
 use think\App;
 use think\contract\TemplateHandlerInterface;
@@ -62,7 +63,9 @@ class Blade implements TemplateHandlerInterface
         if (!$this->config['tpl_cache']) {
             $this->blade->cacheDisable(true);
         }
-        // Bind blade as think app
+        /** @var Register $register */
+        $register = $this->app->make(Register::class);
+        $register->exec($this->blade);
         /** @var CompilerEngine $blade */
         $blade = $this->blade->getViewFactory()->getEngineResolver()->resolve('blade');
         $this->app->bind('blade.compiler', $blade->getCompiler());
