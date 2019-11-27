@@ -3,10 +3,9 @@ thinkphp 6.0 blade 视图渲染驱动
 blade版本: 6.5.2 
 
 [![Latest Stable Version](https://poser.pugx.org/nhzex/think-blade/v/stable)](https://packagist.org/packages/nhzex/think-blade)
-[![Total Downloads](https://poser.pugx.org/nhzex/think-blade/downloads)](https://packagist.org/packages/nhzex/think-blade)
 [![License](https://poser.pugx.org/nhzex/think-blade/license)](https://packagist.org/packages/nhzex/think-blade)
-[![composer.lock](https://poser.pugx.org/nhzex/think-blade/composerlock)](https://packagist.org/packages/nhzex/think-blade)
 [![Travis Ci](https://travis-ci.com/NHZEX/think-blade.svg?branch=4.0)](https://travis-ci.com/NHZEX/think-blade)
+[![workflows](https://github.com/nhzex/think-blade/workflows/buildcheck/badge.svg)](https://github.com/NHZEX/think-blade/actions)
 
 ## Installation
 ```
