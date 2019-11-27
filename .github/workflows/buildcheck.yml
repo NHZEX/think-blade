@@ -6,12 +6,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         php:
-          - 7.1
           - 7.2
           - 7.3
           - 7.4
+        composer:
+          - ""
+          - "--prefer-lowest"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -20,19 +24,18 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php }}
-          extension-csv: mbstring, intl #optional, setup extensions
-          ini-values-csv: post_max_size=256M, short_open_tag=On #optional, setup php.ini configuration
+          extension-csv: mbstring, fileinfo #optional, setup extensions
           coverage: none #optional, setup coverage driver
           pecl: false #optional, setup PECL
 
       - name: Check Version
-        run: php -v && php -m
+        run: php -v && php -m && composer -V
 
       - name: Validate composer.json and composer.lock
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress --no-suggest ${{ matrix.composer }}
 
       - name: Run test suite
         run: composer exec -- phpunit -v
