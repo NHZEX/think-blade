@@ -12,9 +12,7 @@ jobs:
           - 7.2
           - 7.3
           - 7.4
-        composer:
-          - ""
-          - "--prefer-lowest"
+        prefer-lowest: [false, true]
 
     steps:
       - name: Checkout
@@ -34,8 +32,13 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest ${{ matrix.composer }}
+      - name: Install dependencies (composer.lock)
+        if: false == matrix.prefer-lowest
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Install dependencies (prefer-lowest)
+        if: true == matrix.prefer-lowest
+        run: composer update --prefer-dist --no-progress --no-suggest --prefer-lowest
 
       - name: Run test suite
         run: composer exec -- phpunit -v
