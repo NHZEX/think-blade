@@ -176,7 +176,7 @@ class View implements ArrayAccess, ViewContract
      * Add a piece of data to the view.
      *
      * @param  string|array  $key
-     * @param  mixed   $value
+     * @param  mixed  $value
      * @return $this
      */
     public function with($key, $value = null)
@@ -195,7 +195,7 @@ class View implements ArrayAccess, ViewContract
      *
      * @param  string  $key
      * @param  string  $view
-     * @param  array   $data
+     * @param  array  $data
      * @return $this
      */
     public function nest($key, $view, array $data = [])
@@ -325,7 +325,7 @@ class View implements ArrayAccess, ViewContract
      * Set a piece of data on the view.
      *
      * @param  string  $key
-     * @param  mixed   $value
+     * @param  mixed  $value
      * @return void
      */
     public function offsetSet($key, $value)
@@ -359,7 +359,7 @@ class View implements ArrayAccess, ViewContract
      * Set a piece of data on the view.
      *
      * @param  string  $key
-     * @param  mixed   $value
+     * @param  mixed  $value
      * @return void
      */
     public function __set($key, $value)
@@ -393,7 +393,7 @@ class View implements ArrayAccess, ViewContract
      * Dynamically bind parameters to the view.
      *
      * @param  string  $method
-     * @param  array   $parameters
+     * @param  array  $parameters
      * @return \Illuminate\View\View
      *
      * @throws \BadMethodCallException

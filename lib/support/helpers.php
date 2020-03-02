@@ -124,5 +124,9 @@ function value($value)
  */
 function windows_os()
 {
-    return strtolower(substr(PHP_OS, 0, 3)) === 'win';
+    if (PHP_VERSION_ID >= 70200) {
+        return PHP_OS_FAMILY === 'Windows';
+    } else {
+        return strtolower(substr(PHP_OS, 0, 3)) === 'win';
+    }
 }
