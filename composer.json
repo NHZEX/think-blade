@@ -17,11 +17,11 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=7.1",
-        "ext-json": "*",
         "ext-fileinfo": "*",
+        "ext-json": "*",
         "ext-mbstring": "*",
         "symfony/debug": "^4.2",
-        "symfony/finder": "^4.2",
+        "symfony/finder": "^4.2|^5.0",
         "topthink/framework": "~6.0.0",
         "topthink/think-helper": "^3.1.1"
     },
