@@ -19,11 +19,9 @@ trait CompilesConditionals
      */
     protected function compileAuth($guard = null)
     {
-        /**
-         * $guard = is_null($guard) ? '()' : $guard;
-         * return "<?php if(auth()->guard{$guard}->check()): ?>";
-         */
-        return "<?php if(app('auth')->check()): ?>";
+        $guard = is_null($guard) ? '()' : $guard;
+
+        return "<?php if(auth()->guard{$guard}->check()): ?>";
     }
 
     /**
@@ -34,11 +32,9 @@ trait CompilesConditionals
      */
     protected function compileElseAuth($guard = null)
     {
-        /**
-         * $guard = is_null($guard) ? '()' : $guard;
-         * return "<?php elseif(auth()->guard{$guard}->check()): ?>";
-         */
-        return "<?php elseif(app('auth')->check()): ?>";
+        $guard = is_null($guard) ? '()' : $guard;
+
+        return "<?php elseif(auth()->guard{$guard}->check()): ?>";
     }
 
     /**
@@ -52,6 +48,47 @@ trait CompilesConditionals
     }
 
     /**
+     * Compile the env statements into valid PHP.
+     *
+     * @param  string  $environment
+     * @return string
+     */
+    protected function compileEnv($environment)
+    {
+        return "<?php if(app()->environment{$environment}): ?>";
+    }
+
+    /**
+     * Compile the end-env statements into valid PHP.
+     *
+     * @return string
+     */
+    protected function compileEndEnv()
+    {
+        return '<?php endif; ?>';
+    }
+
+    /**
+     * Compile the production statements into valid PHP.
+     *
+     * @return string
+     */
+    protected function compileProduction()
+    {
+        return "<?php if(app()->environment('production')): ?>";
+    }
+
+    /**
+     * Compile the end-production statements into valid PHP.
+     *
+     * @return string
+     */
+    protected function compileEndProduction()
+    {
+        return '<?php endif; ?>';
+    }
+
+    /**
      * Compile the if-guest statements into valid PHP.
      *
      * @param  string|null  $guard
@@ -59,11 +96,9 @@ trait CompilesConditionals
      */
     protected function compileGuest($guard = null)
     {
-        /**
-         * $guard = is_null($guard) ? '()' : $guard;
-         * return "<?php if(auth()->guard{$guard}->guest()): ?>";
-         */
-        return "<?php if(app('auth')->guest()): ?>";
+        $guard = is_null($guard) ? '()' : $guard;
+
+        return "<?php if(auth()->guard{$guard}->guest()): ?>";
     }
 
     /**
@@ -74,11 +109,9 @@ trait CompilesConditionals
      */
     protected function compileElseGuest($guard = null)
     {
-        /**
-         * $guard = is_null($guard) ? '()' : $guard;
-         * return "<?php elseif(auth()->guard{$guard}->guest()): ?>";
-         */
-        return "<?php elseif(app('auth')->guest()): ?>";
+        $guard = is_null($guard) ? '()' : $guard;
+
+        return "<?php elseif(auth()->guard{$guard}->guest()): ?>";
     }
 
     /**

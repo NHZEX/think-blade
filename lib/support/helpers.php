@@ -3,6 +3,7 @@
 namespace Illuminate\Support;
 
 use Closure;
+use Illuminate\Contracts\Support\DeferringDisplayableValue;
 use Illuminate\Contracts\Support\Htmlable;
 
 /**
@@ -19,9 +20,9 @@ function collect($value = null)
 /**
  * Get an item from an array or object using "dot" notation.
  *
- * @param  mixed   $target
- * @param  string|array|int  $key
- * @param  mixed   $default
+ * @param  mixed  $target
+ * @param  string|array|int|null  $key
+ * @param  mixed  $default
  * @return mixed
  */
 function data_get($target, $key, $default = null)
@@ -32,7 +33,13 @@ function data_get($target, $key, $default = null)
 
     $key = is_array($key) ? $key : explode('.', $key);
 
-    while (! is_null($segment = array_shift($key))) {
+    foreach ($key as $i => $segment) {
+        unset($key[$i]);
+
+        if (is_null($segment)) {
+            return $target;
+        }
+
         if ($segment === '*') {
             if ($target instanceof Collection) {
                 $target = $target->all();
@@ -64,12 +71,16 @@ function data_get($target, $key, $default = null)
 /**
  * Encode HTML special characters in a string.
  *
- * @param Htmlable|string $value
- * @param  bool           $doubleEncode
+ * @param  \Illuminate\Contracts\Support\DeferringDisplayableValue|\Illuminate\Contracts\Support\Htmlable|string  $value
+ * @param  bool  $doubleEncode
  * @return string
  */
 function e($value, $doubleEncode = true)
 {
+    if ($value instanceof DeferringDisplayableValue) {
+        $value = $value->resolveDisplayableValue();
+    }
+
     if ($value instanceof Htmlable) {
         return $value->toHtml();
     }

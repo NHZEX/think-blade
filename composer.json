@@ -16,26 +16,26 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.1",
+        "php": "^7.2",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "symfony/debug": "^4.2",
-        "symfony/finder": "^4.2|^5.0",
+        "symfony/finder": "^5.0",
         "topthink/framework": "~6.0.0",
-        "topthink/think-helper": "^3.1.1"
+        "topthink/think-helper": "^3.1.1",
+        "voku/portable-ascii": "^1.4.8"
     },
     "require-dev": {
-        "doctrine/inflector": "^1.1",
+        "doctrine/inflector": "^1.4|^2.0",
         "phpunit/phpunit": "^7|^8",
-        "ramsey/uuid": "^3.7",
-        "symfony/var-dumper": "^4.3",
+        "symfony/var-dumper": "^5.0",
         "topthink/think-template": "^2.0"
     },
     "suggest": {
         "ramsey/uuid": "Required to use Str::uuid() (^3.7).",
         "symfony/var-dumper": "Required to use the dd function (^4.2).",
-        "doctrine/inflector": "Required to use the pluralizer (^1.1)."
+        "doctrine/inflector": "Required to use the pluralizer (^1.4|^2.0).",
+        "symfony/mime": "Required to enable support for guessing extensions (^5.0)."
     },
     "autoload": {
         "files": [
