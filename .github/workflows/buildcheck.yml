@@ -22,9 +22,8 @@ jobs:
         uses: shivammathur/setup-php@master
         with:
           php-version: ${{ matrix.php }}
-          extension-csv: mbstring, fileinfo #optional, setup extensions
+          extensions: mbstring, fileinfo #optional, setup extensions
           coverage: none #optional, setup coverage driver
-          pecl: false #optional, setup PECL
 
       - name: Check Version
         run: php -v && php -m && composer -V
