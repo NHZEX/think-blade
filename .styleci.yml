@@ -1,9 +1,0 @@
-preset: PSR2
-finder:
-  exclude:
-    - vendor
-    - lib
-  name:
-    - "*.php"
-  not-name:
-    - "*.blade.php"

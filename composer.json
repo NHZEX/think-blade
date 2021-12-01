@@ -29,7 +29,8 @@
         "phpunit/phpunit": "^7|^8",
         "symfony/var-dumper": "^5.0",
         "topthink/think-template": "^2.0",
-        "voku/portable-ascii": "^1.4.8"
+        "voku/portable-ascii": "^1.4.8",
+        "squizlabs/php_codesniffer": "^3.6"
     },
     "suggest": {
         "ramsey/uuid": "Required to use Str::uuid() (^3.7).",
