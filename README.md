@@ -1,6 +1,6 @@
 # Think-Blade
 thinkphp 6.0 blade 视图渲染驱动  
-blade版本: 7.14.1 
+blade版本: v7.30.6 
 
 [![Latest Stable Version](https://poser.pugx.org/nhzex/think-blade/v/stable)](https://packagist.org/packages/nhzex/think-blade)
 [![License](https://poser.pugx.org/nhzex/think-blade/license)](https://packagist.org/packages/nhzex/think-blade)
