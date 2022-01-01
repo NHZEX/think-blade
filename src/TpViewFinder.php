@@ -10,7 +10,6 @@ use think\view\driver\Blade;
 
 class TpViewFinder implements ViewFinderInterface
 {
-
     /**
      * Get the fully qualified location of the view.
      *
