@@ -121,7 +121,7 @@ class ViewBladeTest extends TestCase
      */
     public function testComposer()
     {
-        $this->markTestSkipped('事件模块已被阉割，该功能不可用');
+        $this->markTestSkipped('事件模块未移植，功能不可用');
         $this->engine->composer("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
@@ -134,7 +134,7 @@ class ViewBladeTest extends TestCase
      */
     public function testCreator()
     {
-        $this->markTestSkipped('事件模块已被阉割，该功能不可用');
+        $this->markTestSkipped('事件模块未移植，功能不可用');
         $this->engine->creator("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
