@@ -42,7 +42,8 @@
     "autoload": {
         "files": [
             "src/helper.php",
-            "lib/support/helpers.php"
+            "lib/support/helpers.php",
+            "lib/collections/helpers.php"
         ],
         "psr-4": {
             "think\\view\\driver\\": "driver",
