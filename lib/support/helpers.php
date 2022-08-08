@@ -24,3 +24,19 @@ function e($value, $doubleEncode = true)
 
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8', $doubleEncode);
 }
+
+/**
+ * Provide access to optional objects.
+ *
+ * @param  mixed  $value
+ * @param  callable|null  $callback
+ * @return mixed
+ */
+function optional($value = null, callable $callback = null)
+{
+    if (is_null($callback)) {
+        return new Optional($value);
+    } elseif (! is_null($value)) {
+        return $callback($value);
+    }
+}

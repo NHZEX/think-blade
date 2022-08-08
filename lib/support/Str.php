@@ -10,6 +10,8 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactory;
 use voku\helper\ASCII;
 
+use function Illuminate\Support\collect;
+
 class Str
 {
     use Macroable;

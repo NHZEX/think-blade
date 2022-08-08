@@ -3,7 +3,6 @@
 namespace Illuminate\View\Concerns;
 
 use InvalidArgumentException;
-use function Illuminate\Support\tap;
 
 trait ManagesStacks
 {

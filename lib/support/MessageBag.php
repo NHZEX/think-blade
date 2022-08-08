@@ -8,6 +8,8 @@ use Illuminate\Contracts\Support\MessageBag as MessageBagContract;
 use Illuminate\Contracts\Support\MessageProvider;
 use JsonSerializable;
 
+use function Illuminate\Support\collect;
+
 class MessageBag implements Jsonable, JsonSerializable, MessageBagContract, MessageProvider
 {
     /**

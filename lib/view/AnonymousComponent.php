@@ -2,6 +2,8 @@
 
 namespace Illuminate\View;
 
+use function Illuminate\Support\optional;
+
 class AnonymousComponent extends Component
 {
     /**
@@ -48,8 +50,13 @@ class AnonymousComponent extends Component
      */
     public function data()
     {
-        $this->attributes = $this->attributes ?: new ComponentAttributeBag;
+        $this->attributes = $this->attributes ?: $this->newAttributeBag();
 
-        return $this->data + ['attributes' => $this->attributes];
+        return array_merge(
+            optional($this->data['attributes'] ?? null)->getAttributes() ?: [],
+            $this->attributes->getAttributes(),
+            $this->data,
+            ['attributes' => $this->attributes]
+        );
     }
 }

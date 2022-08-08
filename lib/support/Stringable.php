@@ -9,6 +9,8 @@ use Illuminate\Support\Traits\Tappable;
 use JsonSerializable;
 use Symfony\Component\VarDumper\VarDumper;
 
+use function Illuminate\Support\collect;
+
 class Stringable implements JsonSerializable
 {
     use Conditionable, Macroable, Tappable;

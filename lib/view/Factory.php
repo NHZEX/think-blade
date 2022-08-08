@@ -10,12 +10,12 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\View\Engines\EngineResolver;
 use InvalidArgumentException;
-use function Illuminate\Support\tap;
 
 class Factory implements FactoryContract
 {
     use Macroable,
         Concerns\ManagesComponents,
+        Concerns\ManagesEvents,
         Concerns\ManagesLayouts,
         Concerns\ManagesLoops,
         Concerns\ManagesStacks,
@@ -74,6 +74,13 @@ class Factory implements FactoryContract
      * @var int
      */
     protected $renderCount = 0;
+
+    /**
+     * The "once" block IDs that have been rendered.
+     *
+     * @var array
+     */
+    protected $renderedOnce = [];
 
     /**
      * Create a new view factory instance.
@@ -170,6 +177,20 @@ class Factory implements FactoryContract
         }
 
         return $this->make($view, $this->parseData($data), $mergeData)->render();
+    }
+
+    /**
+     * Get the rendered content of the view based on the negation of a given condition.
+     *
+     * @param  bool  $condition
+     * @param  string  $view
+     * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
+     * @param  array  $mergeData
+     * @return string
+     */
+    public function renderUnless($condition, $view, $data = [], $mergeData = [])
+    {
+        return $this->renderWhen(! $condition, $view, $data, $mergeData);
     }
 
     /**
@@ -343,6 +364,28 @@ class Factory implements FactoryContract
     }
 
     /**
+     * Determine if the given once token has been rendered.
+     *
+     * @param  string  $id
+     * @return bool
+     */
+    public function hasRenderedOnce(string $id)
+    {
+        return isset($this->renderedOnce[$id]);
+    }
+
+    /**
+     * Mark the given once token as having been rendered.
+     *
+     * @param  string  $id
+     * @return void
+     */
+    public function markAsRenderedOnce(string $id)
+    {
+        $this->renderedOnce[$id] = true;
+    }
+
+    /**
      * Add a location to the array of view locations.
      *
      * @param  string  $location
@@ -424,9 +467,11 @@ class Factory implements FactoryContract
     public function flushState()
     {
         $this->renderCount = 0;
+        $this->renderedOnce = [];
 
         $this->flushSections();
         $this->flushStacks();
+        $this->flushComponents();
     }
 
     /**
@@ -533,53 +578,5 @@ class Factory implements FactoryContract
     public function getShared()
     {
         return $this->shared;
-    }
-
-    /**
-     * ManagesEvents
-     * Register a view composer event.
-     *
-     * @param array|string    $views
-     * @param \Closure|string $callback
-     * @return array
-     */
-    public function composer($views, $callback)
-    {
-        return [];
-    }
-
-    /**
-     * ManagesEvents
-     * Register a view creator event.
-     *
-     * @param array|string    $views
-     * @param \Closure|string $callback
-     * @return array
-     */
-    public function creator($views, $callback)
-    {
-        return [];
-    }
-
-    /**
-     * ManagesEvents
-     * Call the composer for a given view.
-     *
-     * @param  \Illuminate\Contracts\View\View  $view
-     * @return void
-     */
-    public function callComposer($view)
-    {
-    }
-
-    /**
-     * ManagesEvents
-     * Call the creator for a given view.
-     *
-     * @param  \Illuminate\Contracts\View\View  $view
-     * @return void
-     */
-    public function callCreator($view)
-    {
     }
 }
