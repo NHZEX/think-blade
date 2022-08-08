@@ -122,6 +122,23 @@ class Arr
     }
 
     /**
+     * Convert a flatten "dot" notation array into an expanded array.
+     *
+     * @param  iterable  $array
+     * @return array
+     */
+    public static function undot($array)
+    {
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            static::set($results, $key, $value);
+        }
+
+        return $results;
+    }
+
+    /**
      * Get all of the given array except for a specified array of keys.
      *
      * @param  array  $array
@@ -144,6 +161,10 @@ class Arr
      */
     public static function exists($array, $key)
     {
+        if ($array instanceof Enumerable) {
+            return $array->has($key);
+        }
+
         if ($array instanceof ArrayAccess) {
             return $array->offsetExists($key);
         }
@@ -390,6 +411,19 @@ class Arr
     }
 
     /**
+     * Determines if an array is a list.
+     *
+     * An array is a "list" if all array keys are sequential integers starting from 0 with no gaps in between.
+     *
+     * @param  array  $array
+     * @return bool
+     */
+    public static function isList($array)
+    {
+        return ! self::isAssoc($array);
+    }
+
+    /**
      * Get a subset of the items from the given array.
      *
      * @param  array  $array
@@ -405,7 +439,7 @@ class Arr
      * Pluck an array of values from an array.
      *
      * @param  iterable  $array
-     * @param  string|array  $value
+     * @param  string|array|int|null  $value
      * @param  string|array|null  $key
      * @return array
      */
@@ -463,7 +497,7 @@ class Arr
      */
     public static function prepend($array, $value, $key = null)
     {
-        if (is_null($key)) {
+        if (func_num_args() == 2) {
             array_unshift($array, $value);
         } else {
             $array = [$key => $value] + $array;
@@ -476,7 +510,7 @@ class Arr
      * Get a value from the array, and remove it.
      *
      * @param  array  $array
-     * @param  string  $key
+     * @param  string|int  $key
      * @param  mixed  $default
      * @return mixed
      */
@@ -490,15 +524,27 @@ class Arr
     }
 
     /**
+     * Convert the array into a query string.
+     *
+     * @param  array  $array
+     * @return string
+     */
+    public static function query($array)
+    {
+        return http_build_query($array, '', '&', PHP_QUERY_RFC3986);
+    }
+
+    /**
      * Get one or a specified number of random values from an array.
      *
      * @param  array  $array
      * @param  int|null  $number
+     * @param  bool|false  $preserveKeys
      * @return mixed
      *
      * @throws \InvalidArgumentException
      */
-    public static function random($array, $number = null)
+    public static function random($array, $number = null, $preserveKeys = false)
     {
         $requested = is_null($number) ? 1 : $number;
 
@@ -522,8 +568,14 @@ class Arr
 
         $results = [];
 
-        foreach ((array) $keys as $key) {
-            $results[] = $array[$key];
+        if ($preserveKeys) {
+            foreach ((array) $keys as $key) {
+                $results[$key] = $array[$key];
+            }
+        } else {
+            foreach ((array) $keys as $key) {
+                $results[] = $array[$key];
+            }
         }
 
         return $results;
@@ -593,7 +645,7 @@ class Arr
      * Sort the array using the given callback or "dot" notation.
      *
      * @param  array  $array
-     * @param  callable|string|null  $callback
+     * @param  callable|array|string|null  $callback
      * @return array
      */
     public static function sort($array, $callback = null)
@@ -605,34 +657,52 @@ class Arr
      * Recursively sort an array by keys and values.
      *
      * @param  array  $array
+     * @param  int  $options
+     * @param  bool  $descending
      * @return array
      */
-    public static function sortRecursive($array)
+    public static function sortRecursive($array, $options = SORT_REGULAR, $descending = false)
     {
         foreach ($array as &$value) {
             if (is_array($value)) {
-                $value = static::sortRecursive($value);
+                $value = static::sortRecursive($value, $options, $descending);
             }
         }
 
         if (static::isAssoc($array)) {
-            ksort($array);
+            $descending
+                    ? krsort($array, $options)
+                    : ksort($array, $options);
         } else {
-            sort($array);
+            $descending
+                    ? rsort($array, $options)
+                    : sort($array, $options);
         }
 
         return $array;
     }
 
     /**
-     * Convert the array into a query string.
+     * Conditionally compile classes from an array into a CSS class list.
      *
      * @param  array  $array
      * @return string
      */
-    public static function query($array)
+    public static function toCssClasses($array)
     {
-        return http_build_query($array, '', '&', PHP_QUERY_RFC3986);
+        $classList = static::wrap($array);
+
+        $classes = [];
+
+        foreach ($classList as $class => $constraint) {
+            if (is_numeric($class)) {
+                $classes[] = $constraint;
+            } elseif ($constraint) {
+                $classes[] = $class;
+            }
+        }
+
+        return implode(' ', $classes);
     }
 
     /**
@@ -645,6 +715,19 @@ class Arr
     public static function where($array, callable $callback)
     {
         return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+    }
+
+    /**
+     * Filter items where the value is not null.
+     *
+     * @param  array  $array
+     * @return array
+     */
+    public static function whereNotNull($array)
+    {
+        return static::where($array, function ($value) {
+            return ! is_null($value);
+        });
     }
 
     /**

@@ -16,7 +16,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.2|^8.0",
+        "php": "^7.3|^8.0",
         "ext-fileinfo": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
@@ -49,7 +49,11 @@
             "HZEX\\Blade\\": "src",
             "Illuminate\\Container\\": "lib/container",
             "Illuminate\\Contracts\\": "lib/contracts",
-            "Illuminate\\Support\\": "lib/support",
+            "Illuminate\\Support\\": [
+                "lib/support",
+                "lib/collections",
+                "lib/macroable"
+            ],
             "Illuminate\\Filesystem\\": "lib/filesystem",
             "Illuminate\\View\\": "lib/view"
         }
