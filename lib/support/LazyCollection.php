@@ -1305,6 +1305,7 @@ class LazyCollection implements Enumerable
      *
      * @return \Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->makeIterator($this->source);
@@ -1315,6 +1316,7 @@ class LazyCollection implements Enumerable
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         if (is_array($this->source)) {

@@ -17,7 +17,7 @@ jobs:
         experimental: [false]
         include:
           - php: 8.1
-            experimental: true
+            experimental: false
 
     steps:
       - name: Checkout
