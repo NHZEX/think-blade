@@ -1,4 +1,4 @@
-<phpunit>
+<phpunit bootstrap="tests/bootstrap.php">
     <testsuite name="ThinkPHP Blade Library">
         <directory suffix="Test.php">./tests/</directory>
     </testsuite>
