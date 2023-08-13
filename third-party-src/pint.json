@@ -1,0 +1,50 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "no_superfluous_phpdoc_tags": {
+            "allow_mixed": true,
+            "allow_unused_params": true,
+            "remove_inheritdoc": false
+        },
+        "fully_qualified_strict_types": true,
+
+        "blank_line_before_statement": {
+            "statements": [
+                "break",
+                "case",
+                "continue",
+                "declare",
+                "default",
+                "do",
+                "exit",
+                "for",
+                "foreach",
+                "goto",
+                "if",
+                "include",
+                "include_once",
+                "phpdoc",
+                "require",
+                "require_once",
+                "return",
+                "switch",
+                "throw",
+                "try",
+                "while",
+                "yield",
+                "yield_from"
+            ]
+        },
+
+        "global_namespace_import": {
+            "import_classes": false,
+            "import_constants": false,
+            "import_functions": false
+        },
+        "native_function_invocation": {
+            "include": [],
+            "scope": "all",
+            "strict": true
+        }
+    }
+}

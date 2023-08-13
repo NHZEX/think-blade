@@ -1,0 +1,36 @@
+{
+    "name": "third-party/library",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "illuminate/contracts": "~9.52.15",
+        "illuminate/container": "~9.52.15",
+        "illuminate/collections": "~9.52.15",
+        "illuminate/support": "~9.52.15",
+        "illuminate/view": "~9.52.15"
+    },
+    "require-dev": {
+    },
+    "replace": {
+        "psr/container": "2.0.*",
+        "psr/simple-cache": "3.0.*",
+        "illuminate/events": "*",
+        "illuminate/filesystem": "*",
+        "symfony/polyfill-php80": "*",
+        "voku/portable-ascii": "*",
+        "nesbot/carbon": "*",
+        "doctrine/inflector": "*",
+        "symfony/finder": "*"
+    },
+    "suggest": {
+        "nesbot/carbon": "nesbot/carbon=^2.62.1",
+        "voku/portable-ascii": "voku/portable-ascii=^2.0",
+        "doctrine/inflector": "doctrine/inflector=^2.0",
+        "symfony/finder": "symfony/finder=^6.0"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform-check": false,
+        "optimize-autoloader": true
+    }
+}
