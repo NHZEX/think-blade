@@ -8,3 +8,6 @@
 phpstan.neon export-ignore
 phpstan-baseline.neon export-ignore
 rector.php export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+build-third-party.sh export-ignore
