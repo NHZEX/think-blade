@@ -1,10 +1,9 @@
-# Think-Blade
-thinkphp 6.0 blade 视图渲染驱动  
-blade版本: v7.30.6 
+# Think-Blade 7.x
+thinkphp 6.1, 8.0 blade 视图渲染驱动  
+blade版本: v9.52.15 
 
 [![Latest Stable Version](https://poser.pugx.org/nhzex/think-blade/v/stable)](https://packagist.org/packages/nhzex/think-blade)
 [![License](https://poser.pugx.org/nhzex/think-blade/license)](https://packagist.org/packages/nhzex/think-blade)
-[![Travis Ci](https://travis-ci.com/NHZEX/think-blade.svg?branch=4.0)](https://travis-ci.com/NHZEX/think-blade)
 [![workflows](https://github.com/nhzex/think-blade/workflows/buildcheck/badge.svg)](https://github.com/NHZEX/think-blade/actions)
 
 ## Installation
@@ -31,7 +30,7 @@ composer require nhzex/think-blade
 ];
 ```
 
-### 统一扩展注册
+### ~~统一扩展注册（7.x 暂不支持）~~
 ```php
 <?php
 $register = app()->make(\HZEX\Blade\Register::class);
