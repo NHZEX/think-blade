@@ -1,5 +1,5 @@
-@global
+@ConstantVal
     on
 @else
     off
-@endglobal
+@endConstantVal

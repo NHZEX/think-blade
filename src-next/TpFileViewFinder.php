@@ -1,15 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace HZEX\Blade;
+namespace Zxin\Think\Blade;
 
 use Illuminate\View\ViewFinderInterface;
 use think\App;
 use think\View;
 use think\view\driver\Blade;
 
-class TpViewFinder implements ViewFinderInterface
+class TpFileViewFinder implements ViewFinderInterface
 {
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Get the fully qualified location of the view.
      *
@@ -18,8 +25,9 @@ class TpViewFinder implements ViewFinderInterface
      */
     public function find($view)
     {
-        /** @var View|Blade $view */
-        $driver = App::getInstance()->make(View::class);
+        // todo 需要解耦
+        /** @var Blade $driver */
+        $driver = $this->app->get('view.blade.driver');
         $view = str_replace('.', DIRECTORY_SEPARATOR, $view);
         return $driver->parseTemplate($view);
     }

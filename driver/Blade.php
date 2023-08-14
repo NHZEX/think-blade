@@ -1,53 +1,51 @@
 <?php
+
 declare(strict_types=1);
 
 namespace think\view\driver;
 
-use HZEX\Blade\BladeInstance;
 use HZEX\Blade\Register;
-use Illuminate\View\Engines\CompilerEngine;
 use think\App;
 use think\contract\TemplateHandlerInterface;
 use think\helper\Str;
+use think\template\exception\TemplateNotFoundException;
+use Zxin\Think\Blade\BladeViewService;
+use Zxin\Think\Blade\ViewFactory;
 
-/**
- * Class Driver
- * @package nhzex\Blade\Blade
- * @mixin BladeInstance
- */
 class Blade implements TemplateHandlerInterface
 {
-    // 模板引擎实例
-    /** @var BladeInstance */
-    private $blade;
+    private ViewFactory $view;
+
     /** @var App */
     private $app;
 
     // 模板引擎参数
-    protected $config = [
+    protected array $config = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写 3 保持操作方法
-        'auto_rule'     => 1,
+        'auto_rule' => 1,
         // 视图目录名
         'view_dir_name' => 'view',
         // 模板起始路径
-        'view_path'     => '',
+        'view_path' => '',
         // 模板文件后缀
-        'view_suffix'   => 'blade.php',
+        'view_suffix' => 'blade.php',
         // 模板文件名分隔符
-        'view_depr'     => DIRECTORY_SEPARATOR,
+        'view_depr' => DIRECTORY_SEPARATOR,
         // 缓存路径
-        'cache_path'    => '',
+        'cache_path' => '',
         // 编译缓存
-        'tpl_cache'     => true,
+        'tpl_cache' => true,
+        // 启用模板调试
+        'view_debug' => null,
     ];
 
     public function __construct(App $app, array $config = [])
     {
-        $this->app    = $app;
+        $this->app = $app;
         $this->config = array_merge($this->config, $config);
 
         if (empty($this->config['cache_path'])) {
-            $this->config['cache_path'] = $app->getRuntimePath() . 'temp' . DIRECTORY_SEPARATOR;
+            $this->config['cache_path'] = $app->getRuntimePath().'temp'.DIRECTORY_SEPARATOR;
         }
 
         $this->config(array_merge($config, $this->config));
@@ -56,25 +54,19 @@ class Blade implements TemplateHandlerInterface
 
     public function boot(): void
     {
-        $cache_path = $this->config['cache_path'];
+        $this->app->instance('view.blade.driver', $this);
+        $this->app->register(BladeViewService::class);
 
-        $this->blade = new BladeInstance('', $cache_path);
-        $this->blade->getViewFactory();
-        if (!$this->config['tpl_cache']) {
-            $this->blade->cacheDisable(true);
-        }
-        /** @var Register $register */
-        $register = $this->app->make(Register::class);
-        $register->exec($this->blade);
-        /** @var CompilerEngine $blade */
-        $blade = $this->blade->getViewFactory()->getEngineResolver()->resolve('blade');
-        $this->app->bind('blade.compiler', $blade->getCompiler());
+        /** @var ViewFactory $viewFactory */
+        $viewFactory = $this->app->get('view.blade');
+
+        $this->view = $viewFactory;
     }
 
     /**
      * 检测是否存在模板文件
-     * @param string $template 模板文件或者模板规则
-     * @return bool
+     *
+     * @param  string  $template 模板文件或者模板规则
      */
     public function exists(string $template): bool
     {
@@ -88,9 +80,9 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 渲染模板文件
-     * @param string $template 模板文件
-     * @param array  $data     模板变量
-     * @return void
+     *
+     * @param  string  $template 模板文件
+     * @param  array  $data     模板变量
      */
     public function fetch(string $template, array $data = []): void
     {
@@ -99,38 +91,42 @@ class Blade implements TemplateHandlerInterface
             $template = $this->parseTemplate($template);
         }
         // 模板不存在 抛出异常
-        if (!is_file($template)) {
-            $exceptionClass = '\think\template\exception\TemplateNotFoundException';
-            if (class_exists($exceptionClass)) {
-                throw new $exceptionClass('template not exists:' . $template, $template);
+        if (! is_file($template)) {
+            if (class_exists(TemplateNotFoundException::class)) {
+                throw new TemplateNotFoundException('template not exists:'.$template, $template);
             } else {
-                throw new \RuntimeException('template not exists:' . $template, 0);
+                throw new \RuntimeException('template not exists:'.$template, 0);
             }
         }
-        // 记录视图信息
-        if ($this->app->isDebug()) {
-            $debugInfo = var_export($this->dumpArrayData($data), true);
-            $this->app->log->record("template: {$template}", 'view');
-            $this->app->log->record("assign: [{$debugInfo}]", 'view');
-        }
+        $this->debugViewRender($template, $data);
 
-        echo $this->blade->file($template, $data)->render();
+        echo $this->view->file($template, $data)->render();
     }
 
     /**
      * 渲染模板内容
-     * @param string $template 模板内容
-     * @param array  $data     模板变量
-     * @return void
      */
-    public function display(string $template, array $data = []): void
+    public function display(string $content, array $data = []): void
     {
-        echo $this->blade->make($template, $data)->render();
+        $this->debugViewRender('__content', $data);
+
+        echo $this->view->make($content, $data)->render();
+    }
+
+    protected function debugViewRender(string $template, array $data): void
+    {
+        // 记录视图信息
+        if (($this->config['view_debug'] ?? false) !== false && $this->app->isDebug()) {
+            $debugInfo = var_export($this->dumpArrayData($data), true);
+            $this->app->log->record("template: {$template}", 'view');
+            $this->app->log->record("assign: [{$debugInfo}]", 'view');
+        }
     }
 
     /**
      * 自动定位模板文件
-     * @param string $template 模板文件规则
+     *
+     * @param  string  $template 模板文件规则
      * @return string
      */
     public function parseTemplate(string $template)
@@ -140,37 +136,37 @@ class Blade implements TemplateHandlerInterface
         // 获取视图根目录
         if (strpos($template, '@')) {
             // 跨模块调用
-            list($app, $template) = explode('@', $template);
+            [$app, $template] = explode('@', $template);
         }
 
-        if ($this->config['view_path'] && !isset($app)) {
+        if ($this->config['view_path'] && ! isset($app)) {
             $path = $this->config['view_path'];
         } else {
             $appName = isset($app) ? $app : $this->app->http->getName();
-            $view    = $this->config['view_dir_name'];
+            $view = $this->config['view_dir_name'];
 
-            if (is_dir($this->app->getAppPath() . $view)) {
+            if (is_dir($this->app->getAppPath().$view)) {
                 $path = isset($app) ?
-                    $this->app->getBasePath() . (
-                    $appName ? $appName . DIRECTORY_SEPARATOR : ''
-                    ) . $view . DIRECTORY_SEPARATOR :
-                    $this->app->getAppPath() . $view . DIRECTORY_SEPARATOR;
+                    $this->app->getBasePath().(
+                        $appName ? $appName.DIRECTORY_SEPARATOR : ''
+                    ).$view.DIRECTORY_SEPARATOR :
+                    $this->app->getAppPath().$view.DIRECTORY_SEPARATOR;
             } else {
-                $path = $this->app->getRootPath() . $view . DIRECTORY_SEPARATOR . (
-                    $appName ? $appName . DIRECTORY_SEPARATOR : ''
-                    );
+                $path = $this->app->getRootPath().$view.DIRECTORY_SEPARATOR.(
+                    $appName ? $appName.DIRECTORY_SEPARATOR : ''
+                );
             }
         }
 
         $depr = $this->config['view_depr'];
 
         if (0 !== strpos($template, '/')) {
-            $template   = str_replace(['/', ':'], $depr, $template);
+            $template = str_replace(['/', ':'], $depr, $template);
             $controller = $request->controller();
 
             if (strpos($controller, '.')) {
-                $pos        = strrpos($controller, '.');
-                $controller = substr($controller, 0, $pos) . '.' . Str::snake(substr($controller, $pos + 1));
+                $pos = strrpos($controller, '.');
+                $controller = substr($controller, 0, $pos).'.'.Str::snake(substr($controller, $pos + 1));
             } else {
                 $controller = Str::snake($controller);
             }
@@ -185,22 +181,20 @@ class Blade implements TemplateHandlerInterface
                     } else {
                         $template = Str::snake($request->action());
                     }
-                    $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
+                    $template = str_replace('.', DIRECTORY_SEPARATOR, $controller).$depr.$template;
                 } elseif (false === strpos($template, $depr)) {
-                    $template = str_replace('.', DIRECTORY_SEPARATOR, $controller) . $depr . $template;
+                    $template = str_replace('.', DIRECTORY_SEPARATOR, $controller).$depr.$template;
                 }
             }
         } else {
             $template = str_replace(['/', ':'], $depr, substr($template, 1));
         }
 
-        return $path . ltrim($template, '/') . '.' . ltrim($this->config['view_suffix'], '.');
+        return $path.ltrim($template, '/').'.'.ltrim($this->config['view_suffix'], '.');
     }
 
     /**
      * 配置模板引擎
-     * @param array $config
-     * @return void
      */
     public function config(array $config): void
     {
@@ -209,7 +203,8 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 获取模板引擎配置
-     * @param string $name 参数名
+     *
+     * @param  string  $name 参数名
      * @return mixed
      */
     public function getConfig(string $name)
@@ -219,7 +214,7 @@ class Blade implements TemplateHandlerInterface
 
     public function __call($method, $params)
     {
-        return call_user_func_array([$this->blade, $method], $params);
+        return call_user_func_array([$this->view, $method], $params);
     }
 
     public function __debugInfo()
@@ -229,7 +224,7 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 获取数组调试信息
-     * @param array $data
+     *
      * @return array
      */
     private function dumpArrayData(array $data)
@@ -239,15 +234,15 @@ class Blade implements TemplateHandlerInterface
                 if (method_exists($value, '__toString')) {
                     $value = (string) $value;
                     if (mb_strlen($value) > 36) {
-                        $value = mb_substr((string) $value, 0, 36) . '...';
+                        $value = mb_substr((string) $value, 0, 36).'...';
                     }
                 } else {
-                    $value = get_class($value) . '#' . hash('crc32', spl_object_hash($value));
+                    $value = get_class($value).'#'.hash('crc32', spl_object_hash($value));
                 }
             } else {
                 $value = print_r($value, true);
                 if (mb_strlen($value) > 36) {
-                    $value = mb_substr($value, 0, 36) . '...';
+                    $value = mb_substr($value, 0, 36).'...';
                 }
             }
 

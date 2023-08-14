@@ -36,9 +36,9 @@ class ViewBladeTest extends TestCase
     ];
 
     /** @var \think\View */
-    private $blade;
+    private $view;
     /** @var Blade */
-    private $engine;
+    private $bladeEngine;
 
     public static function setUpBeforeClass(): void
     {
@@ -50,8 +50,12 @@ class ViewBladeTest extends TestCase
     {
         $app = new App(__DIR__);
         $app->config->set(self::CONFIG, 'view');
-        $this->blade = $app->make(\think\View::class);
-        $this->engine = $this->blade->engine();
+        $this->view        = $app->make(\think\View::class);
+        $this->bladeEngine = $this->view->engine();
+    }
+
+    public function tearDown(): void
+    {
     }
 
     /**
@@ -59,7 +63,7 @@ class ViewBladeTest extends TestCase
      */
     public function testBasicFetch()
     {
-        $result = $this->blade->fetch("view1");
+        $result = $this->view->fetch("view1");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view1.blade.php"), $result);
     }
 
@@ -68,14 +72,14 @@ class ViewBladeTest extends TestCase
      */
     public function testParametersFetch()
     {
-        $this->blade->assign(["title" => "Test Title"]);
-        $result = $this->blade->fetch("view2");
+        $this->view->assign(["title" => "Test Title"]);
+        $result = $this->view->fetch("view2");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view2.html"), $result);
     }
 
     public function testAltPath()
     {
-        $result = $this->engine->render("alt/view3");
+        $result = $this->bladeEngine->render("alt/view3");
         $this->assertSame(file_get_contents(__DIR__ . "/views/alt/view3.blade.php"), $result);
     }
 
@@ -84,7 +88,7 @@ class ViewBladeTest extends TestCase
      */
     public function testUse()
     {
-        $result = $this->blade->fetch("view5");
+        $result = $this->view->fetch("view5");
         $this->assertSame("stuff", trim($result));
     }
 
@@ -93,7 +97,7 @@ class ViewBladeTest extends TestCase
      */
     public function testRawOutput()
     {
-        $result = $this->blade->fetch("view6");
+        $result = $this->view->fetch("view6");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view6.html"), $result);
     }
 
@@ -102,7 +106,7 @@ class ViewBladeTest extends TestCase
      */
     public function testEscapedOutput()
     {
-        $result = $this->blade->fetch("view7");
+        $result = $this->view->fetch("view7");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view7.html"), $result);
     }
 
@@ -111,8 +115,8 @@ class ViewBladeTest extends TestCase
      */
     public function testShare()
     {
-        $this->blade->__set("shareData", "shared");
-        $result = $this->blade->fetch("view8");
+        $this->view->__set("shareData", "shared");
+        $result = $this->view->fetch("view8");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view8.html"), $result);
     }
 
@@ -122,10 +126,10 @@ class ViewBladeTest extends TestCase
     public function testComposer()
     {
         $this->markTestSkipped('事件模块未移植，功能不可用');
-        $this->engine->composer("*", function (View $view) {
+        $this->bladeEngine->composer("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
-        $result = $this->blade->fetch("view9");
+        $result = $this->view->fetch("view9");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view9.html"), $result);
     }
 
@@ -135,21 +139,21 @@ class ViewBladeTest extends TestCase
     public function testCreator()
     {
         $this->markTestSkipped('事件模块未移植，功能不可用');
-        $this->engine->creator("*", function (View $view) {
+        $this->bladeEngine->creator("*", function (View $view) {
             $view->with("items", ["One", "Two", "Three"]);
         });
-        $result = $this->blade->fetch("view9");
+        $result = $this->view->fetch("view9");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view9.html"), $result);
     }
 
     public function testExists1()
     {
-        $this->assertTrue($this->blade->exists("view1"));
+        $this->assertTrue($this->view->exists("view1"));
     }
 
     public function testDoesntExist()
     {
-        $this->assertFalse($this->blade->exists("no-such-view"));
+        $this->assertFalse($this->view->exists("no-such-view"));
     }
 
     /**
@@ -157,7 +161,7 @@ class ViewBladeTest extends TestCase
      */
     public function testInheritance()
     {
-        $result = $this->blade->fetch("view10");
+        $result = $this->view->fetch("view10");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view10.html"), $result);
     }
 
@@ -167,7 +171,7 @@ class ViewBladeTest extends TestCase
     public function testInheritanceAltPath()
     {
         // $this->engine->setViewDirName("views/alt");
-        $result = $this->blade->fetch("view11");
+        $result = $this->view->fetch("view11");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view11.html"), $result);
     }
 
@@ -176,10 +180,10 @@ class ViewBladeTest extends TestCase
      */
     public function testCustomCompiler()
     {
-        $this->engine->extend(function ($value) {
+        $this->bladeEngine->extend(function ($value) {
             return str_replace("Original", "New", $value);
         });
-        $result = $this->blade->fetch("view12");
+        $result = $this->view->fetch("view12");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view12.html"), $result);
     }
 
@@ -188,12 +192,12 @@ class ViewBladeTest extends TestCase
      */
     public function testCustomDirective()
     {
-        $this->engine->directive("normandie", function ($parameter) {
+        $this->bladeEngine->directive("normandie", function ($parameter) {
             $parameter = trim($parameter, "()");
 
             return "inguz({$parameter});";
         });
-        $result = $this->blade->fetch("view13");
+        $result = $this->view->fetch("view13");
         $this->assertSame(file_get_contents(__DIR__ . "/views/view13.html"), $result);
     }
 
@@ -212,12 +216,12 @@ class ViewBladeTest extends TestCase
      * @param string $expected
      * @throws Exception
      */
-    public function testCustomConditions(bool $global, string $expected)
+    public function testCustomConditions(bool $constantVal, string $expected)
     {
-        $this->engine->if("global", function () use ($global) {
-            return $global;
+        $this->bladeEngine->if("ConstantVal", function () use ($constantVal) {
+            return $constantVal;
         });
-        $result = $this->blade->fetch("view14");
+        $result = $this->view->fetch("view14");
         $this->assertSame("{$expected}\n", $result);
     }
 
@@ -230,13 +234,13 @@ class ViewBladeTest extends TestCase
     public function testCustomConditionArguments(bool $global, string $expected)
     {
         // $this->markTestIncomplete('功能未实现');
-        $this->engine->if("global", function (bool $global) {
-            return $global;
+        $this->bladeEngine->if("IfBool", function (bool $value) {
+            return $value;
         });
-        $this->blade->assign([
+        $this->view->assign([
             "global" => $global,
         ]);
-        $result = $this->blade->fetch("view15");
+        $result = $this->view->fetch("view15");
         $this->assertSame("{$expected}\n", $result);
     }
 
@@ -245,7 +249,7 @@ class ViewBladeTest extends TestCase
      */
     public function testRender1(): void
     {
-        $result = $this->blade->fetch("view17", ["title" => "Test Title"]);
+        $result = $this->view->fetch("view17", ["title" => "Test Title"]);
         $this->assertSame(file_get_contents(__DIR__ . "/views/view17.html"), $result);
     }
 }

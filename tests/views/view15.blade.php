@@ -1,5 +1,5 @@
-@global($global)
+@IfBool($global)
     on
 @else
     off
-@endglobal
+@endIfBool
