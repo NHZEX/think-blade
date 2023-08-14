@@ -32,7 +32,9 @@
         "topthink/think-template": "^2.0",
         "bamarni/composer-bin-plugin": "^1.8",
         "php-cs-fixer/shim": "^3.22",
-        "symfony/mime": "^6.0"
+        "symfony/mime": "^6.0",
+        "phpstan/phpstan": "^1.10",
+        "rector/rector": "^0.17.12"
     },
     "replace": {
         "illuminate/contracts": "~9.52.15",
