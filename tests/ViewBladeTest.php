@@ -13,10 +13,11 @@ use Illuminate\View\View;
 use PHPUnit\Framework\TestCase;
 use think\App;
 use think\view\driver\Blade;
+use Generator;
 
 class ViewBladeTest extends TestCase
 {
-    const CONFIG = [
+    public const CONFIG = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写
         'auto_rule' => 1,
         // 模板引擎类型 支持 php think 支持扩展
@@ -202,7 +203,7 @@ class ViewBladeTest extends TestCase
     }
 
     /**
-     * @return \Generator
+     * @return Generator
      */
     public function customConditionProvider()
     {

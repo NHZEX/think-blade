@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace think\view\driver;
 
-use HZEX\Blade\Register;
 use think\App;
 use think\contract\TemplateHandlerInterface;
 use think\helper\Str;
 use think\template\exception\TemplateNotFoundException;
 use Zxin\Think\Blade\BladeViewService;
 use Zxin\Think\Blade\ViewFactory;
+use RuntimeException;
+
+use function call_user_func_array;
+use function is_object;
+use function get_class;
 
 class Blade implements TemplateHandlerInterface
 {
@@ -91,11 +95,11 @@ class Blade implements TemplateHandlerInterface
             $template = $this->parseTemplate($template);
         }
         // 模板不存在 抛出异常
-        if (! is_file($template)) {
+        if (!is_file($template)) {
             if (class_exists(TemplateNotFoundException::class)) {
                 throw new TemplateNotFoundException('template not exists:'.$template, $template);
             } else {
-                throw new \RuntimeException('template not exists:'.$template, 0);
+                throw new RuntimeException('template not exists:'.$template, 0);
             }
         }
         $this->debugViewRender($template, $data);
@@ -139,10 +143,10 @@ class Blade implements TemplateHandlerInterface
             [$app, $template] = explode('@', $template);
         }
 
-        if ($this->config['view_path'] && ! isset($app)) {
+        if ($this->config['view_path'] && !isset($app)) {
             $path = $this->config['view_path'];
         } else {
-            $appName = isset($app) ? $app : $this->app->http->getName();
+            $appName = $app ?? $this->app->http->getName();
             $view = $this->config['view_dir_name'];
 
             if (is_dir($this->app->getAppPath().$view)) {

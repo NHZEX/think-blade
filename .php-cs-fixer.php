@@ -4,6 +4,7 @@ $finder = PhpCsFixer\Finder::create()
     ->in([
         'driver',
         'src-next',
+        'tests',
     ]);
 
 return (new PhpCsFixer\Config())
@@ -12,7 +13,6 @@ return (new PhpCsFixer\Config())
         '@PHP74Migration'            => true,
         'normalize_index_brace'      => true,
         'global_namespace_import'    => ['import_classes' => true, 'import_constants' => true, 'import_functions' => true],
-        'operator_linebreak'         => ['only_booleans' => true, 'position' => 'beginning'],
         'standardize_not_equals'     => true,
         'unary_operator_spaces'      => true,
         // risky

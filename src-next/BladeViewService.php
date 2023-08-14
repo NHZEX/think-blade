@@ -167,7 +167,7 @@ class BladeViewService extends Service
     public function registerEngineResolver()
     {
         $this->container->singleton('view.engine.resolver', function () {
-            $resolver = new EngineResolver;
+            $resolver = new EngineResolver();
 
             // Next, we will register the various view engines with the resolver so that the
             // environment will resolve the engines needed for various views based on the

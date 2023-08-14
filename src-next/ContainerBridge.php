@@ -7,8 +7,10 @@ namespace Zxin\Think\Blade;
 use Closure;
 use Illuminate\Contracts\Container\Container as ContainerContract;
 use think\Container as ThinkContainer;
+use ArrayAccess;
+use RuntimeException;
 
-class ContainerBridge implements \ArrayAccess, ContainerContract
+class ContainerBridge implements ArrayAccess, ContainerContract
 {
     private ThinkContainer $container;
 
@@ -29,12 +31,12 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
 
     public function tag($abstracts, $tags)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function tagged($tag)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function bind($abstract, $concrete = null, $shared = false)
@@ -46,7 +48,7 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
 
     public function bindIf($abstract, $concrete = null, $shared = false)
     {
-        if (! $this->bound($abstract)) {
+        if (!$this->bound($abstract)) {
             $this->bind($abstract, $concrete, $shared);
         }
     }
@@ -58,24 +60,24 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
 
     public function singletonIf($abstract, $concrete = null)
     {
-        if (! $this->bound($abstract)) {
+        if (!$this->bound($abstract)) {
             $this->singleton($abstract, $concrete);
         }
     }
 
     public function scoped($abstract, $concrete = null)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function scopedIf($abstract, $concrete = null)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function extend($abstract, Closure $closure)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function instance($abstract, $instance)
@@ -85,12 +87,12 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
 
     public function addContextualBinding($concrete, $abstract, $implementation)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function when($concrete)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function factory($abstract)
@@ -101,7 +103,7 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
     public function flush()
     {
         // 可以考虑静默忽略
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function make($abstract, array $parameters = [])
@@ -114,7 +116,7 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
         // $defaultMethod 无法实现，tp 仅支持`__make`
 
         if (null !== $defaultMethod && '__make' !== $defaultMethod) {
-            throw new \RuntimeException('not support $defaultMethod');
+            throw new RuntimeException('not support $defaultMethod');
         }
 
         $this->container->invoke($callback, $parameters);
@@ -127,7 +129,7 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
 
     public function beforeResolving($abstract, Closure $callback = null)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function resolving($abstract, Closure $callback = null)
@@ -137,7 +139,7 @@ class ContainerBridge implements \ArrayAccess, ContainerContract
 
     public function afterResolving($abstract, Closure $callback = null)
     {
-        throw new \RuntimeException('not support');
+        throw new RuntimeException('not support');
     }
 
     public function get(string $id)
