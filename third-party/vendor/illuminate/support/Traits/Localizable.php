@@ -2,6 +2,7 @@
 
 namespace Illuminate\Support\Traits;
 
+use Closure;
 use Illuminate\Container\Container;
 
 trait Localizable
@@ -10,7 +11,7 @@ trait Localizable
      * Run the callback with the given locale.
      *
      * @param  string  $locale
-     * @param  \Closure  $callback
+     * @param  Closure  $callback
      * @return mixed
      */
     public function withLocale($locale, $callback)
@@ -18,9 +19,7 @@ trait Localizable
         if (! $locale) {
             return $callback();
         }
-
         $app = Container::getInstance();
-
         $original = $app->getLocale();
 
         try {

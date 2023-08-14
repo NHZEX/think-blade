@@ -18,7 +18,6 @@ class PendingBatchFake extends PendingBatch
      * Create a new pending batch instance.
      *
      * @param  \Illuminate\Support\Testing\Fakes\BusFake  $bus
-     * @param  \Illuminate\Support\Collection  $jobs
      * @return void
      */
     public function __construct(BusFake $bus, Collection $jobs)

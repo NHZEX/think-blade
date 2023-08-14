@@ -46,7 +46,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\View\Compilers\BladeCompiler
  */
-class Blade extends Facade
+class Blade extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

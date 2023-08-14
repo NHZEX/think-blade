@@ -2,7 +2,7 @@
 
 namespace Illuminate\View;
 
-class AnonymousComponent extends Component
+class AnonymousComponent extends \Illuminate\View\Component
 {
     /**
      * The component view.
@@ -50,11 +50,6 @@ class AnonymousComponent extends Component
     {
         $this->attributes = $this->attributes ?: $this->newAttributeBag();
 
-        return array_merge(
-            ($this->data['attributes'] ?? null)?->getAttributes() ?: [],
-            $this->attributes->getAttributes(),
-            $this->data,
-            ['attributes' => $this->attributes]
-        );
+        return array_merge(($this->data['attributes'] ?? null)?->getAttributes() ?: [], $this->attributes->getAttributes(), $this->data, ['attributes' => $this->attributes]);
     }
 }

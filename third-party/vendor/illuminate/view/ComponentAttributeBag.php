@@ -27,7 +27,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     /**
      * Create a new component attribute bag instance.
      *
-     * @param  array  $attributes
      * @return void
      */
     public function __construct(array $attributes = [])
@@ -43,7 +42,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      */
     public function first($default = null)
     {
-        return $this->getIterator()->current() ?? value($default);
+        return $this->getIterator()->current() ?? \__Illuminate\value($default);
     }
 
     /**
@@ -55,7 +54,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      */
     public function get($key, $default = null)
     {
-        return $this->attributes[$key] ?? value($default);
+        return $this->attributes[$key] ?? \__Illuminate\value($default);
     }
 
     /**
@@ -92,7 +91,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
             $values = $this->attributes;
         } else {
             $keys = Arr::wrap($keys);
-
             $values = Arr::only($this->attributes, $keys);
         }
 
@@ -111,7 +109,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
             $values = $this->attributes;
         } else {
             $keys = Arr::wrap($keys);
-
             $values = Arr::except($this->attributes, $keys);
         }
 
@@ -126,7 +123,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      */
     public function filter($callback)
     {
-        return new static(collect($this->attributes)->filter($callback)->all());
+        return new static(\__Illuminate\collect($this->attributes)->filter($callback)->all());
     }
 
     /**
@@ -200,7 +197,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
 
         foreach ($keys as $key => $defaultValue) {
             $key = is_numeric($key) ? $defaultValue : $key;
-
             $props[] = $key;
             $props[] = Str::kebab($key);
         }
@@ -237,30 +233,19 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     /**
      * Merge additional attributes / values into the attribute bag.
      *
-     * @param  array  $attributeDefaults
      * @param  bool  $escape
      * @return static
      */
     public function merge(array $attributeDefaults = [], $escape = true)
     {
         $attributeDefaults = array_map(function ($value) use ($escape) {
-            return $this->shouldEscapeAttributeValue($escape, $value)
-                        ? e($value)
-                        : $value;
+            return $this->shouldEscapeAttributeValue($escape, $value) ? \__Illuminate\e($value) : $value;
         }, $attributeDefaults);
-
-        [$appendableAttributes, $nonAppendableAttributes] = collect($this->attributes)
-                    ->partition(function ($value, $key) use ($attributeDefaults) {
-                        return $key === 'class' || $key === 'style' || (
-                            isset($attributeDefaults[$key]) &&
-                            $attributeDefaults[$key] instanceof AppendableAttributeValue
-                        );
-                    });
-
+        [$appendableAttributes, $nonAppendableAttributes] = \__Illuminate\collect($this->attributes)->partition(function ($value, $key) use ($attributeDefaults) {
+            return $key === 'class' || $key === 'style' || isset($attributeDefaults[$key]) && $attributeDefaults[$key] instanceof \Illuminate\View\AppendableAttributeValue;
+        });
         $attributes = $appendableAttributes->mapWithKeys(function ($value, $key) use ($attributeDefaults, $escape) {
-            $defaultsValue = isset($attributeDefaults[$key]) && $attributeDefaults[$key] instanceof AppendableAttributeValue
-                        ? $this->resolveAppendableAttributeDefault($attributeDefaults, $key, $escape)
-                        : ($attributeDefaults[$key] ?? '');
+            $defaultsValue = isset($attributeDefaults[$key]) && $attributeDefaults[$key] instanceof \Illuminate\View\AppendableAttributeValue ? $this->resolveAppendableAttributeDefault($attributeDefaults, $key, $escape) : $attributeDefaults[$key] ?? '';
 
             if ($key === 'style') {
                 $value = Str::finish($value, ';');
@@ -285,9 +270,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
             return false;
         }
 
-        return ! is_object($value) &&
-               ! is_null($value) &&
-               ! is_bool($value);
+        return ! is_object($value) && ! is_null($value) && ! is_bool($value);
     }
 
     /**
@@ -298,7 +281,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      */
     public function prepends($value)
     {
-        return new AppendableAttributeValue($value);
+        return new \Illuminate\View\AppendableAttributeValue($value);
     }
 
     /**
@@ -312,7 +295,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     protected function resolveAppendableAttributeDefault($attributeDefaults, $key, $escape)
     {
         if ($this->shouldEscapeAttributeValue($escape, $value = $attributeDefaults[$key]->value)) {
-            $value = e($value);
+            $value = \__Illuminate\e($value);
         }
 
         return $value;
@@ -331,20 +314,15 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     /**
      * Set the underlying attributes.
      *
-     * @param  array  $attributes
      * @return void
      */
     public function setAttributes(array $attributes)
     {
-        if (isset($attributes['attributes']) &&
-            $attributes['attributes'] instanceof self) {
+        if (isset($attributes['attributes']) && $attributes['attributes'] instanceof self) {
             $parentBag = $attributes['attributes'];
-
             unset($attributes['attributes']);
-
             $attributes = $parentBag->merge($attributes, $escape = false)->getAttributes();
         }
-
         $this->attributes = $attributes;
     }
 
@@ -361,7 +339,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     /**
      * Merge additional attributes / values into the attribute bag.
      *
-     * @param  array  $attributeDefaults
      * @return \Illuminate\Support\HtmlString
      */
     public function __invoke(array $attributeDefaults = [])
@@ -373,7 +350,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * Determine if the given offset exists.
      *
      * @param  string  $offset
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -384,7 +360,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * Get the value at the given offset.
      *
      * @param  string  $offset
-     * @return mixed
      */
     public function offsetGet($offset): mixed
     {
@@ -396,7 +371,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      *
      * @param  string  $offset
      * @param  mixed  $value
-     * @return void
      */
     public function offsetSet($offset, $value): void
     {
@@ -407,7 +381,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
      * Remove the value at the given offset.
      *
      * @param  string  $offset
-     * @return void
      */
     public function offsetUnset($offset): void
     {
@@ -417,7 +390,7 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
     /**
      * Get an iterator for the items.
      *
-     * @return \ArrayIterator
+     * @return ArrayIterator
      */
     public function getIterator(): Traversable
     {
@@ -441,7 +414,6 @@ class ComponentAttributeBag implements ArrayAccess, Htmlable, IteratorAggregate
             if ($value === true) {
                 $value = $key;
             }
-
             $string .= ' '.$key.'="'.str_replace('"', '\\"', trim($value)).'"';
         }
 

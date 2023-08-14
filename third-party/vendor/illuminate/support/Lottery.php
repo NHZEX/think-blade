@@ -53,9 +53,7 @@ class Lottery
         if ($outOf === null && is_float($chances) && $chances > 1) {
             throw new RuntimeException('Float must not be greater than 1.');
         }
-
         $this->chances = $chances;
-
         $this->outOf = $outOf;
     }
 
@@ -119,7 +117,6 @@ class Lottery
         if ($times === null) {
             return $this->runCallback();
         }
-
         $results = [];
 
         for ($i = 0; $i < $times; $i++) {
@@ -137,9 +134,7 @@ class Lottery
      */
     protected function runCallback(...$args)
     {
-        return $this->wins()
-            ? ($this->winner ?? fn () => true)(...$args)
-            : ($this->loser ?? fn () => false)(...$args);
+        return $this->wins() ? ($this->winner ?? fn () => true)(...$args) : ($this->loser ?? fn () => false)(...$args);
     }
 
     /**
@@ -159,9 +154,7 @@ class Lottery
      */
     protected static function resultFactory()
     {
-        return static::$resultFactory ?? fn ($chances, $outOf) => $outOf === null
-            ? random_int(0, PHP_INT_MAX) / PHP_INT_MAX <= $chances
-            : random_int(1, $outOf) <= $chances;
+        return static::$resultFactory ?? fn ($chances, $outOf) => $outOf === null ? random_int(0, \PHP_INT_MAX) / \PHP_INT_MAX <= $chances : random_int(1, $outOf) <= $chances;
     }
 
     /**
@@ -177,9 +170,7 @@ class Lottery
         if ($callback === null) {
             return;
         }
-
         $callback();
-
         static::determineResultNormally();
     }
 
@@ -196,9 +187,7 @@ class Lottery
         if ($callback === null) {
             return;
         }
-
         $callback();
-
         static::determineResultNormally();
     }
 
@@ -224,21 +213,15 @@ class Lottery
     public static function forceResultWithSequence($sequence, $whenMissing = null)
     {
         $next = 0;
-
         $whenMissing ??= function ($chances, $outOf) use (&$next) {
             $factoryCache = static::$resultFactory;
-
             static::$resultFactory = null;
-
             $result = static::resultFactory()($chances, $outOf);
-
             static::$resultFactory = $factoryCache;
-
             $next++;
 
             return $result;
         };
-
         static::setResultFactory(function ($chances, $outOf) use (&$next, $sequence, $whenMissing) {
             if (array_key_exists($next, $sequence)) {
                 return $sequence[$next++];

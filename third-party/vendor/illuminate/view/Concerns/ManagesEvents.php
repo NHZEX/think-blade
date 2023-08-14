@@ -12,7 +12,7 @@ trait ManagesEvents
      * Register a view creator event.
      *
      * @param  array|string  $views
-     * @param  \Closure|string  $callback
+     * @param  Closure|string  $callback
      * @return array
      */
     public function creator($views, $callback)
@@ -29,7 +29,6 @@ trait ManagesEvents
     /**
      * Register multiple view composers via an array.
      *
-     * @param  array  $composers
      * @return array
      */
     public function composers(array $composers)
@@ -47,7 +46,7 @@ trait ManagesEvents
      * Register a view composer event.
      *
      * @param  array|string  $views
-     * @param  \Closure|string  $callback
+     * @param  Closure|string  $callback
      * @return array
      */
     public function composer($views, $callback)
@@ -65,9 +64,9 @@ trait ManagesEvents
      * Add an event for a given view.
      *
      * @param  string  $view
-     * @param  \Closure|string  $callback
+     * @param  Closure|string  $callback
      * @param  string  $prefix
-     * @return \Closure|null
+     * @return Closure|null
      */
     protected function addViewEvent($view, $callback, $prefix = 'composing: ')
     {
@@ -88,19 +87,15 @@ trait ManagesEvents
      * @param  string  $view
      * @param  string  $class
      * @param  string  $prefix
-     * @return \Closure
+     * @return Closure
      */
     protected function addClassEvent($view, $class, $prefix)
     {
         $name = $prefix.$view;
-
         // When registering a class based view "composer", we will simply resolve the
         // classes from the application IoC container then call the compose method
         // on the instance. This allows for convenient, testable view composers.
-        $callback = $this->buildClassEventCallback(
-            $class, $prefix
-        );
-
+        $callback = $this->buildClassEventCallback($class, $prefix);
         $this->addEventListener($name, $callback);
 
         return $callback;
@@ -111,12 +106,11 @@ trait ManagesEvents
      *
      * @param  string  $class
      * @param  string  $prefix
-     * @return \Closure
+     * @return Closure
      */
     protected function buildClassEventCallback($class, $prefix)
     {
         [$class, $method] = $this->parseClassEvent($class, $prefix);
-
         // Once we have the class and method name, we can build the Closure to resolve
         // the instance out of the IoC container and call the method on it with the
         // given arguments that are passed to the Closure as the composer's data.
@@ -152,7 +146,7 @@ trait ManagesEvents
      * Add a listener to the event dispatcher.
      *
      * @param  string  $name
-     * @param  \Closure  $callback
+     * @param  Closure  $callback
      * @return void
      */
     protected function addEventListener($name, $callback)
@@ -162,14 +156,12 @@ trait ManagesEvents
                 return $callback($data[0]);
             };
         }
-
         $this->events->listen($name, $callback);
     }
 
     /**
      * Call the composer for a given view.
      *
-     * @param  \Illuminate\Contracts\View\View  $view
      * @return void
      */
     public function callComposer(ViewContract $view)
@@ -180,7 +172,6 @@ trait ManagesEvents
     /**
      * Call the creator for a given view.
      *
-     * @param  \Illuminate\Contracts\View\View  $view
      * @return void
      */
     public function callCreator(ViewContract $view)

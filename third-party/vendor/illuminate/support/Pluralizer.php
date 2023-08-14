@@ -2,6 +2,7 @@
 
 namespace Illuminate\Support;
 
+use Countable;
 use Doctrine\Inflector\InflectorFactory;
 
 class Pluralizer
@@ -27,16 +28,13 @@ class Pluralizer
      *
      * @var string[]
      */
-    public static $uncountable = [
-        'recommended',
-        'related',
-    ];
+    public static $uncountable = ['recommended', 'related'];
 
     /**
      * Get the plural form of an English word.
      *
      * @param  string  $value
-     * @param  int|array|\Countable  $count
+     * @param  int|array|Countable  $count
      * @return string
      */
     public static function plural($value, $count = 2)
@@ -45,10 +43,9 @@ class Pluralizer
             $count = count($count);
         }
 
-        if ((int) abs($count) === 1 || static::uncountable($value) || preg_match('/^(.*)[A-Za-z0-9\x{0080}-\x{FFFF}]$/u', $value) == 0) {
+        if ((int) abs($count) === 1 || static::uncountable($value) || preg_match('/^(.*)[A-Za-z0-9\\x{0080}-\\x{FFFF}]$/u', $value) == 0) {
             return $value;
         }
-
         $plural = static::inflector()->pluralize($value);
 
         return static::matchCase($plural, $value);
@@ -115,13 +112,11 @@ class Pluralizer
     /**
      * Specify the language that should be used by the inflector.
      *
-     * @param  string  $language
      * @return void
      */
     public static function useLanguage(string $language)
     {
         static::$language = $language;
-
         static::$inflector = null;
     }
 }

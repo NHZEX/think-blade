@@ -24,7 +24,6 @@ trait CapsuleManagerTrait
     /**
      * Setup the IoC container instance.
      *
-     * @param  \Illuminate\Contracts\Container\Container  $container
      * @return void
      */
     protected function setupContainer(Container $container)
@@ -32,7 +31,7 @@ trait CapsuleManagerTrait
         $this->container = $container;
 
         if (! $this->container->bound('config')) {
-            $this->container->instance('config', new Fluent);
+            $this->container->instance('config', new Fluent());
         }
     }
 
@@ -59,7 +58,6 @@ trait CapsuleManagerTrait
     /**
      * Set the IoC container instance.
      *
-     * @param  \Illuminate\Contracts\Container\Container  $container
      * @return void
      */
     public function setContainer(Container $container)

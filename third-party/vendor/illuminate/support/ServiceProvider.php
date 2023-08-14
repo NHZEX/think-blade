@@ -71,7 +71,6 @@ abstract class ServiceProvider
     /**
      * Register a booting callback to be run before the "boot" method is called.
      *
-     * @param  \Closure  $callback
      * @return void
      */
     public function booting(Closure $callback)
@@ -82,7 +81,6 @@ abstract class ServiceProvider
     /**
      * Register a booted callback to be run after the "boot" method is called.
      *
-     * @param  \Closure  $callback
      * @return void
      */
     public function booted(Closure $callback)
@@ -101,7 +99,6 @@ abstract class ServiceProvider
 
         while ($index < count($this->bootingCallbacks)) {
             $this->app->call($this->bootingCallbacks[$index]);
-
             $index++;
         }
     }
@@ -117,7 +114,6 @@ abstract class ServiceProvider
 
         while ($index < count($this->bootedCallbacks)) {
             $this->app->call($this->bootedCallbacks[$index]);
-
             $index++;
         }
     }
@@ -133,10 +129,7 @@ abstract class ServiceProvider
     {
         if (! ($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
             $config = $this->app->make('config');
-
-            $config->set($key, array_merge(
-                require $path, $config->get($key, [])
-            ));
+            $config->set($key, array_merge(require $path, $config->get($key, [])));
         }
     }
 
@@ -163,15 +156,13 @@ abstract class ServiceProvider
     protected function loadViewsFrom($path, $namespace)
     {
         $this->callAfterResolving('view', function ($view) use ($path, $namespace) {
-            if (isset($this->app->config['view']['paths']) &&
-                is_array($this->app->config['view']['paths'])) {
+            if (isset($this->app->config['view']['paths']) && is_array($this->app->config['view']['paths'])) {
                 foreach ($this->app->config['view']['paths'] as $viewPath) {
                     if (is_dir($appPath = $viewPath.'/vendor/'.$namespace)) {
                         $view->addNamespace($namespace, $appPath);
                     }
                 }
             }
-
             $view->addNamespace($namespace, $path);
         });
     }
@@ -180,7 +171,6 @@ abstract class ServiceProvider
      * Register the given view components with a custom prefix.
      *
      * @param  string  $prefix
-     * @param  array  $components
      * @return void
      */
     protected function loadViewComponentsAs($prefix, array $components)
@@ -270,14 +260,12 @@ abstract class ServiceProvider
     /**
      * Register paths to be published by the publish command.
      *
-     * @param  array  $paths
      * @param  mixed  $groups
      * @return void
      */
     protected function publishes(array $paths, $groups = null)
     {
         $this->ensurePublishArrayInitialized($class = static::class);
-
         static::$publishes[$class] = array_merge(static::$publishes[$class], $paths);
 
         foreach ((array) $groups as $group) {
@@ -310,10 +298,7 @@ abstract class ServiceProvider
         if (! array_key_exists($group, static::$publishGroups)) {
             static::$publishGroups[$group] = [];
         }
-
-        static::$publishGroups[$group] = array_merge(
-            static::$publishGroups[$group], $paths
-        );
+        static::$publishGroups[$group] = array_merge(static::$publishGroups[$group], $paths);
     }
 
     /**
@@ -329,7 +314,7 @@ abstract class ServiceProvider
             return $paths;
         }
 
-        return collect(static::$publishes)->reduce(function ($paths, $p) {
+        return \__Illuminate\collect(static::$publishes)->reduce(function ($paths, $p) {
             return array_merge($paths, $p);
         }, []);
     }
@@ -399,7 +384,6 @@ abstract class ServiceProvider
     public function commands($commands)
     {
         $commands = is_array($commands) ? $commands : func_get_args();
-
         Artisan::starting(function ($artisan) use ($commands) {
             $artisan->resolveCommands($commands);
         });

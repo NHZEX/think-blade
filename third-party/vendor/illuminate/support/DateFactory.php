@@ -4,6 +4,7 @@ namespace Illuminate\Support;
 
 use Carbon\Factory;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * @see https://carbon.nesbot.com/docs/
@@ -88,7 +89,7 @@ class DateFactory
      *
      * @var string
      */
-    const DEFAULT_CLASS_NAME = Carbon::class;
+    const DEFAULT_CLASS_NAME = \Illuminate\Support\Carbon::class;
 
     /**
      * The type (class) of dates that should be created.
@@ -117,7 +118,7 @@ class DateFactory
      * @param  mixed  $handler
      * @return mixed
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function use($handler)
     {
@@ -147,13 +148,11 @@ class DateFactory
     /**
      * Execute the given callable on each date creation.
      *
-     * @param  callable  $callable
      * @return void
      */
     public static function useCallable(callable $callable)
     {
         static::$callable = $callable;
-
         static::$dateClass = null;
         static::$factory = null;
     }
@@ -167,7 +166,6 @@ class DateFactory
     public static function useClass($dateClass)
     {
         static::$dateClass = $dateClass;
-
         static::$factory = null;
         static::$callable = null;
     }
@@ -181,7 +179,6 @@ class DateFactory
     public static function useFactory($factory)
     {
         static::$factory = $factory;
-
         static::$dateClass = null;
         static::$callable = null;
     }
@@ -193,38 +190,30 @@ class DateFactory
      * @param  array  $parameters
      * @return mixed
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function __call($method, $parameters)
     {
         $defaultClassName = static::DEFAULT_CLASS_NAME;
-
         // Using callable to generate dates...
         if (static::$callable) {
             return call_user_func(static::$callable, $defaultClassName::$method(...$parameters));
         }
-
         // Using Carbon factory to generate dates...
         if (static::$factory) {
-            return static::$factory->$method(...$parameters);
+            return static::$factory->{$method}(...$parameters);
         }
-
         $dateClass = static::$dateClass ?: $defaultClassName;
-
         // Check if the date can be created using the public class method...
-        if (method_exists($dateClass, $method) ||
-            method_exists($dateClass, 'hasMacro') && $dateClass::hasMacro($method)) {
+        if (method_exists($dateClass, $method) || method_exists($dateClass, 'hasMacro') && $dateClass::hasMacro($method)) {
             return $dateClass::$method(...$parameters);
         }
-
         // If that fails, create the date with the default class...
         $date = $defaultClassName::$method(...$parameters);
-
         // If the configured class has an "instance" method, we'll try to pass our date into there...
         if (method_exists($dateClass, 'instance')) {
             return $dateClass::instance($date);
         }
-
         // Otherwise, assume the configured class has a DateTime compatible constructor...
         return new $dateClass($date->format('Y-m-d H:i:s.u'), $date->getTimezone());
     }

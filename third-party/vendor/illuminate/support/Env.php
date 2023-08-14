@@ -2,9 +2,9 @@
 
 namespace Illuminate\Support;
 
-use Dotenv\Repository\Adapter\PutenvAdapter;
-use Dotenv\Repository\RepositoryBuilder;
-use PhpOption\Option;
+use __Illuminate\Dotenv\Repository\Adapter\PutenvAdapter;
+use __Illuminate\Dotenv\Repository\RepositoryBuilder;
+use __Illuminate\PhpOption\Option;
 
 class Env
 {
@@ -57,7 +57,6 @@ class Env
             if (static::$putenv) {
                 $builder = $builder->addAdapter(PutenvAdapter::class);
             }
-
             static::$repository = $builder->immutable()->make();
         }
 
@@ -73,29 +72,30 @@ class Env
      */
     public static function get($key, $default = null)
     {
-        return Option::fromValue(static::getRepository()->get($key))
-            ->map(function ($value) {
-                switch (strtolower($value)) {
-                    case 'true':
-                    case '(true)':
-                        return true;
-                    case 'false':
-                    case '(false)':
-                        return false;
-                    case 'empty':
-                    case '(empty)':
-                        return '';
-                    case 'null':
-                    case '(null)':
-                        return;
-                }
+        return Option::fromValue(static::getRepository()->get($key))->map(function ($value) {
+            switch (strtolower($value)) {
+                case 'true':
+                case '(true)':
+                    return true;
 
-                if (preg_match('/\A([\'"])(.*)\1\z/', $value, $matches)) {
-                    return $matches[2];
-                }
+                case 'false':
+                case '(false)':
+                    return false;
 
-                return $value;
-            })
-            ->getOrCall(fn () => value($default));
+                case 'empty':
+                case '(empty)':
+                    return '';
+
+                case 'null':
+                case '(null)':
+                    return;
+            }
+
+            if (preg_match('/\\A([\'"])(.*)\\1\\z/', $value, $matches)) {
+                return $matches[2];
+            }
+
+            return $value;
+        })->getOrCall(fn () => \__Illuminate\value($default));
     }
 }

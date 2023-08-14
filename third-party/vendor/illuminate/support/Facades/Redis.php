@@ -32,7 +32,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Redis\RedisManager
  */
-class Redis extends Facade
+class Redis extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

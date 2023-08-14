@@ -52,7 +52,7 @@ use Illuminate\Support\Testing\Fakes\QueueFake;
  * @see \Illuminate\Queue\Queue
  * @see \Illuminate\Support\Testing\Fakes\QueueFake
  */
-class Queue extends Facade
+class Queue extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Register a callback to be executed to pick jobs.

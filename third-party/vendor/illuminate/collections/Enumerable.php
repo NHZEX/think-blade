@@ -3,12 +3,16 @@
 namespace Illuminate\Support;
 
 use CachingIterator;
+use Closure;
 use Countable;
+use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use InvalidArgumentException;
 use IteratorAggregate;
 use JsonSerializable;
 use Traversable;
+use UnexpectedValueException;
 
 /**
  * @template TKey of array-key
@@ -34,7 +38,6 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * Create a new instance by invoking the callback a given amount of times.
      *
      * @param  int  $number
-     * @param  callable|null  $callback
      * @return static
      */
     public static function times($number, callable $callback = null);
@@ -266,7 +269,6 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Execute a callback over each nested chunk of items.
      *
-     * @param  callable  $callback
      * @return static
      */
     public function eachSpread(callable $callback);
@@ -472,7 +474,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @template TFirstDefault
      *
      * @param  (callable(TValue,TKey): bool)|null  $callback
-     * @param  TFirstDefault|(\Closure(): TFirstDefault)  $default
+     * @param  TFirstDefault|(Closure(): TFirstDefault)  $default
      * @return TValue|TFirstDefault
      */
     public function first(callable $callback = null, $default = null);
@@ -493,7 +495,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  int  $depth
      * @return static
      */
-    public function flatten($depth = INF);
+    public function flatten($depth = \INF);
 
     /**
      * Flip the values with their keys.
@@ -508,7 +510,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @template TGetDefault
      *
      * @param  TKey  $key
-     * @param  TGetDefault|(\Closure(): TGetDefault)  $default
+     * @param  TGetDefault|(Closure(): TGetDefault)  $default
      * @return TValue|TGetDefault
      */
     public function get($key, $default = null);
@@ -614,7 +616,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @template TLastDefault
      *
      * @param  (callable(TValue, TKey): bool)|null  $callback
-     * @param  TLastDefault|(\Closure(): TLastDefault)  $default
+     * @param  TLastDefault|(Closure(): TLastDefault)  $default
      * @return TValue|TLastDefault
      */
     public function last(callable $callback = null, $default = null);
@@ -632,7 +634,6 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Run a map over each nested chunk of items.
      *
-     * @param  callable  $callback
      * @return static
      */
     public function mapSpread(callable $callback);
@@ -799,7 +800,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  int|null  $number
      * @return static<int, TValue>|TValue
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function random($number = null);
 
@@ -818,11 +819,10 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Reduce the collection to multiple aggregate values.
      *
-     * @param  callable  $callback
      * @param  mixed  ...$initial
      * @return array
      *
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     public function reduceSpread(callable $callback, ...$initial);
 
@@ -979,7 +979,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  int  $options
      * @return static
      */
-    public function sortDesc($options = SORT_REGULAR);
+    public function sortDesc($options = \SORT_REGULAR);
 
     /**
      * Sort the collection using the given callback.
@@ -989,7 +989,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  bool  $descending
      * @return static
      */
-    public function sortBy($callback, $options = SORT_REGULAR, $descending = false);
+    public function sortBy($callback, $options = \SORT_REGULAR, $descending = false);
 
     /**
      * Sort the collection in descending order using the given callback.
@@ -998,7 +998,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  int  $options
      * @return static
      */
-    public function sortByDesc($callback, $options = SORT_REGULAR);
+    public function sortByDesc($callback, $options = \SORT_REGULAR);
 
     /**
      * Sort the collection keys.
@@ -1007,7 +1007,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  bool  $descending
      * @return static
      */
-    public function sortKeys($options = SORT_REGULAR, $descending = false);
+    public function sortKeys($options = \SORT_REGULAR, $descending = false);
 
     /**
      * Sort the collection keys in descending order.
@@ -1015,7 +1015,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  int  $options
      * @return static
      */
-    public function sortKeysDesc($options = SORT_REGULAR);
+    public function sortKeysDesc($options = \SORT_REGULAR);
 
     /**
      * Sort the collection keys using a callback.
@@ -1153,14 +1153,12 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
     /**
      * Get the values iterator.
      *
-     * @return \Traversable<TKey, TValue>
+     * @return Traversable<TKey, TValue>
      */
     public function getIterator(): Traversable;
 
     /**
      * Count the number of items in the collection.
-     *
-     * @return int
      */
     public function count(): int;
 
@@ -1201,8 +1199,6 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
 
     /**
      * Convert the object into something JSON serializable.
-     *
-     * @return mixed
      */
     public function jsonSerialize(): mixed;
 
@@ -1218,7 +1214,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * Get a CachingIterator instance.
      *
      * @param  int  $flags
-     * @return \CachingIterator
+     * @return CachingIterator
      */
     public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING);
 
@@ -1251,7 +1247,7 @@ interface Enumerable extends Arrayable, Countable, IteratorAggregate, Jsonable, 
      * @param  string  $key
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __get($key);
 }

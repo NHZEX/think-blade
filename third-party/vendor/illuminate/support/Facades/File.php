@@ -57,7 +57,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Filesystem\Filesystem
  */
-class File extends Facade
+class File extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

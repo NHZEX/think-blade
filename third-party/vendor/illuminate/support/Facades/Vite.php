@@ -27,7 +27,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Foundation\Vite
  */
-class Vite extends Facade
+class Vite extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

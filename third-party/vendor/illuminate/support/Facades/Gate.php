@@ -33,7 +33,7 @@ use Illuminate\Contracts\Auth\Access\Gate as GateContract;
  *
  * @see \Illuminate\Auth\Access\Gate
  */
-class Gate extends Facade
+class Gate extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

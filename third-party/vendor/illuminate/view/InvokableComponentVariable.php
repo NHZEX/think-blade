@@ -14,14 +14,13 @@ class InvokableComponentVariable implements DeferringDisplayableValue, IteratorA
     /**
      * The callable instance to resolve the variable value.
      *
-     * @var \Closure
+     * @var Closure
      */
     protected $callable;
 
     /**
      * Create a new variable instance.
      *
-     * @param  \Closure  $callable
      * @return void
      */
     public function __construct(Closure $callable)
@@ -42,7 +41,7 @@ class InvokableComponentVariable implements DeferringDisplayableValue, IteratorA
     /**
      * Get an interator instance for the variable.
      *
-     * @return \ArrayIterator
+     * @return ArrayIterator
      */
     public function getIterator(): Traversable
     {

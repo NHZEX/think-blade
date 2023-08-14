@@ -24,19 +24,14 @@ trait CompilesLoops
     protected function compileForelse($expression)
     {
         $empty = '$__empty_'.++$this->forElseCounter;
-
-        preg_match('/\( *(.+) +as +(.+)\)$/is', $expression ?? '', $matches);
+        preg_match('/\\( *(.+) +as +(.+)\\)$/is', $expression ?? '', $matches);
 
         if (count($matches) === 0) {
             throw new ViewCompilationException('Malformed @forelse statement.');
         }
-
         $iteratee = trim($matches[1]);
-
         $iteration = trim($matches[2]);
-
         $initLoop = "\$__currentLoopData = {$iteratee}; \$__env->addLoop(\$__currentLoopData);";
-
         $iterateLoop = '$__env->incrementLoopIndices(); $loop = $__env->getLastLoop();';
 
         return "<?php {$empty} = true; {$initLoop} foreach(\$__currentLoopData as {$iteration}): {$iterateLoop} {$empty} = false; ?>";
@@ -53,7 +48,6 @@ trait CompilesLoops
         if ($expression) {
             return "<?php if(empty{$expression}): ?>";
         }
-
         $empty = '$__empty_'.$this->forElseCounter--;
 
         return "<?php endforeach; \$__env->popLoop(); \$loop = \$__env->getLastLoop(); if ({$empty}): ?>";
@@ -100,18 +94,14 @@ trait CompilesLoops
      */
     protected function compileForeach($expression)
     {
-        preg_match('/\( *(.+) +as +(.*)\)$/is', $expression ?? '', $matches);
+        preg_match('/\\( *(.+) +as +(.*)\\)$/is', $expression ?? '', $matches);
 
         if (count($matches) === 0) {
             throw new ViewCompilationException('Malformed @foreach statement.');
         }
-
         $iteratee = trim($matches[1]);
-
         $iteration = trim($matches[2]);
-
         $initLoop = "\$__currentLoopData = {$iteratee}; \$__env->addLoop(\$__currentLoopData);";
-
         $iterateLoop = '$__env->incrementLoopIndices(); $loop = $__env->getLastLoop();';
 
         return "<?php {$initLoop} foreach(\$__currentLoopData as {$iteration}): {$iterateLoop} ?>";
@@ -126,7 +116,7 @@ trait CompilesLoops
     protected function compileBreak($expression)
     {
         if ($expression) {
-            preg_match('/\(\s*(-?\d+)\s*\)$/', $expression, $matches);
+            preg_match('/\\(\\s*(-?\\d+)\\s*\\)$/', $expression, $matches);
 
             return $matches ? '<?php break '.max(1, $matches[1]).'; ?>' : "<?php if{$expression} break; ?>";
         }
@@ -143,7 +133,7 @@ trait CompilesLoops
     protected function compileContinue($expression)
     {
         if ($expression) {
-            preg_match('/\(\s*(-?\d+)\s*\)$/', $expression, $matches);
+            preg_match('/\\(\\s*(-?\\d+)\\s*\\)$/', $expression, $matches);
 
             return $matches ? '<?php continue '.max(1, $matches[1]).'; ?>' : "<?php if{$expression} continue; ?>";
         }

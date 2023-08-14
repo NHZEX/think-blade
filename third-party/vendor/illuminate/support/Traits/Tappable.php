@@ -12,6 +12,6 @@ trait Tappable
      */
     public function tap($callback = null)
     {
-        return tap($this, $callback);
+        return \__Illuminate\tap($this, $callback);
     }
 }

@@ -3,6 +3,7 @@
 namespace Illuminate\Support;
 
 use Closure;
+use Countable;
 use Illuminate\Support\Traits\Macroable;
 use JsonException;
 use League\CommonMark\Environment\Environment;
@@ -65,7 +66,7 @@ class Str
      */
     public static function of($string)
     {
-        return new Stringable($string);
+        return new \Illuminate\Support\Stringable($string);
     }
 
     /**
@@ -92,7 +93,6 @@ class Str
         if ($search === '') {
             return $subject;
         }
-
         $position = strrpos($subject, (string) $search);
 
         if ($position === false) {
@@ -139,7 +139,6 @@ class Str
         if ($search === '') {
             return $subject;
         }
-
         $result = strstr($subject, (string) $search, true);
 
         return $result === false ? $subject : $result;
@@ -157,7 +156,6 @@ class Str
         if ($search === '') {
             return $subject;
         }
-
         $pos = mb_strrpos($subject, $search);
 
         if ($pos === false) {
@@ -300,26 +298,15 @@ class Str
     {
         $radius = $options['radius'] ?? 100;
         $omission = $options['omission'] ?? '...';
-
         preg_match('/^(.*?)('.preg_quote((string) $phrase).')(.*)$/iu', (string) $text, $matches);
 
         if (empty($matches)) {
             return null;
         }
-
         $start = ltrim($matches[1]);
-
-        $start = str(mb_substr($start, max(mb_strlen($start, 'UTF-8') - $radius, 0), $radius, 'UTF-8'))->ltrim()->unless(
-            fn ($startWithRadius) => $startWithRadius->exactly($start),
-            fn ($startWithRadius) => $startWithRadius->prepend($omission),
-        );
-
+        $start = \__Illuminate\str(mb_substr($start, max(mb_strlen($start, 'UTF-8') - $radius, 0), $radius, 'UTF-8'))->ltrim()->unless(fn ($startWithRadius) => $startWithRadius->exactly($start), fn ($startWithRadius) => $startWithRadius->prepend($omission));
         $end = rtrim($matches[3]);
-
-        $end = str(mb_substr($end, 0, $radius, 'UTF-8'))->rtrim()->unless(
-            fn ($endWithRadius) => $endWithRadius->exactly($end),
-            fn ($endWithRadius) => $endWithRadius->append($omission),
-        );
+        $end = \__Illuminate\str(mb_substr($end, 0, $radius, 'UTF-8'))->rtrim()->unless(fn ($endWithRadius) => $endWithRadius->exactly($end), fn ($endWithRadius) => $endWithRadius->append($omission));
 
         return $start->append($matches[2], $end)->toString();
     }
@@ -368,22 +355,19 @@ class Str
 
         foreach ($pattern as $pattern) {
             $pattern = (string) $pattern;
-
             // If the given value is an exact match we can of course return true right
             // from the beginning. Otherwise, we will translate asterisks and do an
             // actual pattern match against the two strings to see if they match.
             if ($pattern === $value) {
                 return true;
             }
-
             $pattern = preg_quote($pattern, '#');
-
             // Asterisks are translated into zero-or-more regular expression wildcards
             // to make it convenient to check if the strings starts with the given
             // pattern such as "library/*", making any string check convenient.
-            $pattern = str_replace('\*', '.*', $pattern);
+            $pattern = str_replace('\\*', '.*', $pattern);
 
-            if (preg_match('#^'.$pattern.'\z#u', $value) === 1) {
+            if (preg_match('#^'.$pattern.'\\z#u', $value) === 1) {
                 return true;
             }
         }
@@ -415,7 +399,7 @@ class Str
         }
 
         try {
-            json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+            json_decode($value, true, 512, \JSON_THROW_ON_ERROR);
         } catch (JsonException) {
             return false;
         }
@@ -435,7 +419,7 @@ class Str
             return false;
         }
 
-        return preg_match('/^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/iD', $value) > 0;
+        return preg_match('/^[\\da-f]{8}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{4}-[\\da-f]{12}$/iD', $value) > 0;
     }
 
     /**
@@ -518,7 +502,7 @@ class Str
      */
     public static function words($value, $words = 100, $end = '...')
     {
-        preg_match('/^\s*+(?:\S++\s*+){1,'.$words.'}/u', $value, $matches);
+        preg_match('/^\\s*+(?:\\S++\\s*+){1,'.$words.'}/u', $value, $matches);
 
         if (! isset($matches[0]) || static::length($value) === static::length($matches[0])) {
             return $value;
@@ -531,7 +515,6 @@ class Str
      * Converts GitHub flavored Markdown into HTML.
      *
      * @param  string  $string
-     * @param  array  $options
      * @return string
      */
     public static function markdown($string, array $options = [])
@@ -545,16 +528,13 @@ class Str
      * Converts inline Markdown into HTML.
      *
      * @param  string  $string
-     * @param  array  $options
      * @return string
      */
     public static function inlineMarkdown($string, array $options = [])
     {
         $environment = new Environment($options);
-
         $environment->addExtension(new GithubFlavoredMarkdownExtension());
         $environment->addExtension(new InlinesOnlyExtension());
-
         $converter = new MarkdownConverter($environment);
 
         return (string) $converter->convert($string);
@@ -575,20 +555,17 @@ class Str
         if ($character === '') {
             return $string;
         }
-
         $segment = mb_substr($string, $index, $length, $encoding);
 
         if ($segment === '') {
             return $string;
         }
-
         $strlen = mb_strlen($string, $encoding);
         $startIndex = $index;
 
         if ($index < 0) {
             $startIndex = $index < -$strlen ? 0 : $strlen + $index;
         }
-
         $start = mb_substr($string, 0, $startIndex, $encoding);
         $segmentLen = mb_strlen($segment, $encoding);
         $end = mb_substr($string, $startIndex + $segmentLen);
@@ -626,10 +603,10 @@ class Str
         preg_match_all($pattern, $subject, $matches);
 
         if (empty($matches[0])) {
-            return collect();
+            return \__Illuminate\collect();
         }
 
-        return collect($matches[1] ?? $matches[0]);
+        return \__Illuminate\collect($matches[1] ?? $matches[0]);
     }
 
     /**
@@ -646,9 +623,7 @@ class Str
         $shortLeft = floor($short / 2);
         $shortRight = ceil($short / 2);
 
-        return mb_substr(str_repeat($pad, $shortLeft), 0, $shortLeft).
-               $value.
-               mb_substr(str_repeat($pad, $shortRight), 0, $shortRight);
+        return mb_substr(str_repeat($pad, $shortLeft), 0, $shortLeft).$value.mb_substr(str_repeat($pad, $shortRight), 0, $shortRight);
     }
 
     /**
@@ -697,25 +672,24 @@ class Str
      * Get the plural form of an English word.
      *
      * @param  string  $value
-     * @param  int|array|\Countable  $count
+     * @param  int|array|Countable  $count
      * @return string
      */
     public static function plural($value, $count = 2)
     {
-        return Pluralizer::plural($value, $count);
+        return \Illuminate\Support\Pluralizer::plural($value, $count);
     }
 
     /**
      * Pluralize the last word of an English, studly caps case string.
      *
      * @param  string  $value
-     * @param  int|array|\Countable  $count
+     * @param  int|array|Countable  $count
      * @return string
      */
     public static function pluralStudly($value, $count = 2)
     {
-        $parts = preg_split('/(.)(?=[A-Z])/u', $value, -1, PREG_SPLIT_DELIM_CAPTURE);
-
+        $parts = preg_split('/(.)(?=[A-Z])/u', $value, -1, \PREG_SPLIT_DELIM_CAPTURE);
         $lastWord = array_pop($parts);
 
         return implode('', $parts).self::plural($lastWord, $count);
@@ -734,11 +708,8 @@ class Str
 
             while (($len = strlen($string)) < $length) {
                 $size = $length - $len;
-
                 $bytesSize = (int) ceil($size / 3) * 3;
-
                 $bytes = random_bytes($bytesSize);
-
                 $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
             }
 
@@ -749,7 +720,6 @@ class Str
     /**
      * Set the callable that will be used to generate random strings.
      *
-     * @param  callable|null  $factory
      * @return void
      */
     public static function createRandomStringsUsing(callable $factory = null)
@@ -760,28 +730,21 @@ class Str
     /**
      * Set the sequence that will be used to generate random strings.
      *
-     * @param  array  $sequence
      * @param  callable|null  $whenMissing
      * @return void
      */
     public static function createRandomStringsUsingSequence(array $sequence, $whenMissing = null)
     {
         $next = 0;
-
         $whenMissing ??= function ($length) use (&$next) {
             $factoryCache = static::$randomStringFactory;
-
             static::$randomStringFactory = null;
-
             $randomString = static::random($length);
-
             static::$randomStringFactory = $factoryCache;
-
             $next++;
 
             return $randomString;
         };
-
         static::createRandomStringsUsing(function ($length) use (&$next, $sequence, $whenMissing) {
             if (array_key_exists($next, $sequence)) {
                 return $sequence[$next++];
@@ -804,8 +767,6 @@ class Str
     /**
      * Repeat the given string.
      *
-     * @param  string  $string
-     * @param  int  $times
      * @return string
      */
     public static function repeat(string $string, int $times)
@@ -824,11 +785,9 @@ class Str
     public static function replaceArray($search, $replace, $subject)
     {
         if ($replace instanceof Traversable) {
-            $replace = collect($replace)->all();
+            $replace = \__Illuminate\collect($replace)->all();
         }
-
         $segments = explode($search, $subject);
-
         $result = array_shift($segments);
 
         foreach ($segments as $segment) {
@@ -849,15 +808,15 @@ class Str
     public static function replace($search, $replace, $subject)
     {
         if ($search instanceof Traversable) {
-            $search = collect($search)->all();
+            $search = \__Illuminate\collect($search)->all();
         }
 
         if ($replace instanceof Traversable) {
-            $replace = collect($replace)->all();
+            $replace = \__Illuminate\collect($replace)->all();
         }
 
         if ($subject instanceof Traversable) {
-            $subject = collect($subject)->all();
+            $subject = \__Illuminate\collect($subject)->all();
         }
 
         return str_replace($search, $replace, $subject);
@@ -878,7 +837,6 @@ class Str
         if ($search === '') {
             return $subject;
         }
-
         $position = strpos($subject, $search);
 
         if ($position !== false) {
@@ -901,7 +859,6 @@ class Str
         if ($search === '') {
             return $subject;
         }
-
         $position = strrpos($subject, $search);
 
         if ($position !== false) {
@@ -922,12 +879,9 @@ class Str
     public static function remove($search, $subject, $caseSensitive = true)
     {
         if ($search instanceof Traversable) {
-            $search = collect($search)->all();
+            $search = \__Illuminate\collect($search)->all();
         }
-
-        $subject = $caseSensitive
-                    ? str_replace($search, '', $subject)
-                    : str_ireplace($search, '', $subject);
+        $subject = $caseSensitive ? str_replace($search, '', $subject) : str_ireplace($search, '', $subject);
 
         return $subject;
     }
@@ -935,7 +889,6 @@ class Str
     /**
      * Reverse the given string.
      *
-     * @param  string  $value
      * @return string
      */
     public static function reverse(string $value)
@@ -976,7 +929,7 @@ class Str
      */
     public static function title($value)
     {
-        return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
+        return mb_convert_case($value, \MB_CASE_TITLE, 'UTF-8');
     }
 
     /**
@@ -988,11 +941,7 @@ class Str
     public static function headline($value)
     {
         $parts = explode(' ', $value);
-
-        $parts = count($parts) > 1
-            ? array_map([static::class, 'title'], $parts)
-            : array_map([static::class, 'title'], static::ucsplit(implode('_', $parts)));
-
+        $parts = count($parts) > 1 ? array_map([static::class, 'title'], $parts) : array_map([static::class, 'title'], static::ucsplit(implode('_', $parts)));
         $collapsed = static::replace(['-', '_', ' '], '_', implode('_', $parts));
 
         return implode(' ', array_filter(explode('_', $collapsed)));
@@ -1006,7 +955,7 @@ class Str
      */
     public static function singular($value)
     {
-        return Pluralizer::singular($value);
+        return \Illuminate\Support\Pluralizer::singular($value);
     }
 
     /**
@@ -1021,24 +970,18 @@ class Str
     public static function slug($title, $separator = '-', $language = 'en', $dictionary = ['@' => 'at'])
     {
         $title = $language ? static::ascii($title, $language) : $title;
-
         // Convert all dashes/underscores into separator
         $flip = $separator === '-' ? '_' : '-';
-
         $title = preg_replace('!['.preg_quote($flip).']+!u', $separator, $title);
-
         // Replace dictionary words
         foreach ($dictionary as $key => $value) {
             $dictionary[$key] = $separator.$value.$separator;
         }
-
         $title = str_replace(array_keys($dictionary), array_values($dictionary), $title);
-
         // Remove all characters that are not the separator, letters, numbers, or whitespace
-        $title = preg_replace('![^'.preg_quote($separator).'\pL\pN\s]+!u', '', static::lower($title));
-
+        $title = preg_replace('![^'.preg_quote($separator).'\\pL\\pN\\s]+!u', '', static::lower($title));
         // Replace all separator characters and whitespace by a single separator
-        $title = preg_replace('!['.preg_quote($separator).'\s]+!u', $separator, $title);
+        $title = preg_replace('!['.preg_quote($separator).'\\s]+!u', $separator, $title);
 
         return trim($title, $separator);
     }
@@ -1059,8 +1002,7 @@ class Str
         }
 
         if (! ctype_lower($value)) {
-            $value = preg_replace('/\s+/u', '', ucwords($value));
-
+            $value = preg_replace('/\\s+/u', '', ucwords($value));
             $value = static::lower(preg_replace('/(.)(?=[A-Z])/u', '$1'.$delimiter, $value));
         }
 
@@ -1075,7 +1017,7 @@ class Str
      */
     public static function squish($value)
     {
-        return preg_replace('~(\s|\x{3164})+~u', ' ', preg_replace('~^[\s\x{FEFF}]+|[\s\x{FEFF}]+$~u', '', $value));
+        return preg_replace('~(\\s|\\x{3164})+~u', ' ', preg_replace('~^[\\s\\x{FEFF}]+|[\\s\\x{FEFF}]+$~u', '', $value));
     }
 
     /**
@@ -1113,9 +1055,7 @@ class Str
         if (isset(static::$studlyCache[$key])) {
             return static::$studlyCache[$key];
         }
-
         $words = explode(' ', static::replace(['-', '_'], ' ', $value));
-
         $studlyWords = array_map(fn ($word) => static::ucfirst($word), $words);
 
         return static::$studlyCache[$key] = implode($studlyWords);
@@ -1174,7 +1114,6 @@ class Str
     /**
      * Swap multiple keywords in a string with other keywords.
      *
-     * @param  array  $map
      * @param  string  $subject
      * @return string
      */
@@ -1213,7 +1152,7 @@ class Str
      */
     public static function ucsplit($string)
     {
-        return preg_split('/(?=\p{Lu})/u', $string, -1, PREG_SPLIT_NO_EMPTY);
+        return preg_split('/(?=\\p{Lu})/u', $string, -1, \PREG_SPLIT_NO_EMPTY);
     }
 
     /**
@@ -1235,9 +1174,7 @@ class Str
      */
     public static function uuid()
     {
-        return static::$uuidFactory
-                    ? call_user_func(static::$uuidFactory)
-                    : Uuid::uuid4();
+        return static::$uuidFactory ? call_user_func(static::$uuidFactory) : Uuid::uuid4();
     }
 
     /**
@@ -1250,17 +1187,9 @@ class Str
         if (static::$uuidFactory) {
             return call_user_func(static::$uuidFactory);
         }
-
-        $factory = new UuidFactory;
-
-        $factory->setRandomGenerator(new CombGenerator(
-            $factory->getRandomGenerator(),
-            $factory->getNumberConverter()
-        ));
-
-        $factory->setCodec(new TimestampFirstCombCodec(
-            $factory->getUuidBuilder()
-        ));
+        $factory = new UuidFactory();
+        $factory->setRandomGenerator(new CombGenerator($factory->getRandomGenerator(), $factory->getNumberConverter()));
+        $factory->setCodec(new TimestampFirstCombCodec($factory->getUuidBuilder()));
 
         return $factory->uuid4();
     }
@@ -1268,7 +1197,6 @@ class Str
     /**
      * Set the callable that will be used to generate UUIDs.
      *
-     * @param  callable|null  $factory
      * @return void
      */
     public static function createUuidsUsing(callable $factory = null)
@@ -1279,28 +1207,21 @@ class Str
     /**
      * Set the sequence that will be used to generate UUIDs.
      *
-     * @param  array  $sequence
      * @param  callable|null  $whenMissing
      * @return void
      */
     public static function createUuidsUsingSequence(array $sequence, $whenMissing = null)
     {
         $next = 0;
-
         $whenMissing ??= function () use (&$next) {
             $factoryCache = static::$uuidFactory;
-
             static::$uuidFactory = null;
-
             $uuid = static::uuid();
-
             static::$uuidFactory = $factoryCache;
-
             $next++;
 
             return $uuid;
         };
-
         static::createUuidsUsing(function () use (&$next, $sequence, $whenMissing) {
             if (array_key_exists($next, $sequence)) {
                 return $sequence[$next++];
@@ -1313,20 +1234,18 @@ class Str
     /**
      * Always return the same UUID when generating new UUIDs.
      *
-     * @param  \Closure|null  $callback
      * @return \Ramsey\Uuid\UuidInterface
      */
     public static function freezeUuids(Closure $callback = null)
     {
-        $uuid = Str::uuid();
-
-        Str::createUuidsUsing(fn () => $uuid);
+        $uuid = \Illuminate\Support\Str::uuid();
+        \Illuminate\Support\Str::createUuidsUsing(fn () => $uuid);
 
         if ($callback !== null) {
             try {
                 $callback($uuid);
             } finally {
-                Str::createUuidsNormally();
+                \Illuminate\Support\Str::createUuidsNormally();
             }
         }
 

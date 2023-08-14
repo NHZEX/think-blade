@@ -26,7 +26,7 @@ use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
  *
  * @see \Illuminate\Routing\ResponseFactory
  */
-class Response extends Facade
+class Response extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

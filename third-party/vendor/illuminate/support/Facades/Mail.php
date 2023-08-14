@@ -57,7 +57,7 @@ use Illuminate\Support\Testing\Fakes\MailFake;
  * @see \Illuminate\Mail\MailManager
  * @see \Illuminate\Support\Testing\Fakes\MailFake
  */
-class Mail extends Facade
+class Mail extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Replace the bound instance with a fake.
@@ -66,7 +66,7 @@ class Mail extends Facade
      */
     public static function fake()
     {
-        static::swap($fake = new MailFake);
+        static::swap($fake = new MailFake());
 
         return $fake;
     }

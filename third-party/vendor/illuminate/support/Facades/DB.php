@@ -105,7 +105,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Database\DatabaseManager
  */
-class DB extends Facade
+class DB extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

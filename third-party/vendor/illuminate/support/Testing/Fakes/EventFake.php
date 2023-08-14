@@ -45,14 +45,12 @@ class EventFake implements Dispatcher
     /**
      * Create a new event fake instance.
      *
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
      * @param  array|string  $eventsToFake
      * @return void
      */
     public function __construct(Dispatcher $dispatcher, $eventsToFake = [])
     {
         $this->dispatcher = $dispatcher;
-
         $this->eventsToFake = Arr::wrap($eventsToFake);
     }
 
@@ -64,10 +62,7 @@ class EventFake implements Dispatcher
      */
     public function except($eventsToDispatch)
     {
-        $this->eventsToDispatch = array_merge(
-            $this->eventsToDispatch,
-            Arr::wrap($eventsToDispatch)
-        );
+        $this->eventsToDispatch = array_merge($this->eventsToDispatch, Arr::wrap($eventsToDispatch));
 
         return $this;
     }
@@ -82,9 +77,7 @@ class EventFake implements Dispatcher
     public function assertListening($expectedEvent, $expectedListener)
     {
         foreach ($this->dispatcher->getListeners($expectedEvent) as $listenerClosure) {
-            $actualListener = (new ReflectionFunction($listenerClosure))
-                        ->getStaticVariables()['listener'];
-
+            $actualListener = (new ReflectionFunction($listenerClosure))->getStaticVariables()['listener'];
             $normalizedListener = $expectedListener;
 
             if (is_string($actualListener) && Str::contains($actualListener, '@')) {
@@ -94,37 +87,24 @@ class EventFake implements Dispatcher
                     if (Str::contains($expectedListener, '@')) {
                         $normalizedListener = Str::parseCallback($expectedListener);
                     } else {
-                        $normalizedListener = [
-                            $expectedListener,
-                            method_exists($expectedListener, 'handle') ? 'handle' : '__invoke',
-                        ];
+                        $normalizedListener = [$expectedListener, method_exists($expectedListener, 'handle') ? 'handle' : '__invoke'];
                     }
                 }
             }
 
-            if ($actualListener === $normalizedListener ||
-                ($actualListener instanceof Closure &&
-                $normalizedListener === Closure::class)) {
+            if ($actualListener === $normalizedListener || $actualListener instanceof Closure && $normalizedListener === Closure::class) {
                 PHPUnit::assertTrue(true);
 
                 return;
             }
         }
-
-        PHPUnit::assertTrue(
-            false,
-            sprintf(
-                'Event [%s] does not have the [%s] listener attached to it',
-                $expectedEvent,
-                print_r($expectedListener, true)
-            )
-        );
+        PHPUnit::assertTrue(false, sprintf('Event [%s] does not have the [%s] listener attached to it', $expectedEvent, print_r($expectedListener, true)));
     }
 
     /**
      * Assert if an event was dispatched based on a truth-test callback.
      *
-     * @param  string|\Closure  $event
+     * @param  string|Closure  $event
      * @param  callable|int|null  $callback
      * @return void
      */
@@ -137,11 +117,7 @@ class EventFake implements Dispatcher
         if (is_int($callback)) {
             return $this->assertDispatchedTimes($event, $callback);
         }
-
-        PHPUnit::assertTrue(
-            $this->dispatched($event, $callback)->count() > 0,
-            "The expected [{$event}] event was not dispatched."
-        );
+        PHPUnit::assertTrue($this->dispatched($event, $callback)->count() > 0, "The expected [{$event}] event was not dispatched.");
     }
 
     /**
@@ -154,17 +130,13 @@ class EventFake implements Dispatcher
     public function assertDispatchedTimes($event, $times = 1)
     {
         $count = $this->dispatched($event)->count();
-
-        PHPUnit::assertSame(
-            $times, $count,
-            "The expected [{$event}] event was dispatched {$count} times instead of {$times} times."
-        );
+        PHPUnit::assertSame($times, $count, "The expected [{$event}] event was dispatched {$count} times instead of {$times} times.");
     }
 
     /**
      * Determine if an event was dispatched based on a truth-test callback.
      *
-     * @param  string|\Closure  $event
+     * @param  string|Closure  $event
      * @param  callable|null  $callback
      * @return void
      */
@@ -173,11 +145,7 @@ class EventFake implements Dispatcher
         if ($event instanceof Closure) {
             [$event, $callback] = [$this->firstClosureParameterType($event), $event];
         }
-
-        PHPUnit::assertCount(
-            0, $this->dispatched($event, $callback),
-            "The unexpected [{$event}] event was dispatched."
-        );
+        PHPUnit::assertCount(0, $this->dispatched($event, $callback), "The unexpected [{$event}] event was dispatched.");
     }
 
     /**
@@ -188,11 +156,7 @@ class EventFake implements Dispatcher
     public function assertNothingDispatched()
     {
         $count = count(Arr::flatten($this->events));
-
-        PHPUnit::assertSame(
-            0, $count,
-            "{$count} unexpected events were dispatched."
-        );
+        PHPUnit::assertSame(0, $count, "{$count} unexpected events were dispatched.");
     }
 
     /**
@@ -205,14 +169,11 @@ class EventFake implements Dispatcher
     public function dispatched($event, $callback = null)
     {
         if (! $this->hasDispatched($event)) {
-            return collect();
+            return \__Illuminate\collect();
         }
-
         $callback = $callback ?: fn () => true;
 
-        return collect($this->events[$event])->filter(
-            fn ($arguments) => $callback(...$arguments)
-        );
+        return \__Illuminate\collect($this->events[$event])->filter(fn ($arguments) => $callback(...$arguments));
     }
 
     /**
@@ -229,7 +190,7 @@ class EventFake implements Dispatcher
     /**
      * Register an event listener with the dispatcher.
      *
-     * @param  \Closure|string|array  $events
+     * @param  Closure|string|array  $events
      * @param  mixed  $listener
      * @return void
      */
@@ -319,13 +280,9 @@ class EventFake implements Dispatcher
             return true;
         }
 
-        return collect($this->eventsToFake)
-            ->filter(function ($event) use ($eventName, $payload) {
-                return $event instanceof Closure
-                            ? $event($eventName, $payload)
-                            : $event === $eventName;
-            })
-            ->isNotEmpty();
+        return \__Illuminate\collect($this->eventsToFake)->filter(function ($event) use ($eventName, $payload) {
+            return $event instanceof Closure ? $event($eventName, $payload) : $event === $eventName;
+        })->isNotEmpty();
     }
 
     /**
@@ -341,13 +298,9 @@ class EventFake implements Dispatcher
             return false;
         }
 
-        return collect($this->eventsToDispatch)
-            ->filter(function ($event) use ($eventName, $payload) {
-                return $event instanceof Closure
-                    ? $event($eventName, $payload)
-                    : $event === $eventName;
-            })
-            ->isNotEmpty();
+        return \__Illuminate\collect($this->eventsToDispatch)->filter(function ($event) use ($eventName, $payload) {
+            return $event instanceof Closure ? $event($eventName, $payload) : $event === $eventName;
+        })->isNotEmpty();
     }
 
     /**

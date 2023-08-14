@@ -37,9 +37,7 @@ trait CompilesStacks
     protected function compilePushOnce($expression)
     {
         $parts = explode(',', $this->stripParentheses($expression), 2);
-
         [$stack, $id] = [$parts[0], $parts[1] ?? ''];
-
         $id = trim($id) ?: "'".(string) Str::uuid()."'";
 
         return '<?php if (! $__env->hasRenderedOnce('.$id.')): $__env->markAsRenderedOnce('.$id.');
@@ -86,9 +84,7 @@ $__env->startPush('.$stack.'); ?>';
     protected function compilePrependOnce($expression)
     {
         $parts = explode(',', $this->stripParentheses($expression), 2);
-
         [$stack, $id] = [$parts[0], $parts[1] ?? ''];
-
         $id = trim($id) ?: "'".(string) Str::uuid()."'";
 
         return '<?php if (! $__env->hasRenderedOnce('.$id.')): $__env->markAsRenderedOnce('.$id.');

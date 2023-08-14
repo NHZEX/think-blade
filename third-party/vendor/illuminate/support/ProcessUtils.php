@@ -21,15 +21,14 @@ class ProcessUtils
         // Fix for PHP bug #49446 escapeshellarg doesn't work on Windows
         // @see https://bugs.php.net/bug.php?id=43784
         // @see https://bugs.php.net/bug.php?id=49446
-        if ('\\' === DIRECTORY_SEPARATOR) {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
             if ($argument === '') {
                 return '""';
             }
-
             $escapedArgument = '';
             $quote = false;
 
-            foreach (preg_split('/(")/', $argument, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE) as $part) {
+            foreach (preg_split('/(")/', $argument, -1, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE) as $part) {
                 if ($part === '"') {
                     $escapedArgument .= '\\"';
                 } elseif (self::isSurroundedBy($part, '%')) {

@@ -50,7 +50,7 @@ trait ManagesLayouts
                 $this->sectionStack[] = $section;
             }
         } else {
-            $this->extendSection($section, $content instanceof View ? $content : e($content));
+            $this->extendSection($section, $content instanceof View ? $content : \__Illuminate\e($content));
         }
     }
 
@@ -86,14 +86,13 @@ trait ManagesLayouts
      * @param  bool  $overwrite
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function stopSection($overwrite = false)
     {
         if (empty($this->sectionStack)) {
             throw new InvalidArgumentException('Cannot end a section without first starting one.');
         }
-
         $last = array_pop($this->sectionStack);
 
         if ($overwrite) {
@@ -110,14 +109,13 @@ trait ManagesLayouts
      *
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function appendSection()
     {
         if (empty($this->sectionStack)) {
             throw new InvalidArgumentException('Cannot end a section without first starting one.');
         }
-
         $last = array_pop($this->sectionStack);
 
         if (isset($this->sections[$last])) {
@@ -141,7 +139,6 @@ trait ManagesLayouts
         if (isset($this->sections[$section])) {
             $content = str_replace(static::parentPlaceholder($section), $content, $this->sections[$section]);
         }
-
         $this->sections[$section] = $content;
     }
 
@@ -154,17 +151,14 @@ trait ManagesLayouts
      */
     public function yieldContent($section, $default = '')
     {
-        $sectionContent = $default instanceof View ? $default : e($default);
+        $sectionContent = $default instanceof View ? $default : \__Illuminate\e($default);
 
         if (isset($this->sections[$section])) {
             $sectionContent = $this->sections[$section];
         }
-
         $sectionContent = str_replace('@@parent', '--parent--holder--', $sectionContent);
 
-        return str_replace(
-            '--parent--holder--', '@parent', str_replace(static::parentPlaceholder($section), '', $sectionContent)
-        );
+        return str_replace('--parent--holder--', '@parent', str_replace(static::parentPlaceholder($section), '', $sectionContent));
     }
 
     /**
@@ -177,7 +171,6 @@ trait ManagesLayouts
     {
         if (! isset(static::$parentPlaceholder[$section])) {
             $salt = static::parentPlaceholderSalt();
-
             static::$parentPlaceholder[$section] = '##parent-placeholder-'.sha1($salt.$section).'##';
         }
 

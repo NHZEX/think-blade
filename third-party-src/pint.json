@@ -6,7 +6,6 @@
             "allow_unused_params": true,
             "remove_inheritdoc": false
         },
-        "fully_qualified_strict_types": true,
 
         "blank_line_before_statement": {
             "statements": [
@@ -36,8 +35,9 @@
             ]
         },
 
+
         "global_namespace_import": {
-            "import_classes": false,
+            "import_classes": true,
             "import_constants": false,
             "import_functions": false
         },
@@ -45,6 +45,10 @@
             "include": [],
             "scope": "all",
             "strict": true
+        },
+        "fully_qualified_strict_types": true,
+        "method_argument_space": {
+            "on_multiline": "ensure_fully_multiline"
         }
     }
 }

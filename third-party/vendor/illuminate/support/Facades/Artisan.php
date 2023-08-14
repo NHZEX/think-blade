@@ -21,7 +21,7 @@ use Illuminate\Contracts\Console\Kernel as ConsoleKernelContract;
  *
  * @see \Illuminate\Foundation\Console\Kernel
  */
-class Artisan extends Facade
+class Artisan extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

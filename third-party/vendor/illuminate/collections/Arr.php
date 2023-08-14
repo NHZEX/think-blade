@@ -50,12 +50,11 @@ class Arr
         $results = [];
 
         foreach ($array as $values) {
-            if ($values instanceof Collection) {
+            if ($values instanceof \Illuminate\Support\Collection) {
                 $values = $values->all();
             } elseif (! is_array($values)) {
                 continue;
             }
-
             $results[] = $values;
         }
 
@@ -78,11 +77,9 @@ class Arr
             foreach ($results as $product) {
                 foreach ($array as $item) {
                     $product[$index] = $item;
-
                     $append[] = $product;
                 }
             }
-
             $results = $append;
         }
 
@@ -156,13 +153,13 @@ class Arr
     /**
      * Determine if the given key exists in the provided array.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param  ArrayAccess|array  $array
      * @param  string|int  $key
      * @return bool
      */
     public static function exists($array, $key)
     {
-        if ($array instanceof Enumerable) {
+        if ($array instanceof \Illuminate\Support\Enumerable) {
             return $array->has($key);
         }
 
@@ -181,7 +178,6 @@ class Arr
      * Return the first element in an array passing a given truth test.
      *
      * @param  iterable  $array
-     * @param  callable|null  $callback
      * @param  mixed  $default
      * @return mixed
      */
@@ -189,7 +185,7 @@ class Arr
     {
         if (is_null($callback)) {
             if (empty($array)) {
-                return value($default);
+                return \__Illuminate\value($default);
             }
 
             foreach ($array as $item) {
@@ -203,21 +199,20 @@ class Arr
             }
         }
 
-        return value($default);
+        return \__Illuminate\value($default);
     }
 
     /**
      * Return the last element in an array passing a given truth test.
      *
      * @param  array  $array
-     * @param  callable|null  $callback
      * @param  mixed  $default
      * @return mixed
      */
     public static function last($array, callable $callback = null, $default = null)
     {
         if (is_null($callback)) {
-            return empty($array) ? value($default) : end($array);
+            return empty($array) ? \__Illuminate\value($default) : end($array);
         }
 
         return static::first(array_reverse($array, true), $callback, $default);
@@ -230,19 +225,17 @@ class Arr
      * @param  int  $depth
      * @return array
      */
-    public static function flatten($array, $depth = INF)
+    public static function flatten($array, $depth = \INF)
     {
         $result = [];
 
         foreach ($array as $item) {
-            $item = $item instanceof Collection ? $item->all() : $item;
+            $item = $item instanceof \Illuminate\Support\Collection ? $item->all() : $item;
 
             if (! is_array($item)) {
                 $result[] = $item;
             } else {
-                $values = $depth === 1
-                    ? array_values($item)
-                    : static::flatten($item, $depth - 1);
+                $values = $depth === 1 ? array_values($item) : static::flatten($item, $depth - 1);
 
                 foreach ($values as $value) {
                     $result[] = $value;
@@ -263,7 +256,6 @@ class Arr
     public static function forget(&$array, $keys)
     {
         $original = &$array;
-
         $keys = (array) $keys;
 
         if (count($keys) === 0) {
@@ -277,9 +269,7 @@ class Arr
 
                 continue;
             }
-
             $parts = explode('.', $key);
-
             // clean up before each pass
             $array = &$original;
 
@@ -292,7 +282,6 @@ class Arr
                     continue 2;
                 }
             }
-
             unset($array[array_shift($parts)]);
         }
     }
@@ -300,7 +289,7 @@ class Arr
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param  ArrayAccess|array  $array
      * @param  string|int|null  $key
      * @param  mixed  $default
      * @return mixed
@@ -308,7 +297,7 @@ class Arr
     public static function get($array, $key, $default = null)
     {
         if (! static::accessible($array)) {
-            return value($default);
+            return \__Illuminate\value($default);
         }
 
         if (is_null($key)) {
@@ -320,14 +309,14 @@ class Arr
         }
 
         if (! str_contains($key, '.')) {
-            return $array[$key] ?? value($default);
+            return $array[$key] ?? \__Illuminate\value($default);
         }
 
         foreach (explode('.', $key) as $segment) {
             if (static::accessible($array) && static::exists($array, $segment)) {
                 $array = $array[$segment];
             } else {
-                return value($default);
+                return \__Illuminate\value($default);
             }
         }
 
@@ -337,7 +326,7 @@ class Arr
     /**
      * Check if an item or items exist in an array using "dot" notation.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param  ArrayAccess|array  $array
      * @param  string|array  $keys
      * @return bool
      */
@@ -371,7 +360,7 @@ class Arr
     /**
      * Determine if any of the keys exist in an array using "dot" notation.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param  ArrayAccess|array  $array
      * @param  string|array  $keys
      * @return bool
      */
@@ -380,7 +369,6 @@ class Arr
         if (is_null($keys)) {
             return false;
         }
-
         $keys = (array) $keys;
 
         if (! $array) {
@@ -405,7 +393,6 @@ class Arr
      *
      * An array is "associative" if it doesn't have sequential numerical keys beginning with zero.
      *
-     * @param  array  $array
      * @return bool
      */
     public static function isAssoc(array $array)
@@ -449,7 +436,6 @@ class Arr
         if (count($array) === 1) {
             return end($array);
         }
-
         $finalItem = array_pop($array);
 
         return implode($glue, $array).$finalGlue.$finalItem;
@@ -464,7 +450,7 @@ class Arr
      */
     public static function keyBy($array, $keyBy)
     {
-        return Collection::make($array)->keyBy($keyBy)->all();
+        return \Illuminate\Support\Collection::make($array)->keyBy($keyBy)->all();
     }
 
     /**
@@ -476,7 +462,7 @@ class Arr
      */
     public static function prependKeysWith($array, $prependWith)
     {
-        return Collection::make($array)->mapWithKeys(function ($item, $key) use ($prependWith) {
+        return \Illuminate\Support\Collection::make($array)->mapWithKeys(function ($item, $key) use ($prependWith) {
             return [$prependWith.$key => $item];
         })->all();
     }
@@ -504,24 +490,21 @@ class Arr
     public static function pluck($array, $value, $key = null)
     {
         $results = [];
-
         [$value, $key] = static::explodePluckParameters($value, $key);
 
         foreach ($array as $item) {
-            $itemValue = data_get($item, $value);
-
+            $itemValue = \__Illuminate\data_get($item, $value);
             // If the key is "null", we will just append the value to the array and keep
             // looping. Otherwise we will key the array using the value of the key we
             // received from the developer. Then we'll return the final array form.
             if (is_null($key)) {
                 $results[] = $itemValue;
             } else {
-                $itemKey = data_get($item, $key);
+                $itemKey = \__Illuminate\data_get($item, $key);
 
                 if (is_object($itemKey) && method_exists($itemKey, '__toString')) {
                     $itemKey = (string) $itemKey;
                 }
-
                 $results[$itemKey] = $itemValue;
             }
         }
@@ -539,7 +522,6 @@ class Arr
     protected static function explodePluckParameters($value, $key)
     {
         $value = is_string($value) ? explode('.', $value) : $value;
-
         $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
 
         return [$value, $key];
@@ -548,8 +530,6 @@ class Arr
     /**
      * Run a map over each of the items in the array.
      *
-     * @param  array  $array
-     * @param  callable  $callback
      * @return array
      */
     public static function map(array $array, callable $callback)
@@ -595,7 +575,6 @@ class Arr
     public static function pull(&$array, $key, $default = null)
     {
         $value = static::get($array, $key, $default);
-
         static::forget($array, $key);
 
         return $value;
@@ -609,7 +588,7 @@ class Arr
      */
     public static function query($array)
     {
-        return http_build_query($array, '', '&', PHP_QUERY_RFC3986);
+        return http_build_query($array, '', '&', \PHP_QUERY_RFC3986);
     }
 
     /**
@@ -620,18 +599,15 @@ class Arr
      * @param  bool  $preserveKeys
      * @return mixed
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function random($array, $number = null, $preserveKeys = false)
     {
         $requested = is_null($number) ? 1 : $number;
-
         $count = count($array);
 
         if ($requested > $count) {
-            throw new InvalidArgumentException(
-                "You requested {$requested} items, but there are only {$count} items available."
-            );
+            throw new InvalidArgumentException("You requested {$requested} items, but there are only {$count} items available.");
         }
 
         if (is_null($number)) {
@@ -641,9 +617,7 @@ class Arr
         if ((int) $number === 0) {
             return [];
         }
-
         $keys = array_rand($array, $number);
-
         $results = [];
 
         if ($preserveKeys) {
@@ -674,26 +648,21 @@ class Arr
         if (is_null($key)) {
             return $array = $value;
         }
-
         $keys = explode('.', $key);
 
         foreach ($keys as $i => $key) {
             if (count($keys) === 1) {
                 break;
             }
-
             unset($keys[$i]);
-
             // If the key doesn't exist at this depth, we will just create an empty array
             // to hold the next value, allowing us to create the arrays to hold final
             // values at the correct depth. Then we'll keep digging into the array.
             if (! isset($array[$key]) || ! is_array($array[$key])) {
                 $array[$key] = [];
             }
-
             $array = &$array[$key];
         }
-
         $array[array_shift($keys)] = $value;
 
         return $array;
@@ -728,7 +697,7 @@ class Arr
      */
     public static function sort($array, $callback = null)
     {
-        return Collection::make($array)->sortBy($callback)->all();
+        return \Illuminate\Support\Collection::make($array)->sortBy($callback)->all();
     }
 
     /**
@@ -740,7 +709,7 @@ class Arr
      */
     public static function sortDesc($array, $callback = null)
     {
-        return Collection::make($array)->sortByDesc($callback)->all();
+        return \Illuminate\Support\Collection::make($array)->sortByDesc($callback)->all();
     }
 
     /**
@@ -751,7 +720,7 @@ class Arr
      * @param  bool  $descending
      * @return array
      */
-    public static function sortRecursive($array, $options = SORT_REGULAR, $descending = false)
+    public static function sortRecursive($array, $options = \SORT_REGULAR, $descending = false)
     {
         foreach ($array as &$value) {
             if (is_array($value)) {
@@ -760,13 +729,9 @@ class Arr
         }
 
         if (static::isAssoc($array)) {
-            $descending
-                    ? krsort($array, $options)
-                    : ksort($array, $options);
+            $descending ? krsort($array, $options) : ksort($array, $options);
         } else {
-            $descending
-                    ? rsort($array, $options)
-                    : sort($array, $options);
+            $descending ? rsort($array, $options) : sort($array, $options);
         }
 
         return $array;
@@ -781,7 +746,6 @@ class Arr
     public static function toCssClasses($array)
     {
         $classList = static::wrap($array);
-
         $classes = [];
 
         foreach ($classList as $class => $constraint) {
@@ -804,14 +768,13 @@ class Arr
     public static function toCssStyles($array)
     {
         $styleList = static::wrap($array);
-
         $styles = [];
 
         foreach ($styleList as $class => $constraint) {
             if (is_numeric($class)) {
-                $styles[] = Str::finish($constraint, ';');
+                $styles[] = \Illuminate\Support\Str::finish($constraint, ';');
             } elseif ($constraint) {
-                $styles[] = Str::finish($class, ';');
+                $styles[] = \Illuminate\Support\Str::finish($class, ';');
             }
         }
 
@@ -822,12 +785,11 @@ class Arr
      * Filter the array using the given callback.
      *
      * @param  array  $array
-     * @param  callable  $callback
      * @return array
      */
     public static function where($array, callable $callback)
     {
-        return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+        return array_filter($array, $callback, \ARRAY_FILTER_USE_BOTH);
     }
 
     /**

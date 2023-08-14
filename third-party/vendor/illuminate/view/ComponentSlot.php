@@ -30,19 +30,17 @@ class ComponentSlot implements Htmlable
     public function __construct($contents = '', $attributes = [])
     {
         $this->contents = $contents;
-
         $this->withAttributes($attributes);
     }
 
     /**
      * Set the extra attributes that the slot should make available.
      *
-     * @param  array  $attributes
      * @return $this
      */
     public function withAttributes(array $attributes)
     {
-        $this->attributes = new ComponentAttributeBag($attributes);
+        $this->attributes = new \Illuminate\View\ComponentAttributeBag($attributes);
 
         return $this;
     }

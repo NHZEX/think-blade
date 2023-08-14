@@ -50,7 +50,7 @@ trait ManagesStacks
      *
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function stopPush()
     {
@@ -58,7 +58,7 @@ trait ManagesStacks
             throw new InvalidArgumentException('Cannot end a push stack without first starting one.');
         }
 
-        return tap(array_pop($this->pushStack), function ($last) {
+        return \__Illuminate\tap(array_pop($this->pushStack), function ($last) {
             $this->extendPush($last, ob_get_clean());
         });
     }
@@ -106,7 +106,7 @@ trait ManagesStacks
      *
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function stopPrepend()
     {
@@ -114,7 +114,7 @@ trait ManagesStacks
             throw new InvalidArgumentException('Cannot end a prepend operation without first starting one.');
         }
 
-        return tap(array_pop($this->pushStack), function ($last) {
+        return \__Illuminate\tap(array_pop($this->pushStack), function ($last) {
             $this->extendPrepend($last, ob_get_clean());
         });
     }
@@ -151,7 +151,6 @@ trait ManagesStacks
         if (! isset($this->pushes[$section]) && ! isset($this->prepends[$section])) {
             return $default;
         }
-
         $output = '';
 
         if (isset($this->prepends[$section])) {

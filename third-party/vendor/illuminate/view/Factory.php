@@ -2,6 +2,7 @@
 
 namespace Illuminate\View;
 
+use Closure;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Support\Arrayable;
@@ -13,14 +14,7 @@ use InvalidArgumentException;
 
 class Factory implements FactoryContract
 {
-    use Macroable,
-        Concerns\ManagesComponents,
-        Concerns\ManagesEvents,
-        Concerns\ManagesFragments,
-        Concerns\ManagesLayouts,
-        Concerns\ManagesLoops,
-        Concerns\ManagesStacks,
-        Concerns\ManagesTranslations;
+    use Macroable, \Illuminate\View\Concerns\ManagesComponents, \Illuminate\View\Concerns\ManagesEvents, \Illuminate\View\Concerns\ManagesFragments, \Illuminate\View\Concerns\ManagesLayouts, \Illuminate\View\Concerns\ManagesLoops, \Illuminate\View\Concerns\ManagesStacks, \Illuminate\View\Concerns\ManagesTranslations;
 
     /**
      * The engine implementation.
@@ -62,12 +56,7 @@ class Factory implements FactoryContract
      *
      * @var array
      */
-    protected $extensions = [
-        'blade.php' => 'blade',
-        'php' => 'php',
-        'css' => 'file',
-        'html' => 'file',
-    ];
+    protected $extensions = ['blade.php' => 'blade', 'php' => 'php', 'css' => 'file', 'html' => 'file'];
 
     /**
      * The view composer events.
@@ -93,9 +82,7 @@ class Factory implements FactoryContract
     /**
      * Create a new view factory instance.
      *
-     * @param  \Illuminate\View\Engines\EngineResolver  $engines
      * @param  \Illuminate\View\ViewFinderInterface  $finder
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
      * @return void
      */
     public function __construct(EngineResolver $engines, ViewFinderInterface $finder, Dispatcher $events)
@@ -103,7 +90,6 @@ class Factory implements FactoryContract
         $this->finder = $finder;
         $this->events = $events;
         $this->engines = $engines;
-
         $this->share('__env', $this);
     }
 
@@ -119,7 +105,7 @@ class Factory implements FactoryContract
     {
         $data = array_merge($mergeData, $this->parseData($data));
 
-        return tap($this->viewInstance($path, $path, $data), function ($view) {
+        return \__Illuminate\tap($this->viewInstance($path, $path, $data), function ($view) {
             $this->callCreator($view);
         });
     }
@@ -134,16 +120,13 @@ class Factory implements FactoryContract
      */
     public function make($view, $data = [], $mergeData = [])
     {
-        $path = $this->finder->find(
-            $view = $this->normalizeName($view)
-        );
-
+        $path = $this->finder->find($view = $this->normalizeName($view));
         // Next, we will create the view instance and call the view creator for the view
         // which can set any data, etc. Then we will return the view instance back to
         // the caller for rendering or performing other view manipulations on this.
         $data = array_merge($mergeData, $this->parseData($data));
 
-        return tap($this->viewInstance($view, $path, $data), function ($view) {
+        return \__Illuminate\tap($this->viewInstance($view, $path, $data), function ($view) {
             $this->callCreator($view);
         });
     }
@@ -151,12 +134,11 @@ class Factory implements FactoryContract
     /**
      * Get the first view that actually exists from the given list.
      *
-     * @param  array  $views
      * @param  \Illuminate\Contracts\Support\Arrayable|array  $data
      * @param  array  $mergeData
      * @return \Illuminate\Contracts\View\View
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function first(array $views, $data = [], $mergeData = [])
     {
@@ -215,25 +197,15 @@ class Factory implements FactoryContract
     public function renderEach($view, $data, $iterator, $empty = 'raw|')
     {
         $result = '';
-
         // If is actually data in the array, we will loop through the data and append
         // an instance of the partial view to the final result HTML passing in the
         // iterated value of this data array, allowing the views to access them.
         if (count($data) > 0) {
             foreach ($data as $key => $value) {
-                $result .= $this->make(
-                    $view, ['key' => $key, $iterator => $value]
-                )->render();
+                $result .= $this->make($view, ['key' => $key, $iterator => $value])->render();
             }
-        }
-
-        // If there is no data in the array, we will render the contents of the empty
-        // view. Alternatively, the "empty view" could be a raw string that begins
-        // with "raw|" for convenience and to let this know that it is a string.
-        else {
-            $result = str_starts_with($empty, 'raw|')
-                        ? substr($empty, 4)
-                        : $this->make($empty)->render();
+        } else {
+            $result = str_starts_with($empty, 'raw|') ? substr($empty, 4) : $this->make($empty)->render();
         }
 
         return $result;
@@ -247,7 +219,7 @@ class Factory implements FactoryContract
      */
     protected function normalizeName($name)
     {
-        return ViewName::normalize($name);
+        return \Illuminate\View\ViewName::normalize($name);
     }
 
     /**
@@ -271,7 +243,7 @@ class Factory implements FactoryContract
      */
     protected function viewInstance($view, $path, $data)
     {
-        return new View($this, $this->getEngineFromPath($path), $view, $path, $data);
+        return new \Illuminate\View\View($this, $this->getEngineFromPath($path), $view, $path, $data);
     }
 
     /**
@@ -297,14 +269,13 @@ class Factory implements FactoryContract
      * @param  string  $path
      * @return \Illuminate\Contracts\View\Engine
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getEngineFromPath($path)
     {
-        if (! $extension = $this->getExtension($path)) {
+        if (! ($extension = $this->getExtension($path))) {
             throw new InvalidArgumentException("Unrecognized extension in file: {$path}.");
         }
-
         $engine = $this->extensions[$extension];
 
         return $this->engines->resolve($engine);
@@ -376,7 +347,6 @@ class Factory implements FactoryContract
     /**
      * Determine if the given once token has been rendered.
      *
-     * @param  string  $id
      * @return bool
      */
     public function hasRenderedOnce(string $id)
@@ -387,7 +357,6 @@ class Factory implements FactoryContract
     /**
      * Mark the given once token as having been rendered.
      *
-     * @param  string  $id
      * @return void
      */
     public function markAsRenderedOnce(string $id)
@@ -453,7 +422,7 @@ class Factory implements FactoryContract
      *
      * @param  string  $extension
      * @param  string  $engine
-     * @param  \Closure|null  $resolver
+     * @param  Closure|null  $resolver
      * @return void
      */
     public function addExtension($extension, $engine, $resolver = null)
@@ -463,9 +432,7 @@ class Factory implements FactoryContract
         if (isset($resolver)) {
             $this->engines->register($engine, $resolver);
         }
-
         unset($this->extensions[$extension]);
-
         $this->extensions = array_merge([$extension => $engine], $this->extensions);
     }
 
@@ -478,7 +445,6 @@ class Factory implements FactoryContract
     {
         $this->renderCount = 0;
         $this->renderedOnce = [];
-
         $this->flushSections();
         $this->flushStacks();
         $this->flushComponents();
@@ -561,7 +527,6 @@ class Factory implements FactoryContract
     /**
      * Set the event dispatcher instance.
      *
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
      * @return void
      */
     public function setDispatcher(Dispatcher $events)
@@ -582,7 +547,6 @@ class Factory implements FactoryContract
     /**
      * Set the IoC container instance.
      *
-     * @param  \Illuminate\Contracts\Container\Container  $container
      * @return void
      */
     public function setContainer(Container $container)

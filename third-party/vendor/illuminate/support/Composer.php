@@ -25,7 +25,6 @@ class Composer
     /**
      * Create a new Composer manager instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  string|null  $workingPath
      * @return void
      */
@@ -44,7 +43,6 @@ class Composer
     public function dumpAutoloads($extra = '')
     {
         $extra = $extra ? (array) $extra : [];
-
         $command = array_merge($this->findComposer(), ['dump-autoload'], $extra);
 
         return $this->getProcess($command)->run();
@@ -81,13 +79,12 @@ class Composer
      */
     protected function phpBinary()
     {
-        return ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
+        return \Illuminate\Support\ProcessUtils::escapeArgument((new PhpExecutableFinder())->find(false));
     }
 
     /**
      * Get a new Symfony process instance.
      *
-     * @param  array  $command
      * @return \Symfony\Component\Process\Process
      */
     protected function getProcess(array $command)
@@ -116,14 +113,11 @@ class Composer
     public function getVersion()
     {
         $command = array_merge($this->findComposer(), ['-V', '--no-ansi']);
-
         $process = $this->getProcess($command);
-
         $process->run();
-
         $output = $process->getOutput();
 
-        if (preg_match('/(\d+(\.\d+){2})/', $output, $version)) {
+        if (preg_match('/(\\d+(\\.\\d+){2})/', $output, $version)) {
             return $version[1];
         }
 

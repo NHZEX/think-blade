@@ -19,7 +19,7 @@ use Illuminate\Contracts\Auth\PasswordBroker;
  * @see \Illuminate\Auth\Passwords\PasswordBrokerManager
  * @see \Illuminate\Auth\Passwords\PasswordBroker
  */
-class Password extends Facade
+class Password extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Constant representing a successfully sent reminder.

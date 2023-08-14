@@ -61,7 +61,6 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * Create a new view instance.
      *
      * @param  \Illuminate\View\Factory  $factory
-     * @param  \Illuminate\Contracts\View\Engine  $engine
      * @param  string  $view
      * @param  string  $path
      * @param  mixed  $data
@@ -73,7 +72,6 @@ class View implements ArrayAccess, Htmlable, ViewContract
         $this->path = $path;
         $this->engine = $engine;
         $this->factory = $factory;
-
         $this->data = $data instanceof Arrayable ? $data->toArray() : (array) $data;
     }
 
@@ -93,12 +91,11 @@ class View implements ArrayAccess, Htmlable, ViewContract
     /**
      * Get the evaluated contents for a given array of fragments.
      *
-     * @param  array  $fragments
      * @return string
      */
     public function fragments(array $fragments)
     {
-        return collect($fragments)->map(fn ($f) => $this->fragment($f))->implode('');
+        return \__Illuminate\collect($fragments)->map(fn ($f) => $this->fragment($f))->implode('');
     }
 
     /**
@@ -110,7 +107,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      */
     public function fragmentIf($boolean, $fragment)
     {
-        if (value($boolean)) {
+        if (\__Illuminate\value($boolean)) {
             return $this->fragment($fragment);
         }
 
@@ -121,12 +118,11 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * Get the evaluated contents for a given array of fragments if the given condition is true.
      *
      * @param  bool  $boolean
-     * @param  array  $fragments
      * @return string
      */
     public function fragmentsIf($boolean, array $fragments)
     {
-        if (value($boolean)) {
+        if (\__Illuminate\value($boolean)) {
             return $this->fragments($fragments);
         }
 
@@ -136,18 +132,15 @@ class View implements ArrayAccess, Htmlable, ViewContract
     /**
      * Get the string contents of the view.
      *
-     * @param  callable|null  $callback
      * @return string
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function render(callable $callback = null)
     {
         try {
             $contents = $this->renderContents();
-
             $response = isset($callback) ? $callback($this, $contents) : null;
-
             // Once we have the contents of the view, we will flush the sections if we are
             // done rendering all views so that there is nothing left hanging over when
             // another view gets rendered in the future by the application developer.
@@ -172,11 +165,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
         // the section after the complete rendering operation is done. This will
         // clear out the sections for any separate views that may be rendered.
         $this->factory->incrementRender();
-
         $this->factory->callComposer($this);
-
         $contents = $this->getContents();
-
         // Once we've finished rendering the view, we'll decrement the render count
         // so that each section gets flushed out next time a view is created and
         // no old sections are staying around in the memory of an environment.
@@ -218,7 +208,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      *
      * @return array
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderSections()
     {
@@ -250,7 +240,6 @@ class View implements ArrayAccess, Htmlable, ViewContract
      *
      * @param  string  $key
      * @param  string  $view
-     * @param  array  $data
      * @return $this
      */
     public function nest($key, $view, array $data = [])
@@ -267,9 +256,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      */
     public function withErrors($provider, $bag = 'default')
     {
-        return $this->with('errors', (new ViewErrorBag)->put(
-            $bag, $this->formatErrors($provider)
-        ));
+        return $this->with('errors', (new ViewErrorBag())->put($bag, $this->formatErrors($provider)));
     }
 
     /**
@@ -280,9 +267,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      */
     protected function formatErrors($provider)
     {
-        return $provider instanceof MessageProvider
-                        ? $provider->getMessageBag()
-                        : new MessageBag((array) $provider);
+        return $provider instanceof MessageProvider ? $provider->getMessageBag() : new MessageBag((array) $provider);
     }
 
     /**
@@ -360,7 +345,6 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * Determine if a piece of data is bound.
      *
      * @param  string  $key
-     * @return bool
      */
     public function offsetExists($key): bool
     {
@@ -371,7 +355,6 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * Get a piece of bound data to the view.
      *
      * @param  string  $key
-     * @return mixed
      */
     public function offsetGet($key): mixed
     {
@@ -383,7 +366,6 @@ class View implements ArrayAccess, Htmlable, ViewContract
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @return void
      */
     public function offsetSet($key, $value): void
     {
@@ -394,7 +376,6 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * Unset a piece of data from the view.
      *
      * @param  string  $key
-     * @return void
      */
     public function offsetUnset($key): void
     {
@@ -453,7 +434,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      * @param  array  $parameters
      * @return \Illuminate\View\View
      *
-     * @throws \BadMethodCallException
+     * @throws BadMethodCallException
      */
     public function __call($method, $parameters)
     {
@@ -461,10 +442,8 @@ class View implements ArrayAccess, Htmlable, ViewContract
             return $this->macroCall($method, $parameters);
         }
 
-        if (! str_starts_with($method, 'with')) {
-            throw new BadMethodCallException(sprintf(
-                'Method %s::%s does not exist.', static::class, $method
-            ));
+        if (! str_starts_with($method, '\__Illuminate\with')) {
+            throw new BadMethodCallException(sprintf('Method %s::%s does not exist.', static::class, $method));
         }
 
         return $this->with(Str::camel(substr($method, 4)), $parameters[0]);
@@ -485,7 +464,7 @@ class View implements ArrayAccess, Htmlable, ViewContract
      *
      * @return string
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function __toString()
     {

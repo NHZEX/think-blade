@@ -3,7 +3,7 @@
         'name' => 'third-party/library',
         'pretty_version' => '7.x-dev',
         'version' => '7.9999999.9999999.9999999-dev',
-        'reference' => '80b7aa429e5215663847eeb3f97f1425fc89604d',
+        'reference' => 'c40e3f0c9558212441e60529c30043323cd83520',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -130,7 +130,7 @@
         'third-party/library' => array(
             'pretty_version' => '7.x-dev',
             'version' => '7.9999999.9999999.9999999-dev',
-            'reference' => '80b7aa429e5215663847eeb3f97f1425fc89604d',
+            'reference' => 'c40e3f0c9558212441e60529c30043323cd83520',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

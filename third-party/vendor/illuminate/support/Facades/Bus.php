@@ -49,13 +49,12 @@ use Illuminate\Support\Testing\Fakes\BusFake;
  * @see \Illuminate\Bus\Dispatcher
  * @see \Illuminate\Support\Testing\Fakes\BusFake
  */
-class Bus extends Facade
+class Bus extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Replace the bound instance with a fake.
      *
      * @param  array|string  $jobsToFake
-     * @param  \Illuminate\Bus\BatchRepository|null  $batchRepository
      * @return \Illuminate\Support\Testing\Fakes\BusFake
      */
     public static function fake($jobsToFake = [], BatchRepository $batchRepository = null)
@@ -75,8 +74,7 @@ class Bus extends Facade
     {
         $jobs = is_array($jobs) ? $jobs : func_get_args();
 
-        return (new PendingChain(array_shift($jobs), $jobs))
-                    ->dispatch();
+        return (new PendingChain(array_shift($jobs), $jobs))->dispatch();
     }
 
     /**

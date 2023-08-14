@@ -6,26 +6,65 @@ use Isolated\Symfony\Component\Finder\Finder;
 
 require __DIR__ . '/vendor/autoload.php';
 
-var_dump(function_exists('collect'));
+function getPackagesFilesRelativePathname(array $excludePackages): array
+{
+    $rootDirnameLen = strlen(__DIR__);
 
-$ref = new ReflectionFunction('collect');
-var_dump($ref->getFileName());
+    $excludeFiles = [];
 
-$helpersFuncs = [];
+    foreach ($excludePackages as $package) {
+        $packagePath = \Composer\InstalledVersions::getInstallPath($package);
+        $packagePath = realpath($packagePath);
 
-$funcs = get_defined_functions();
-foreach ($funcs['user'] as $func) {
-    $ref = new ReflectionFunction($func);
+        $items = Finder::create()
+            ->files()
+            ->in($packagePath);
 
-    if (!str_contains($ref->getFileName(), 'third-party-src/vendor/illuminate')) {
-        continue;
+        foreach ($items as $file) {
+            /** @var \Symfony\Component\Finder\SplFileInfo $file */
+
+            $relativePathname = substr($file->getPathname(), $rootDirnameLen + 1);
+
+            $excludeFiles[] = $relativePathname;
+        }
     }
 
-    echo "> {$func} => {$ref->getFileName()}" . PHP_EOL;
-
-    $helpersFuncs[] = $func;
+    return $excludeFiles;
 }
 
+function findIlluminateHelperFuncs(): array
+{
+    $helpersFuncs = [];
+
+    $funcs = get_defined_functions();
+    foreach ($funcs['user'] as $func) {
+        $ref = new \ReflectionFunction($func);
+
+        if (!str_contains($ref->getFileName(), 'third-party-src/vendor/illuminate')) {
+            continue;
+        }
+
+        $filename = $ref->getFileName();
+
+        $filename = str_replace(dirname(__DIR__), '', $filename);
+
+        echo "> {$func} => {$filename}" . PHP_EOL;
+
+        $helpersFuncs[] = $func;
+    }
+
+    return $helpersFuncs;
+}
+
+$excludePackages = [
+    'illuminate/contracts',
+    'illuminate/container',
+    'illuminate/macroable',
+    'illuminate/conditionable',
+];
+$excludeFiles = getPackagesFilesRelativePathname($excludePackages);
+
+$helpersFuncs = findIlluminateHelperFuncs();
 $helpersFuncMatchStr = join('|', array_map('\preg_quote', $helpersFuncs));
 
 function strPosGetLine(string $text, int $pos, ?int &$relativePos = null): string {
@@ -59,7 +98,7 @@ return [
     // will be generated instead.
     //
     // For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#prefix
-    'prefix' => '_Z_IlluminateVendor',
+    'prefix' => '__Illuminate',
 
     // By default when running php-scoper add-prefix, it will prefix all relevant code found in the current working
     // directory. You can however define which files should be scoped by defining a collection of Finders in the
@@ -88,6 +127,11 @@ return [
         Finder::create()->append([
             'composer.json',
         ]),
+        Finder::create()
+            ->files()
+            ->ignoreVCS(true)
+            ->name('/LICENSE|LICENSE.md/')
+            ->in('vendor'),
     ],
 
     // List of excluded files, i.e. files for which the content will be left untouched.
@@ -95,6 +139,11 @@ return [
     //
     // For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers
     'exclude-files' => [
+        'composer.json',
+        'vendor/composer/installed.json',
+        'vendor/composer/installed.php',
+        'vendor/composer/InstalledVersions.php',
+        ...$excludeFiles,
     ],
 
     // When scoping PHP files, there will be scenarios where some of the code being scoped indirectly references the
@@ -182,7 +231,7 @@ return [
         'Illuminate',
     ],
     'exclude-classes' => [
-        // 'ReflectionClassConstant',
+        'Illuminate\Support\Traits\Macroable'
     ],
     'exclude-functions' => [
         // 'mb_str_split',

@@ -25,7 +25,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Routing\Redirector
  */
-class Redirect extends Facade
+class Redirect extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

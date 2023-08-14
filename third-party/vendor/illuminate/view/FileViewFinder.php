@@ -5,7 +5,7 @@ namespace Illuminate\View;
 use Illuminate\Filesystem\Filesystem;
 use InvalidArgumentException;
 
-class FileViewFinder implements ViewFinderInterface
+class FileViewFinder implements \Illuminate\View\ViewFinderInterface
 {
     /**
      * The filesystem instance.
@@ -45,9 +45,6 @@ class FileViewFinder implements ViewFinderInterface
     /**
      * Create a new file view loader instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  array  $paths
-     * @param  array|null  $extensions
      * @return void
      */
     public function __construct(Filesystem $files, array $paths, array $extensions = null)
@@ -98,7 +95,7 @@ class FileViewFinder implements ViewFinderInterface
      * @param  string  $name
      * @return array
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function parseNamespaceSegments($name)
     {
@@ -122,7 +119,7 @@ class FileViewFinder implements ViewFinderInterface
      * @param  array  $paths
      * @return string
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function findInPaths($name, $paths)
     {
@@ -195,7 +192,6 @@ class FileViewFinder implements ViewFinderInterface
         if (isset($this->hints[$namespace])) {
             $hints = array_merge($this->hints[$namespace], $hints);
         }
-
         $this->hints[$namespace] = $hints;
     }
 
@@ -213,7 +209,6 @@ class FileViewFinder implements ViewFinderInterface
         if (isset($this->hints[$namespace])) {
             $hints = array_merge($hints, $this->hints[$namespace]);
         }
-
         $this->hints[$namespace] = $hints;
     }
 
@@ -240,7 +235,6 @@ class FileViewFinder implements ViewFinderInterface
         if (($index = array_search($extension, $this->extensions)) !== false) {
             unset($this->extensions[$index]);
         }
-
         array_unshift($this->extensions, $extension);
     }
 

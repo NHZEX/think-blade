@@ -44,7 +44,6 @@ class PendingChainFake extends PendingChain
         } else {
             $firstJob = $this->job;
         }
-
         $firstJob->allOnConnection($this->connection);
         $firstJob->allOnQueue($this->queue);
         $firstJob->chain($this->chain);

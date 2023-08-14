@@ -36,7 +36,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Database\Schema\Builder
  */
-class Schema extends Facade
+class Schema extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Indicates if the resolved facade should be cached.

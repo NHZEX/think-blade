@@ -37,7 +37,7 @@ use Illuminate\Support\Testing\Fakes\EventFake;
  * @see \Illuminate\Events\Dispatcher
  * @see \Illuminate\Support\Testing\Fakes\EventFake
  */
-class Event extends Facade
+class Event extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Replace the bound instance with a fake.
@@ -48,9 +48,8 @@ class Event extends Facade
     public static function fake($eventsToFake = [])
     {
         static::swap($fake = new EventFake(static::getFacadeRoot(), $eventsToFake));
-
         Model::setEventDispatcher($fake);
-        Cache::refreshEventDispatcher();
+        \Illuminate\Support\Facades\Cache::refreshEventDispatcher();
 
         return $fake;
     }
@@ -63,52 +62,42 @@ class Event extends Facade
      */
     public static function fakeExcept($eventsToAllow)
     {
-        return static::fake([
-            function ($eventName) use ($eventsToAllow) {
-                return ! in_array($eventName, (array) $eventsToAllow);
-            },
-        ]);
+        return static::fake([function ($eventName) use ($eventsToAllow) {
+            return ! in_array($eventName, (array) $eventsToAllow);
+        }]);
     }
 
     /**
      * Replace the bound instance with a fake during the given callable's execution.
      *
-     * @param  callable  $callable
-     * @param  array  $eventsToFake
      * @return mixed
      */
     public static function fakeFor(callable $callable, array $eventsToFake = [])
     {
         $originalDispatcher = static::getFacadeRoot();
-
         static::fake($eventsToFake);
 
-        return tap($callable(), function () use ($originalDispatcher) {
+        return \__Illuminate\tap($callable(), function () use ($originalDispatcher) {
             static::swap($originalDispatcher);
-
             Model::setEventDispatcher($originalDispatcher);
-            Cache::refreshEventDispatcher();
+            \Illuminate\Support\Facades\Cache::refreshEventDispatcher();
         });
     }
 
     /**
      * Replace the bound instance with a fake during the given callable's execution.
      *
-     * @param  callable  $callable
-     * @param  array  $eventsToAllow
      * @return mixed
      */
     public static function fakeExceptFor(callable $callable, array $eventsToAllow = [])
     {
         $originalDispatcher = static::getFacadeRoot();
-
         static::fakeExcept($eventsToAllow);
 
-        return tap($callable(), function () use ($originalDispatcher) {
+        return \__Illuminate\tap($callable(), function () use ($originalDispatcher) {
             static::swap($originalDispatcher);
-
             Model::setEventDispatcher($originalDispatcher);
-            Cache::refreshEventDispatcher();
+            \Illuminate\Support\Facades\Cache::refreshEventDispatcher();
         });
     }
 

@@ -2,7 +2,7 @@
 
 namespace Illuminate\Support\Facades;
 
-use Laravel\Ui\UiServiceProvider;
+use __Illuminate\Laravel\Ui\UiServiceProvider;
 use RuntimeException;
 
 /**
@@ -67,7 +67,7 @@ use RuntimeException;
  * @see \Illuminate\Auth\AuthManager
  * @see \Illuminate\Auth\SessionGuard
  */
-class Auth extends Facade
+class Auth extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.
@@ -82,17 +82,15 @@ class Auth extends Facade
     /**
      * Register the typical authentication routes for an application.
      *
-     * @param  array  $options
      * @return void
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public static function routes(array $options = [])
     {
         if (! static::$app->providerIsLoaded(UiServiceProvider::class)) {
             throw new RuntimeException('In order to use the Auth::routes() method, please install the laravel/ui package.');
         }
-
         static::$app->make('router')->auth($options);
     }
 }

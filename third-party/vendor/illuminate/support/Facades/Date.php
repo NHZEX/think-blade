@@ -3,6 +3,7 @@
 namespace Illuminate\Support\Facades;
 
 use Illuminate\Support\DateFactory;
+use RuntimeException;
 
 /**
  * @see https://carbon.nesbot.com/docs/
@@ -87,7 +88,7 @@ use Illuminate\Support\DateFactory;
  *
  * @see \Illuminate\Support\DateFactory
  */
-class Date extends Facade
+class Date extends \Illuminate\Support\Facades\Facade
 {
     const DEFAULT_FACADE = DateFactory::class;
 
@@ -96,7 +97,7 @@ class Date extends Facade
      *
      * @return string
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected static function getFacadeAccessor()
     {
@@ -113,8 +114,7 @@ class Date extends Facade
     {
         if (! isset(static::$resolvedInstance[$name]) && ! isset(static::$app, static::$app[$name])) {
             $class = static::DEFAULT_FACADE;
-
-            static::swap(new $class);
+            static::swap(new $class());
         }
 
         return parent::resolveFacadeInstance($name);

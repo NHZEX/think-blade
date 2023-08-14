@@ -21,7 +21,7 @@ namespace Illuminate\Support\Facades;
  * @see \Illuminate\Hashing\HashManager
  * @see \Illuminate\Hashing\AbstractHasher
  */
-class Hash extends Facade
+class Hash extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

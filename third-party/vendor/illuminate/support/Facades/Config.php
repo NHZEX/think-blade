@@ -17,7 +17,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Config\Repository
  */
-class Config extends Facade
+class Config extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

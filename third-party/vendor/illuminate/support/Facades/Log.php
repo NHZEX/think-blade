@@ -34,7 +34,7 @@ namespace Illuminate\Support\Facades;
  *
  * @see \Illuminate\Log\LogManager
  */
-class Log extends Facade
+class Log extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.

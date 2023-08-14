@@ -54,7 +54,7 @@ namespace Illuminate\Support\Facades;
  *
  * @mixin \Illuminate\Cache\Repository
  */
-class Cache extends Facade
+class Cache extends \Illuminate\Support\Facades\Facade
 {
     /**
      * Get the registered name of the component.
