@@ -4,7 +4,7 @@ blade版本: v9.52.15
 
 [![Latest Stable Version](https://poser.pugx.org/nhzex/think-blade/v/stable)](https://packagist.org/packages/nhzex/think-blade)
 [![License](https://poser.pugx.org/nhzex/think-blade/license)](https://packagist.org/packages/nhzex/think-blade)
-[![workflows](https://github.com/nhzex/think-blade/workflows/buildcheck/badge.svg)](https://github.com/NHZEX/think-blade/actions)
+[![tests](https://github.com/nhzex/think-blade/actions/workflows/tests.yml/badge.svg)](https://github.com/NHZEX/think-blade/actions/workflows/tests.yml)
 
 ## Installation
 ```
