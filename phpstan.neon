@@ -1,0 +1,11 @@
+parameters:
+    level: 5
+    paths:
+        - driver
+        - src-next
+    scanFiles:
+    stubFiles:
+    reportUnmatchedIgnoredErrors: true
+    ignoreErrors:
+includes:
+    - phpstan-baseline.neon

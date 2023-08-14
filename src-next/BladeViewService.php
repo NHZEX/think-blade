@@ -43,6 +43,7 @@ class BladeViewService extends Service
     private static function setBridgeContainer(ContainerContract $container): void
     {
         \Illuminate\Container\Container::setInstance($container);
+        // @phpstan-ignore-next-line
         Facade::setFacadeApplication($container);
         Facade::clearResolvedInstances();
     }

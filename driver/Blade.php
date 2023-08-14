@@ -20,10 +20,11 @@ class Blade implements TemplateHandlerInterface
 {
     private ViewFactory $view;
 
-    /** @var App */
-    private $app;
+    private App $app;
 
-    // 模板引擎参数
+    /**
+     * @var array<string, mixed>
+     */
     protected array $config = [
         // 默认模板渲染规则 1 解析为小写+下划线 2 全部转换小写 3 保持操作方法
         'auto_rule' => 1,
@@ -133,7 +134,7 @@ class Blade implements TemplateHandlerInterface
      * @param  string  $template 模板文件规则
      * @return string
      */
-    public function parseTemplate(string $template)
+    public function parseTemplate(string $template): string
     {
         $request = $this->app->request;
 
@@ -207,16 +208,13 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 获取模板引擎配置
-     *
-     * @param  string  $name 参数名
-     * @return mixed
      */
-    public function getConfig(string $name)
+    public function getConfig(string $name): mixed
     {
         return $this->config[$name];
     }
 
-    public function __call($method, $params)
+    public function __call(string $method, $params): mixed
     {
         return call_user_func_array([$this->view, $method], $params);
     }
@@ -228,10 +226,8 @@ class Blade implements TemplateHandlerInterface
 
     /**
      * 获取数组调试信息
-     *
-     * @return array
      */
-    private function dumpArrayData(array $data)
+    private function dumpArrayData(array $data): array
     {
         $debugInfo = array_map(function ($value) {
             if (is_object($value)) {
@@ -241,7 +237,7 @@ class Blade implements TemplateHandlerInterface
                         $value = mb_substr((string) $value, 0, 36).'...';
                     }
                 } else {
-                    $value = get_class($value).'#'.hash('crc32', spl_object_hash($value));
+                    $value = get_class($value).'#'.\spl_object_id($value);
                 }
             } else {
                 $value = print_r($value, true);

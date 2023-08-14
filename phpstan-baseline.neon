@@ -1,0 +1,46 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Method think\\\\view\\\\driver\\\\Blade\\:\\:getConfig\\(\\) with return type void returns mixed but should not return anything\\.$#"
+			count: 1
+			path: driver/Blade.php
+
+		-
+			message: "#^Parameter \\#2 \\$cachePath of class Illuminate\\\\View\\\\Compilers\\\\BladeCompiler constructor expects string, void given\\.$#"
+			count: 1
+			path: src-next/BladeViewService.php
+
+		-
+			message: "#^Parameter \\#3 \\$basePath of class Illuminate\\\\View\\\\Compilers\\\\BladeCompiler constructor expects string, void given\\.$#"
+			count: 1
+			path: src-next/BladeViewService.php
+
+		-
+			message: "#^Parameter \\#4 \\$shouldCache of class Illuminate\\\\View\\\\Compilers\\\\BladeCompiler constructor expects bool, void given\\.$#"
+			count: 1
+			path: src-next/BladeViewService.php
+
+		-
+			message: "#^Result of method think\\\\view\\\\driver\\\\Blade\\:\\:getConfig\\(\\) \\(void\\) is used\\.$#"
+			count: 3
+			path: src-next/BladeViewService.php
+
+		-
+			message: "#^Constructor of class Zxin\\\\Think\\\\Blade\\\\NullEventDispatcher has an unused parameter \\$container\\.$#"
+			count: 1
+			path: src-next/NullEventDispatcher.php
+
+		-
+			message: "#^Method Zxin\\\\Think\\\\Blade\\\\NullEventDispatcher\\:\\:dispatch\\(\\) should return array\\|null but return statement is missing\\.$#"
+			count: 1
+			path: src-next/NullEventDispatcher.php
+
+		-
+			message: "#^Method Zxin\\\\Think\\\\Blade\\\\NullEventDispatcher\\:\\:hasListeners\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: src-next/NullEventDispatcher.php
+
+		-
+			message: "#^Method Zxin\\\\Think\\\\Blade\\\\NullEventDispatcher\\:\\:until\\(\\) should return array\\|null but return statement is missing\\.$#"
+			count: 1
+			path: src-next/NullEventDispatcher.php
