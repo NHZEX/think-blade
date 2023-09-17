@@ -157,7 +157,7 @@ class ContainerBridge implements ArrayAccess, ContainerContract
         return isset($this->container[$offset]);
     }
 
-    public function offsetGet(mixed $offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->container[$offset];
     }
