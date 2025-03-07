@@ -13,6 +13,8 @@ jobs:
           - 8.0
           - 8.1
           - 8.2
+          - 8.3
+          - 8.4
         experimental: [false]
 
     steps:
@@ -38,7 +40,7 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache vendor
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: composer-cache
         with:
